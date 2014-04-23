@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="qge" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/qge" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c++11" />
+					<Add option="-Wall" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/qge" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add directory="C:/Program Files (x86)/SFML/include" />
+			<Add directory="C:/Program Files (x86)/SFGUI/include" />
+		</Compiler>
+		<Linker>
+			<Add library="sfml-graphics" />
+			<Add library="sfml-audio" />
+			<Add library="sfml-window" />
+			<Add library="sfml-system" />
+			<Add library="C:\Program Files (x86)\SFGUI\lib\libsfgui.a" />
+			<Add directory="C:/Program Files (x86)/SFML/lib" />
+			<Add directory="C:/Program Files (x86)/SFGUI/lib" />
+		</Linker>
+		<Unit filename="gameengine.cpp" />
+		<Unit filename="gameengine.h" />
+		<Unit filename="gamestate.h" />
+		<Unit filename="hero.cpp" />
+		<Unit filename="hero.h" />
+		<Unit filename="highscorestate.cpp" />
+		<Unit filename="highscorestate.h" />
+		<Unit filename="introstate.cpp" />
+		<Unit filename="introstate.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="mapmanager.cpp" />
+		<Unit filename="mapmanager.h" />
+		<Unit filename="menustate.cpp" />
+		<Unit filename="menustate.h" />
+		<Unit filename="playstate.cpp" />
+		<Unit filename="playstate.h" />
+		<Unit filename="tile.h" />
+		<Unit filename="timer.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
