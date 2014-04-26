@@ -1,96 +1,8 @@
 # depslib dependency file v1.0
-1397947235 source:c:\c++\qge\helloworld.cpp
-	<SFGUI/SFGUI.hpp>
+1398308739 source:c:\c++\qge\collision.cpp
 	<SFML/Graphics.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\sfgui.hpp
-	<SFGUI/Bin.hpp>
-	<SFGUI/Box.hpp>
-	<SFGUI/Button.hpp>
-	<SFGUI/Context.hpp>
-	<SFGUI/Desktop.hpp>
-	<SFGUI/Engine.hpp>
-	<SFGUI/Entry.hpp>
-	<SFGUI/Fixed.hpp>
-	<SFGUI/Label.hpp>
-	<SFGUI/Range.hpp>
-	<SFGUI/Scale.hpp>
-	<SFGUI/Scrollbar.hpp>
-	<SFGUI/ScrolledWindow.hpp>
-	<SFGUI/Table.hpp>
-	<SFGUI/Window.hpp>
-	<SFGUI/ToggleButton.hpp>
-	<SFGUI/CheckButton.hpp>
-	<SFGUI/RadioButton.hpp>
-	<SFGUI/Viewport.hpp>
-	<SFGUI/ProgressBar.hpp>
-	<SFGUI/Separator.hpp>
-	<SFGUI/Frame.hpp>
-	<SFGUI/Image.hpp>
-	<SFGUI/Alignment.hpp>
-	<SFGUI/Notebook.hpp>
-	<SFGUI/Spinner.hpp>
-	<SFGUI/ComboBox.hpp>
-	<SFGUI/Canvas.hpp>
-	<SFGUI/SpinButton.hpp>
-	<SFGUI/Renderer.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\bin.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Container.hpp>
-	<memory>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\config.hpp
-	<iostream>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\container.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Widget.hpp>
-	<memory>
-	<vector>
-
-1397946096 c:\program files (x86)\sfgui\include\sfgui\widget.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Object.hpp>
-	<memory>
-	<SFGUI/RenderQueue.hpp>
-	<SFML/Graphics/Drawable.hpp>
-	<SFML/Window/Event.hpp>
 	<map>
-	<string>
-	<cstdint>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\object.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Signal.hpp>
-	<memory>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\signal.hpp
-	<SFGUI/Config.hpp>
-	<map>
-	<memory>
-	<functional>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\renderqueue.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Primitive.hpp>
-	<memory>
-	<SFML/Graphics/Drawable.hpp>
-	<SFML/OpenGL.hpp>
-	<vector>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\primitive.hpp
-	<SFGUI/Config.hpp>
-	<memory>
-	<SFGUI/Signal.hpp>
-	<SFGUI/RendererViewport.hpp>
-	<SFML/Graphics.hpp>
-	<SFML/OpenGL.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\rendererviewport.hpp
-	<SFGUI/Config.hpp>
-	<memory>
-	<SFML/Graphics.hpp>
+	"collision.h"
 
 1397941576 c:\program files (x86)\sfml\include\sfml\graphics.hpp
 	<SFML/Window.hpp>
@@ -426,274 +338,18 @@
 	<string>
 	<vector>
 
-1397941576 c:\program files (x86)\sfml\include\sfml\opengl.hpp
-	<SFML/Config.hpp>
-	<windows.h>
-	<GL/gl.h>
-	<GL/glu.h>
-	<GL/gl.h>
-	<GL/glu.h>
-	<OpenGL/gl.h>
-	<OpenGL/glu.h>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\box.hpp
-	<SFGUI/Container.hpp>
-	<memory>
-	<list>
-	<cstdint>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\button.hpp
-	<SFGUI/Bin.hpp>
-	<SFGUI/Image.hpp>
-	<memory>
-	<SFML/System/String.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\image.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Widget.hpp>
-	<SFGUI/Misc.hpp>
-	<memory>
-	<SFML/Graphics/Texture.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\misc.hpp
-	<SFGUI/Config.hpp>
-	<memory>
-	<SFML/System.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\context.hpp
-	<SFGUI/Config.hpp>
-	<memory>
-	<SFGUI/Engine.hpp>
-	<SFGUI/Engines/BREW.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\engine.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Widget.hpp>
-	<SFGUI/Selector.hpp>
-	<SFGUI/ResourceManager.hpp>
-	<SFGUI/Parsers/ThemeParser/Parse.hpp>
-	<memory>
-	<SFML/Graphics/Drawable.hpp>
-	<string>
-	<map>
-	<list>
-	<stdexcept>
-	"Engine.inl"
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\selector.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Widget.hpp>
-	<memory>
-	<string>
-	<stdexcept>
-	<cstdint>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\resourcemanager.hpp
-	<SFGUI/Config.hpp>
-	<map>
-	<string>
-	<memory>
-	"ResourceManager.inl"
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\resourcemanager.inl
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\parsers\themeparser\parse.hpp
-	<SFGUI/Config.hpp>
-	<string>
-	<vector>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\engine.inl
-	<sstream>
-	<iomanip>
-	<typeinfo>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\engines\brew.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Engine.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\desktop.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Context.hpp>
-	<SFGUI/Engine.hpp>
-	<SFML/Graphics/Rect.hpp>
-	<SFML/Graphics/View.hpp>
-	<memory>
-	<string>
-	<deque>
-	"Desktop.inl"
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\desktop.inl
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\entry.hpp
-	<SFGUI/Widget.hpp>
-	<memory>
-	<SFML/System/String.hpp>
-	<SFML/System/Clock.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\fixed.hpp
-	<SFGUI/Container.hpp>
-	<memory>
-	<map>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\label.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Widget.hpp>
-	<SFGUI/Misc.hpp>
-	<memory>
-	<SFML/System/String.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\range.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Widget.hpp>
-	<SFGUI/Adjustment.hpp>
-	<memory>
-	<cstdint>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\adjustment.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Object.hpp>
-	<SFGUI/Signal.hpp>
-	<memory>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\scale.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Range.hpp>
-	<memory>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\scrollbar.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Range.hpp>
-	<memory>
-	<SFML/System/Clock.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\scrolledwindow.hpp
-	<SFGUI/Bin.hpp>
-	<SFGUI/Adjustment.hpp>
-	<SFGUI/Scrollbar.hpp>
-	<SFGUI/Viewport.hpp>
-	<memory>
-	<cstdint>
-
-1397946096 c:\program files (x86)\sfgui\include\sfgui\viewport.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Bin.hpp>
-	<SFGUI/Adjustment.hpp>
-	<memory>
-
-1397946096 c:\program files (x86)\sfgui\include\sfgui\table.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/TableCell.hpp>
-	<SFGUI/TableOptions.hpp>
-	<SFGUI/Container.hpp>
-	<memory>
-	<list>
-	<vector>
-
-1397946096 c:\program files (x86)\sfgui\include\sfgui\tablecell.hpp
-	<SFGUI/Widget.hpp>
-	<SFGUI/Container.hpp>
-	<SFML/Graphics/Rect.hpp>
-
-1397946096 c:\program files (x86)\sfgui\include\sfgui\tableoptions.hpp
-
-1397946096 c:\program files (x86)\sfgui\include\sfgui\window.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Bin.hpp>
-	<memory>
-	<SFML/Graphics/Drawable.hpp>
-	<SFML/System/String.hpp>
-	<cstdint>
-
-1397946096 c:\program files (x86)\sfgui\include\sfgui\togglebutton.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Button.hpp>
-	<memory>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\checkbutton.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/ToggleButton.hpp>
-	<memory>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\radiobutton.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/CheckButton.hpp>
-	<memory>
-	<set>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\progressbar.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Widget.hpp>
-	<memory>
-	<cstdint>
-	<SFML/System/String.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\separator.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Widget.hpp>
-	<memory>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\frame.hpp
-	<SFGUI/Bin.hpp>
-	<SFGUI/Misc.hpp>
-	<memory>
-	<SFML/System/String.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\alignment.hpp
-	<SFGUI/Bin.hpp>
-	<SFGUI/Misc.hpp>
-	<memory>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\notebook.hpp
-	<SFGUI/Container.hpp>
-	<memory>
-	<deque>
-	<cstdint>
-
-1397946096 c:\program files (x86)\sfgui\include\sfgui\spinner.hpp
-	<SFGUI/Widget.hpp>
-	<memory>
-	<SFML/System.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\combobox.hpp
-	<SFGUI/Bin.hpp>
-	<SFGUI/Scrollbar.hpp>
-	<memory>
-	<SFML/System/String.hpp>
-	<vector>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\canvas.hpp
-	<SFGUI/Config.hpp>
-	<SFGUI/Widget.hpp>
-	<SFGUI/RendererViewport.hpp>
-	<memory>
-
-1397946096 c:\program files (x86)\sfgui\include\sfgui\spinbutton.hpp
-	<SFGUI/Entry.hpp>
-	<SFGUI/Adjustment.hpp>
-	<memory>
-	<SFML/System/String.hpp>
-	<SFML/System/Clock.hpp>
-
-1397946097 c:\program files (x86)\sfgui\include\sfgui\renderer.hpp
-	<SFGUI/Config.hpp>
-	<memory>
-	<SFGUI/Primitive.hpp>
-	<SFML/Graphics.hpp>
-	<SFML/OpenGL.hpp>
-	<vector>
-	<map>
-	<list>
-	<cstdint>
+1398308708 c:\c++\qge\collision.h
 
 1398289930 source:c:\c++\qge\gameengine.cpp
 	"gameengine.h"
 	"gamestate.h"
 
-1398290505 c:\c++\qge\gameengine.h
+1398533410 c:\c++\qge\gameengine.h
 	<SFML/Graphics.hpp>
 	<SFML/Audio.hpp>
 	<SFML/OpenGL.hpp>
 	<vector>
+	<stack>
 	"timer.h"
 
 1397941576 c:\program files (x86)\sfml\include\sfml\audio.hpp
@@ -756,6 +412,20 @@
 	<SFML/System/Thread.hpp>
 	<vector>
 
+1397941576 c:\program files (x86)\sfml\include\sfml\opengl.hpp
+	<SFML/Config.hpp>
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+
+1398267365 c:\c++\qge\timer.h
+	<Windows.h>
+	<iostream>
+
 1398025866 c:\c++\qge\gamestate.h
 	"gameengine.h"
 
@@ -778,34 +448,10 @@
 	"gamestate.h"
 	"level.h"
 
-1398290273 source:c:\c++\qge\main.cpp
-	"gameengine.h"
-	"menustate.h"
-	"timer.h"
-
-1398025866 c:\c++\qge\menustate.h
-	"gamestate.h"
-
-1398025866 source:c:\c++\qge\menustate.cpp
-	"menustate.h"
-	"introstate.h"
-	"highscorestate.h"
-	<iostream>
-
-1398289738 source:c:\c++\qge\playstate.cpp
-	"playstate.h"
+1398310401 c:\c++\qge\level.h
 	"mapmanager.h"
 	"hero.h"
-	"timer.h"
-
-1398033609 source:c:\c++\qge\tilemap.cpp
-	"tilemap.h"
-
-1398035549 c:\c++\qge\tilemap.h
-	<SFML/Graphics.hpp>
-
-1398229152 source:c:\c++\qge\mapmanager.cpp
-	"mapmanager.h"
+	"npc.h"
 
 1398258530 c:\c++\qge\mapmanager.h
 	<SFML/Graphics.hpp>
@@ -820,25 +466,39 @@
 1398053945 c:\c++\qge\tile.h
 	<SFML/Graphics.hpp>
 
-1398290039 source:c:\c++\qge\hero.cpp
-	"hero.h"
-
-1398284450 c:\c++\qge\hero.h
+1398319842 c:\c++\qge\hero.h
 	<SFML/Graphics.hpp>
 
-1398265485 source:c:\c++\qge\timer.cpp
-	<windows.h>
-	<iostream>
+1398319209 c:\c++\qge\npc.h
+	<SFML/Graphics.hpp>
 
-1398265485 c:\c++\qge\timer.cpp
-	<windows.h>
-	<iostream>
+1398290546 source:c:\c++\qge\main.cpp
+	"gameengine.h"
+	"menustate.h"
+	"timer.h"
 
-1398267365 c:\c++\qge\timer.h
-	<Windows.h>
-	<iostream>
+1398025866 c:\c++\qge\menustate.h
+	"gamestate.h"
 
-1398275071 c:\c++\qge\level.h
+1398229152 source:c:\c++\qge\mapmanager.cpp
 	"mapmanager.h"
+
+1398025866 source:c:\c++\qge\menustate.cpp
+	"menustate.h"
+	"introstate.h"
+	"highscorestate.h"
+	<iostream>
+
+1398320018 source:c:\c++\qge\npc.cpp
+	"npc.h"
+
+1398321857 source:c:\c++\qge\playstate.cpp
+	"playstate.h"
+	"mapmanager.h"
+	"hero.h"
+	"timer.h"
+	"collision.h"
+
+1398321056 source:c:\c++\qge\hero.cpp
 	"hero.h"
 

@@ -6,6 +6,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/OpenGL.hpp> // OpenGL for antialiasing
 #include <vector>
+#include <stack>
 #include "timer.h"
 
 class CGameState;
@@ -28,11 +29,14 @@ public:
 	bool Running() { return running; }
 	void Quit() { running = false; }
 
-	sf::RenderWindow& window;
-  Timer timer;
+	Timer timer;
   Timer render_timer;
 
+  // Window as a reference because it may have a longer lifetime than game engine for crash reporting
+	sf::RenderWindow& window;
+
 private:
+
 	// the stack of states
 	std::vector<CGameState*> states;
 	bool running;

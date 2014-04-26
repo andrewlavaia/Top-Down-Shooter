@@ -1,13 +1,13 @@
 
-#ifndef HERO_H
-#define HERO_H
+#ifndef NPC_H
+#define NPC_H
 
 #include <SFML/Graphics.hpp>
 
-class Hero
+class NPC
 {
 public:
-  Hero();
+  NPC();
 
   double x;
   double y;
@@ -17,9 +17,7 @@ public:
 
   double speed;
   double velocity;
-
-  double strength;
-
+  bool collision_flag;
 
 private:
 
@@ -29,4 +27,4 @@ private:
 
 
 
-#endif // HERO_H
+#endif // NPC_H

@@ -45,6 +45,8 @@
 			<Add directory="C:/Program Files (x86)/SFML/lib" />
 			<Add directory="C:/Program Files (x86)/SFGUI/lib" />
 		</Linker>
+		<Unit filename="collision.cpp" />
+		<Unit filename="collision.h" />
 		<Unit filename="gameengine.cpp" />
 		<Unit filename="gameengine.h" />
 		<Unit filename="gamestate.h" />
@@ -54,15 +56,18 @@
 		<Unit filename="highscorestate.h" />
 		<Unit filename="introstate.cpp" />
 		<Unit filename="introstate.h" />
+		<Unit filename="level.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="mapmanager.cpp" />
 		<Unit filename="mapmanager.h" />
 		<Unit filename="menustate.cpp" />
 		<Unit filename="menustate.h" />
+		<Unit filename="npc.cpp" />
+		<Unit filename="npc.h" />
 		<Unit filename="playstate.cpp" />
 		<Unit filename="playstate.h" />
 		<Unit filename="tile.h" />
-		<Unit filename="timer.cpp" />
+		<Unit filename="timer.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

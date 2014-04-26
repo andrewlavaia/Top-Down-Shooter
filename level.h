@@ -4,6 +4,7 @@
 
 #include "mapmanager.h"
 #include "hero.h"
+#include "npc.h"
 
 class Level
 {
@@ -12,6 +13,7 @@ public:
 
   MapManager map;
   Hero hero;
+  NPC npc;
 
 };
 

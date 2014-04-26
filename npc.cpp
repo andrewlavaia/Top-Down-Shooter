@@ -1,24 +1,24 @@
+#include "npc.h"
 
-#include "hero.h"
-
-Hero::Hero()
+NPC::NPC()
 {
-  x = 50;
-  y = 50;
+  x = 200;
+  y = 200;
 
   if (!texture.loadFromFile("character-sprite-map.gif"))
   {
       // error...
   }
+
   texture.setSmooth(true);
   sprite.setTexture(texture,true);
-  sprite.setTextureRect(sf::IntRect(0, 0, 20, 20));
+  sprite.setTextureRect(sf::IntRect(167, 20, 20, 20));
   sprite.setPosition(x,y);
 
-  speed = .4;
-  velocity = 15;
+  speed = .5;
+  velocity = 5;
 
-  strength = 5;
+  collision_flag = false;
 
 
 }
