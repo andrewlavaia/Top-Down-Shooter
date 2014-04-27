@@ -9,6 +9,8 @@ CGameEngine::CGameEngine(sf::RenderWindow &sfmlwindow) : window(sfmlwindow)
 void CGameEngine::Init()
 {
 	running = true;
+	timer.StartCounter();
+	tick_timer.StartCounter();
 }
 
 void CGameEngine::Cleanup()
@@ -76,8 +78,8 @@ void CGameEngine::Update()
 	states.back()->Update(this);
 }
 
-void CGameEngine::Draw()
+void CGameEngine::Draw(double interpolation)
 {
 	// let the state draw the screen
-	states.back()->Draw(this);
+	states.back()->Draw(this, interpolation);
 }

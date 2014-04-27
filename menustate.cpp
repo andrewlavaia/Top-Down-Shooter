@@ -59,7 +59,7 @@ void CMenuState::Update(CGameEngine* game)
 
 }
 
-void CMenuState::Draw(CGameEngine* game)
+void CMenuState::Draw(CGameEngine* game, double interpolation)
 {
 
 }

@@ -11,7 +11,7 @@ int main()
   window.create(sf::VideoMode(1024, 768), "Subway Mercenary", sf::Style::Default);
 
   // Set window settings
-  // window.setFramerateLimit(60);
+  window.setFramerateLimit(200);
 
   // Create the game engine with window (stores a reference)
   CGameEngine game(window);
@@ -20,21 +20,30 @@ int main()
 	game.Init();
 	game.PushState(CMenuState::Instance());
 
-  double frame_length = 1000/60;
+  // Set Game loop variables
+  const int TICKS_PER_SECOND = 25; // how often game is updated (logic, physics, input checking)
+  const int TIME_PER_TICK = 1000/TICKS_PER_SECOND;
+  double next_game_tick = 0;
+  double interpolation = 0;
 
-  // Main game loop
+  // Fixed game loop with variable FPS
 	while (game.Running())
 	{
     game.timer.StartCounter();
-    game.HandleEvents();
-    game.Update();
-    if(game.render_timer.GetCounter() >= frame_length)
+
+    while(game.tick_timer.GetCounter() > next_game_tick)
     {
-      game.Draw();
-      std::cout << "Rendered in: " << game.render_timer.GetCounter()<< std::endl;
-      game.render_timer.StartCounter();
+      game.HandleEvents();
+      game.Update();
+      //std::cout << "Game Logic Updated in: " << game.tick_timer.GetCounter() - next_game_tick << std::endl;
+      next_game_tick += TIME_PER_TICK;
     }
-    std::cout << "Main Game Loop: " << game.timer.GetCounter()<<std::endl;
+
+    interpolation = (game.tick_timer.GetCounter() - next_game_tick + TIME_PER_TICK ) / TIME_PER_TICK;
+    game.Draw(interpolation);
+    //std::cout << interpolation <<std::endl;
+
+    //std::cout << "Frame Rendered in: " << game.timer.GetCounter()<<std::endl;
 	}
 
   // cleanup the engine

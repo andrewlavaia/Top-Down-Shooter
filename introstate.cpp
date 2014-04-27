@@ -52,7 +52,7 @@ void CIntroState::Update(CGameEngine* game)
 
 }
 
-void CIntroState::Draw(CGameEngine* game)
+void CIntroState::Draw(CGameEngine* game, double interpolation)
 {
 
 }

@@ -1,24 +1,29 @@
+
+#include <iostream>
 #include "npc.h"
 
 NPC::NPC()
 {
-  x = 200;
-  y = 200;
+  position.x = 200;
+  position.y = 200;
 
   if (!texture.loadFromFile("character-sprite-map.gif"))
   {
-      // error...
+    std::cout << "texture loading error" << std::endl;
   }
-
   texture.setSmooth(true);
+
   sprite.setTexture(texture,true);
   sprite.setTextureRect(sf::IntRect(167, 20, 20, 20));
-  sprite.setPosition(x,y);
+  sprite.setPosition(position.x,position.y);
 
-  speed = .5;
-  velocity = 5;
+  speed = 1;
+  weight = .5;
 
-  collision_flag = false;
+}
 
-
+void NPC::MoveSprite(double interpolation)
+{
+  sf::Vector2f distance = this->position - this->sprite.getPosition();
+  this->sprite.move( distance.x * interpolation, distance.y * interpolation );
 }

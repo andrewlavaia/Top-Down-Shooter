@@ -16,7 +16,7 @@ public:
 
 	void HandleEvents(CGameEngine* game);
 	void Update(CGameEngine* game);
-	void Draw(CGameEngine* game);
+	void Draw(CGameEngine* game, double interpolation);
 
 	static CPlayState* Instance() {
 		return &PlayState;

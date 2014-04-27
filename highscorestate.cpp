@@ -52,7 +52,7 @@ void CHighScoreState::Update(CGameEngine* game)
 
 }
 
-void CHighScoreState::Draw(CGameEngine* game)
+void CHighScoreState::Draw(CGameEngine* game, double interpolation)
 {
 
 }

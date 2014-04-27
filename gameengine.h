@@ -24,13 +24,13 @@ public:
 
 	void HandleEvents();
 	void Update();
-	void Draw();
+	void Draw(double interpolation);
 
 	bool Running() { return running; }
 	void Quit() { running = false; }
 
 	Timer timer;
-  Timer render_timer;
+  Timer tick_timer;
 
   // Window as a reference because it may have a longer lifetime than game engine for crash reporting
 	sf::RenderWindow& window;

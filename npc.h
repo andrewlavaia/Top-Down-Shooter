@@ -9,22 +9,19 @@ class NPC
 public:
   NPC();
 
-  double x;
-  double y;
+  void MoveSprite(double interpolation);        // Animates sprite towards its new location based on time factor
+
+  sf::Vector2f position;
 
   sf::Texture texture;
   sf::Sprite sprite;
 
   double speed;
-  double velocity;
-  bool collision_flag;
+  double weight;
 
 private:
 
-
-
 };
-
 
 
 #endif // NPC_H

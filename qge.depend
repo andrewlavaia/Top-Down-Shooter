@@ -340,11 +340,11 @@
 
 1398308708 c:\c++\qge\collision.h
 
-1398289930 source:c:\c++\qge\gameengine.cpp
+1398545289 source:c:\c++\qge\gameengine.cpp
 	"gameengine.h"
 	"gamestate.h"
 
-1398533410 c:\c++\qge\gameengine.h
+1398545306 c:\c++\qge\gameengine.h
 	<SFML/Graphics.hpp>
 	<SFML/Audio.hpp>
 	<SFML/OpenGL.hpp>
@@ -426,29 +426,30 @@
 	<Windows.h>
 	<iostream>
 
-1398025866 c:\c++\qge\gamestate.h
+1398542693 c:\c++\qge\gamestate.h
 	"gameengine.h"
 
-1398025866 source:c:\c++\qge\highscorestate.cpp
+1398542753 source:c:\c++\qge\highscorestate.cpp
 	"highscorestate.h"
 	<iostream>
 
-1398025866 c:\c++\qge\highscorestate.h
+1398542708 c:\c++\qge\highscorestate.h
 	"gamestate.h"
 
-1398025866 source:c:\c++\qge\introstate.cpp
+1398542767 source:c:\c++\qge\introstate.cpp
 	"introstate.h"
 	"playstate.h"
 	<iostream>
 
-1398025866 c:\c++\qge\introstate.h
+1398542724 c:\c++\qge\introstate.h
 	"gamestate.h"
 
-1398274979 c:\c++\qge\playstate.h
+1398542649 c:\c++\qge\playstate.h
 	"gamestate.h"
 	"level.h"
 
-1398310401 c:\c++\qge\level.h
+1398566616 c:\c++\qge\level.h
+	<vector>
 	"mapmanager.h"
 	"hero.h"
 	"npc.h"
@@ -466,39 +467,44 @@
 1398053945 c:\c++\qge\tile.h
 	<SFML/Graphics.hpp>
 
-1398319842 c:\c++\qge\hero.h
+1398563440 c:\c++\qge\hero.h
 	<SFML/Graphics.hpp>
 
-1398319209 c:\c++\qge\npc.h
+1398562981 c:\c++\qge\npc.h
 	<SFML/Graphics.hpp>
 
-1398290546 source:c:\c++\qge\main.cpp
+1398563070 source:c:\c++\qge\main.cpp
 	"gameengine.h"
 	"menustate.h"
 	"timer.h"
 
-1398025866 c:\c++\qge\menustate.h
+1398542732 c:\c++\qge\menustate.h
 	"gamestate.h"
 
 1398229152 source:c:\c++\qge\mapmanager.cpp
 	"mapmanager.h"
 
-1398025866 source:c:\c++\qge\menustate.cpp
+1398542786 source:c:\c++\qge\menustate.cpp
 	"menustate.h"
 	"introstate.h"
 	"highscorestate.h"
 	<iostream>
 
-1398320018 source:c:\c++\qge\npc.cpp
+1398566156 source:c:\c++\qge\npc.cpp
+	<iostream>
 	"npc.h"
 
-1398321857 source:c:\c++\qge\playstate.cpp
+1398564151 source:c:\c++\qge\playstate.cpp
 	"playstate.h"
 	"mapmanager.h"
 	"hero.h"
+	"npc.h"
 	"timer.h"
 	"collision.h"
 
-1398321056 source:c:\c++\qge\hero.cpp
+1398552088 source:c:\c++\qge\hero.cpp
 	"hero.h"
+
+1398566417 source:c:\c++\qge\level.cpp
+	"level.h"
 
