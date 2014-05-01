@@ -3,8 +3,10 @@
 
 #include <vector>
 #include "mapmanager.h"
+#include "texturemanager.h"
 #include "hero.h"
 #include "npc.h"
+
 
 
 class Level
@@ -13,10 +15,9 @@ public:
   Level();
 
   MapManager map;
+  TextureManager textures;
   Hero hero;
-  NPC npc0;
-  NPC npc1;
-  std::vector<NPC> npc{npc0,npc1};
+  std::vector<NPC> npc;
 
 };
 

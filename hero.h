@@ -3,17 +3,19 @@
 #define HERO_H
 
 #include <SFML/Graphics.hpp>
+#include "TextureManager.h"
 
 class Hero
 {
 public:
   Hero();
 
+  void CreateSprite(const TextureManager& textures);
+
   void MoveSprite(double interpolation);   // Animates sprite towards its new location based on time factor
 
   sf::Vector2f position;
 
-  sf::Texture texture;
   sf::Sprite sprite;
 
   double speed;

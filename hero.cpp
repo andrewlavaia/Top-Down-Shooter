@@ -6,22 +6,17 @@ Hero::Hero()
   position.x = 50;
   position.y = 50;
 
-  if (!texture.loadFromFile("character-sprite-map.gif"))
-  {
-      // error...
-  }
-  texture.setSmooth(true);
-  sprite.setTexture(texture,true);
+  speed = 5;
+  strength = 5;
+}
+
+void Hero::CreateSprite(const TextureManager& textures)
+{
+  sprite.setTexture(textures.Get(Textures::Hero));
   sprite.setTextureRect(sf::IntRect(0, 0, 20, 20));
   sprite.setPosition(position.x,position.y);
 
-  speed = 5;
-
-  strength = 5;
-
-
 }
-
 
 void Hero::MoveSprite(double interpolation)
 {

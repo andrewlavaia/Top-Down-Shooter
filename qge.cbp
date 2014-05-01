@@ -67,6 +67,8 @@
 		<Unit filename="npc.h" />
 		<Unit filename="playstate.cpp" />
 		<Unit filename="playstate.h" />
+		<Unit filename="texturemanager.cpp" />
+		<Unit filename="texturemanager.h" />
 		<Unit filename="tile.h" />
 		<Unit filename="timer.h" />
 		<Extensions>
