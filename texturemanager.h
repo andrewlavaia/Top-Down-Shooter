@@ -26,13 +26,18 @@ namespace Textures {
 class TextureManager
 {
 public:
- void                 Load(Textures::ID id, const std::string& filename);
+  TextureManager() {};
 
- sf::Texture&         Get(Textures::ID id);
- const sf::Texture&   Get(Textures::ID id) const;
+  void                 Load(Textures::ID id, const std::string& filename);
+
+  sf::Texture&         Get(Textures::ID id);
+  const sf::Texture&   Get(Textures::ID id) const;
 
 private:
   std::map<Textures::ID, std::unique_ptr<sf::Texture>> texture_map;
+
+  TextureManager(const TextureManager&);              // Disallow copy constructor
+  TextureManager& operator=(const TextureManager&);   // Disallow assignment
 
 };
 

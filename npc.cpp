@@ -11,15 +11,12 @@ NPC::NPC(Type type)
     speed = 1;
     weight = .5;
   }
-
   if(type == NPC::Chumba) {
     position.x = 300;
     position.y = 300;
     speed = 1;
     weight = 2;
   }
-
-
 }
 
 void NPC::CreateSprite(const TextureManager& textures)
@@ -27,7 +24,6 @@ void NPC::CreateSprite(const TextureManager& textures)
   sprite.setTexture(textures.Get(Textures::Hero));
   sprite.setTextureRect(sf::IntRect(167, 20, 20, 20));
   sprite.setPosition(position.x,position.y);
-
 }
 
 void NPC::MoveSprite(double interpolation)

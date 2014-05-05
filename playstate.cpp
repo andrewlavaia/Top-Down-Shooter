@@ -10,12 +10,12 @@ CPlayState CPlayState::PlayState;
 
 void CPlayState::Init()
 {
-  std::cout << "Play State started." << std::endl ;
+  std::cout << "Play State started." << std::endl;
 }
 
 void CPlayState::Cleanup()
 {
-  std::cout << "Play State ended." << std::endl ;
+  std::cout << "Play State ended." << std::endl;
 }
 
 void CPlayState::Pause()
@@ -56,6 +56,15 @@ void CPlayState::HandleEvents(CGameEngine* game)
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
     this->level.hero.position.y += this->level.hero.speed;
   }
+
+  // Spawning Controls
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+      this->level.npc.push_back(this->level.CreateNPC(NPC::Chumba));
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
+      this->level.npc.push_back(this->level.CreateNPC(NPC::Goomba));
+  }
+
 }
 
 void CPlayState::Update(CGameEngine* game)
@@ -67,10 +76,10 @@ void CPlayState::Update(CGameEngine* game)
   // how much the npc moves is based on hero's strength factor, npc's weight and the current distance between hero and npc
   for (unsigned i = 0; i < this->level.npc.size(); ++i)
   {
-    if(Collision::BoundingBoxTest(this->level.hero.sprite, this->level.npc[i].sprite))
+    if(Collision::BoundingBoxTest(this->level.hero.sprite, this->level.npc[i]->sprite))
     {
-      this->level.npc[i].position.x += this->level.hero.strength * this->level.npc[i].weight * (this->level.npc[i].position.x - this->level.hero.position.x);
-      this->level.npc[i].position.y += this->level.hero.strength * this->level.npc[i].weight * (this->level.npc[i].position.y - this->level.hero.position.y);
+      this->level.npc[i]->position.x += this->level.hero.strength * this->level.npc[i]->weight * (this->level.npc[i]->position.x - this->level.hero.position.x);
+      this->level.npc[i]->position.y += this->level.hero.strength * this->level.npc[i]->weight * (this->level.npc[i]->position.y - this->level.hero.position.y);
     }
   }
 }
@@ -112,8 +121,8 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
 
   for (unsigned i = 0; i < this->level.npc.size(); ++i)
   {
-    this->level.npc[i].MoveSprite(interpolation);
-    window.draw(this->level.npc[i].sprite);
+    this->level.npc[i]->MoveSprite(interpolation);
+    window.draw(this->level.npc[i]->sprite);
   }
 
   // ---------------

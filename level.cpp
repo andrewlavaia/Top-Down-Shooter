@@ -1,20 +1,22 @@
 
-  #include "level.h"
+#include "level.h"
 
-  Level::Level()
-    : map("map2.txt"),
-      textures()
-  {
-    textures.Load(Textures::Hero, "character-sprite-map.gif");
+Level::Level()
+  : map("map2.txt"),
+    textures()
+{
+  textures.Load(Textures::Hero, "character-sprite-map.gif");
 
-    hero.CreateSprite(textures);
+  hero.CreateSprite(textures);
 
-    NPC enemy1(NPC::Goomba);
-    enemy1.CreateSprite(textures);
-    npc.push_back(enemy1);
+  npc.push_back(CreateNPC(NPC::Goomba));
+  npc.push_back(CreateNPC(NPC::Chumba));
+};
 
-    NPC enemy2(NPC::Chumba);
-    enemy2.CreateSprite(textures);
-    npc.push_back(enemy2);
-
-  };
+NPC* Level::CreateNPC(NPC::Type type)
+{
+  NPC* p_enemy;
+  p_enemy = new NPC(type);
+  p_enemy->CreateSprite(this->textures);
+  return p_enemy;
+}
