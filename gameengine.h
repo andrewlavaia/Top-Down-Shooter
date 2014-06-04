@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/OpenGL.hpp> // OpenGL for antialiasing
+#include <SFML/System/Time.hpp>
 #include <vector>
 #include <stack>
 #include "timer.h"
@@ -31,6 +32,9 @@ public:
 
 	Timer timer;
   Timer tick_timer;
+
+  sf::Clock frameClock;
+  sf::Time frameTime;
 
   // Window as a reference because it may have a longer lifetime than game engine for crash reporting
 	sf::RenderWindow& window;

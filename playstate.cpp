@@ -31,6 +31,8 @@ void CPlayState::Resume()
 void CPlayState::HandleEvents(CGameEngine* game)
 {
   sf::Event event;
+  bool noKeyPressed = true;
+
   while (game->window.pollEvent(event))
   {
     switch (event.type)
@@ -46,15 +48,28 @@ void CPlayState::HandleEvents(CGameEngine* game)
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
     this->level.hero.position.x -= this->level.hero.speed;
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimationLeft;
+    noKeyPressed = false;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
     this->level.hero.position.x += this->level.hero.speed;
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimationRight;
+    noKeyPressed = false;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
     this->level.hero.position.y -= this->level.hero.speed;
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimationUp;
+    noKeyPressed = false;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
     this->level.hero.position.y += this->level.hero.speed;
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimationDown;
+    noKeyPressed = false;
+  }
+  this->level.hero.animatedSprite.play(*this->level.hero.currentAnimation);
+
+  if (noKeyPressed) {
+    this->level.hero.animatedSprite.stop();
   }
 
   // Spawning Controls
@@ -69,6 +84,9 @@ void CPlayState::HandleEvents(CGameEngine* game)
 
 void CPlayState::Update(CGameEngine* game)
 {
+
+  game->frameTime = game->frameClock.restart();
+
   // ---------------
   // Collision Rules
   // ---------------
@@ -82,6 +100,7 @@ void CPlayState::Update(CGameEngine* game)
       this->level.npc[i]->position.y += this->level.hero.strength * this->level.npc[i]->weight * (this->level.npc[i]->position.y - this->level.hero.position.y);
     }
   }
+
 }
 
 void CPlayState::Draw(CGameEngine* game, double interpolation)
@@ -113,6 +132,10 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
 
   this->level.hero.MoveSprite(interpolation);
   window.draw(this->level.hero.sprite);
+
+
+  this->level.hero.animatedSprite.update(game->frameTime);
+  window.draw(this->level.hero.animatedSprite);
 
   // ---------------
   // Draw NPCs

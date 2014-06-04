@@ -344,10 +344,11 @@
 	"gameengine.h"
 	"gamestate.h"
 
-1398545306 c:\c++\qge\gameengine.h
+1401856347 c:\c++\qge\gameengine.h
 	<SFML/Graphics.hpp>
 	<SFML/Audio.hpp>
 	<SFML/OpenGL.hpp>
+	<SFML/System/Time.hpp>
 	<vector>
 	<stack>
 	"timer.h"
@@ -468,9 +469,12 @@
 1398053945 c:\c++\qge\tile.h
 	<SFML/Graphics.hpp>
 
-1398919349 c:\c++\qge\hero.h
+1401854008 c:\c++\qge\hero.h
 	<SFML/Graphics.hpp>
+	<SFML/System/Time.hpp>
 	"TextureManager.h"
+	"animation.h"
+	"animatedsprite.h"
 
 1398920274 c:\c++\qge\npc.h
 	<SFML/Graphics.hpp>
@@ -497,7 +501,7 @@
 	<iostream>
 	"npc.h"
 
-1399258070 source:c:\c++\qge\playstate.cpp
+1401857255 source:c:\c++\qge\playstate.cpp
 	"playstate.h"
 	"mapmanager.h"
 	"hero.h"
@@ -505,16 +509,35 @@
 	"timer.h"
 	"collision.h"
 
-1398919324 source:c:\c++\qge\hero.cpp
+1401856680 source:c:\c++\qge\hero.cpp
 	"hero.h"
 
-1399257917 source:c:\c++\qge\level.cpp
+1401856566 source:c:\c++\qge\level.cpp
 	"level.h"
 
-1399082584 c:\c++\qge\texturemanager.h
+1401852232 c:\c++\qge\texturemanager.h
 	<memory>
 	<SFML/Graphics.hpp>
 
 1398914759 source:c:\c++\qge\texturemanager.cpp
 	"texturemanager.h"
+
+1401758342 source:c:\c++\qge\animatedsprite.cpp
+	"animatedsprite.h"
+
+1401758904 c:\c++\qge\animatedsprite.h
+	<SFML/Graphics/RenderTarget.hpp>
+	<SFML/System/Time.hpp>
+	<SFML/Graphics/Drawable.hpp>
+	<SFML/Graphics/Transformable.hpp>
+	<SFML/System/Vector2.hpp>
+	"Animation.h"
+
+1401758275 c:\c++\qge\animation.h
+	<vector>
+	<SFML/Graphics/Rect.hpp>
+	<SFML/Graphics/Texture.hpp>
+
+1401758327 source:c:\c++\qge\animation.cpp
+	"animation.h"
 

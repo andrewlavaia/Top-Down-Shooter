@@ -45,6 +45,10 @@
 			<Add directory="C:/Program Files (x86)/SFML/lib" />
 			<Add directory="C:/Program Files (x86)/SFGUI/lib" />
 		</Linker>
+		<Unit filename="animatedsprite.cpp" />
+		<Unit filename="animatedsprite.h" />
+		<Unit filename="animation.cpp" />
+		<Unit filename="animation.h" />
 		<Unit filename="collision.cpp" />
 		<Unit filename="collision.h" />
 		<Unit filename="gameengine.cpp" />

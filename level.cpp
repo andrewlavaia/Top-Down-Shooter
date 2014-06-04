@@ -6,8 +6,11 @@ Level::Level()
     textures()
 {
   textures.Load(Textures::Hero, "character-sprite-map.gif");
+  textures.Load(Textures::SpriteSheet, "spritesheet.png");
 
   hero.CreateSprite(textures);
+  hero.CreateAnimatedSprite();
+  hero.CreateAnimations(textures);
 
   npc.push_back(CreateNPC(NPC::Goomba));
   npc.push_back(CreateNPC(NPC::Chumba));

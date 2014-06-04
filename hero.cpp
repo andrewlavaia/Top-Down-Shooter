@@ -8,6 +8,7 @@ Hero::Hero()
 
   speed = 5;
   strength = 5;
+
 }
 
 void Hero::CreateSprite(const TextureManager& textures)
@@ -15,7 +16,40 @@ void Hero::CreateSprite(const TextureManager& textures)
   sprite.setTexture(textures.Get(Textures::Hero));
   sprite.setTextureRect(sf::IntRect(0, 0, 20, 20));
   sprite.setPosition(position.x,position.y);
+}
 
+void Hero::CreateAnimatedSprite()
+{
+  animatedSprite.setPosition(position.x,position.y);
+}
+
+void Hero::CreateAnimations(const TextureManager& textures)
+{
+  walkAnimationDown.setSpriteSheet(textures.Get(Textures::SpriteSheet));
+  walkAnimationDown.addFrame(sf::IntRect(32, 0, 32, 32));
+  walkAnimationDown.addFrame(sf::IntRect(64, 0, 32, 32));
+  walkAnimationDown.addFrame(sf::IntRect(32, 0, 32, 32));
+  walkAnimationDown.addFrame(sf::IntRect( 0, 0, 32, 32));
+
+  walkAnimationLeft.setSpriteSheet(textures.Get(Textures::SpriteSheet));
+  walkAnimationLeft.addFrame(sf::IntRect(32, 32, 32, 32));
+  walkAnimationLeft.addFrame(sf::IntRect(64, 32, 32, 32));
+  walkAnimationLeft.addFrame(sf::IntRect(32, 32, 32, 32));
+  walkAnimationLeft.addFrame(sf::IntRect( 0, 32, 32, 32));
+
+  walkAnimationRight.setSpriteSheet(textures.Get(Textures::SpriteSheet));
+  walkAnimationRight.addFrame(sf::IntRect(32, 64, 32, 32));
+  walkAnimationRight.addFrame(sf::IntRect(64, 64, 32, 32));
+  walkAnimationRight.addFrame(sf::IntRect(32, 64, 32, 32));
+  walkAnimationRight.addFrame(sf::IntRect( 0, 64, 32, 32));
+
+  walkAnimationUp.setSpriteSheet(textures.Get(Textures::SpriteSheet));
+  walkAnimationUp.addFrame(sf::IntRect(32, 96, 32, 32));
+  walkAnimationUp.addFrame(sf::IntRect(64, 96, 32, 32));
+  walkAnimationUp.addFrame(sf::IntRect(32, 96, 32, 32));
+  walkAnimationUp.addFrame(sf::IntRect( 0, 96, 32, 32));
+
+  currentAnimation = &walkAnimationRight;
 }
 
 void Hero::MoveSprite(double interpolation)
