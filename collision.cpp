@@ -184,4 +184,5 @@ namespace Collision
         }
         return true;
     }
-}
+
+} //end namepace Collision

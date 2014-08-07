@@ -1,3 +1,4 @@
+
 ////////////////////////////////////////////////////////////
 //
 // Copyright (C) 2014 Maximilian Wagenbach (aka. Foaly) (foaly.f@web.de)
@@ -95,6 +96,8 @@ sf::FloatRect AnimatedSprite::getLocalBounds() const
     return sf::FloatRect(0.f, 0.f, width, height);
 }
 
+
+
 sf::FloatRect AnimatedSprite::getGlobalBounds() const
 {
     return getTransform().transformRect(getLocalBounds());
@@ -186,3 +189,5 @@ void AnimatedSprite::draw(sf::RenderTarget& target, sf::RenderStates states) con
         target.draw(m_vertices, 4, sf::Quads, states);
     }
 }
+
+

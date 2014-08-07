@@ -40,7 +40,7 @@ void Animation::setSpriteSheet(const sf::Texture& texture)
 
 const sf::Texture* Animation::getSpriteSheet() const
 {
-    return m_texture;
+     return m_texture;
 }
 
 std::size_t Animation::getSize() const

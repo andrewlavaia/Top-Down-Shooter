@@ -1,0 +1,17 @@
+
+AI -> charging opponent
+
+bonus round, how many people can you bounce in x seconds? (after rounds 2 and 4?)
+
+special moves -> dodge left, dodge right, charge (with spritesheets)
+fatigue/energy bar for hero displayed at all times
+
+start menu
+stats screen
+hero select screen
+tournament bracket screen / opponent bio screen
+victory / game over screen
+
+music
+sound effects
+

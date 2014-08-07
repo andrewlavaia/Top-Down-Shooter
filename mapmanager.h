@@ -31,21 +31,21 @@
 class MapManager
 {
 public:
-  MapManager(std::string filelocation);     // requires .txt file location, and either "Simple" or "Complex"
+  MapManager();
+
+  void Load(std::string filelocation);      // loads the map file and populates array of tiles. Requires .txt file location
 
   int GetTileWidth() { return tile_width; }
   int GetTileHeight() { return tile_height; }
 
   std::vector<std::vector<Tile>> GetTiles(){ return tiles; }
+  std::string filepath_txt;
 
 
 private:
-  void Load();                              //used in constructor to load the map file and populate array of tiles
-  void SetSprites();                        //used in constructor to assign a sprite to each tile
-  void SetTileSize(int width, int height);  //used in MapManager::Load
+  void SetSprites();                        // used in MapManager::Load
+  void SetTileSize(int width, int height);  // used in MapManager::Load
 
-
-  const std::string filepath_txt;
   const std::string map_type;
   std::string filepath_img;
 
@@ -53,8 +53,8 @@ private:
   int tile_height;                          // stored at map level as all tiles should be the same size
   sf::Texture map_texture;
 
-  void LoadComplex();                       // supports loading individual tiles based on a sprite map
-  void SetSpritesComplex();                 //
+  void LoadComplex();                       // NOT CURRENTLY USED - supports loading individual tiles based on a sprite map
+  void SetSpritesComplex();                 // NOT CURRENTLY USED
 
   std::vector<std::vector<Tile>> tiles;
 };

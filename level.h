@@ -12,9 +12,11 @@ class Level
 public:
   Level();
 
+  void Load(int id);
+
   NPC* CreateNPC(NPC::Type type);
 
-  MapManager map;
+  MapManager mp;
   TextureManager textures;
   Hero hero;
   std::vector<NPC*> npc;

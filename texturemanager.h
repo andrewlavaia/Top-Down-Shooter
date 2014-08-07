@@ -20,7 +20,7 @@ namespace Textures {
 
   enum ID {
     Hero,
-    SpriteSheet
+    NPC
   };
 }
 

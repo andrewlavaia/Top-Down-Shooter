@@ -1,13 +1,13 @@
 #include "mapmanager.h"
 
-MapManager::MapManager(std::string filelocation) : filepath_txt(filelocation)
+MapManager::MapManager()
 {
-  MapManager::Load();
-  MapManager::SetSprites();
+
 }
 
-void MapManager::Load()
+void MapManager::Load(std::string filelocation)
 {
+  this->filepath_txt = filelocation;
   std::ifstream openfile(this->filepath_txt);
 
   if(openfile.is_open())
@@ -40,6 +40,8 @@ void MapManager::Load()
       tempMap.clear();
     }
   }
+
+  MapManager::SetSprites();
 }
 
 void MapManager::SetSprites()

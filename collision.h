@@ -2,6 +2,8 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
+#include "animatedsprite.h"
+
 namespace Collision {
     //////
     /// Test for a collision between two sprites by comparing the alpha values of overlapping pixels

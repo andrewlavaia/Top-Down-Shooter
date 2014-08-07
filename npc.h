@@ -4,29 +4,40 @@
 
 #include <SFML/Graphics.hpp>
 #include "TextureManager.h"
+#include "animation.h"
+#include "animatedsprite.h"
+#include "direction.h"
 
 class NPC
 {
 public:
   enum Type {
     Goomba,
-    Chumba
+    Chumba,
   };
 
   explicit NPC(Type type);
 
-  void CreateSprite(const TextureManager& textures);
+  void CreateAnimatedSprite();                            // psuedo constructor for AnimatedSprite
+  void CreateAnimations(const TextureManager& textures);  // required method to assign animations
+  void MoveAnimatedSprite(double interpolation);          // Animates sprite towards its new location based on time factor
 
-  void MoveSprite(double interpolation);        // Animates sprite towards its new location based on time factor
+  AnimatedSprite                          animatedSprite;
+  Animation                               walkAnimationDown;
+  Animation                               walkAnimationUp;
+  Animation                               walkAnimationRight;
+  Animation                               walkAnimationLeft;
+  Animation*                              currentAnimation;
 
-  sf::Sprite sprite;
-
-  sf::Vector2f position;
-  double speed;
-  double weight;
+  sf::Vector2f                            position;
+  double                                  speed;
+  double                                  weight;
+  std::vector<Direction>                  directions;
+  std::vector<Direction>::const_iterator  directions_it;
+  double                                  distance_travelled;
 
 private:
-  Type type;
+  Type                                     type;
 
 };
 

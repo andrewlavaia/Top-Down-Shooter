@@ -22,6 +22,8 @@ public:
 		return &PlayState;
 	}
 
+  bool noKeyPressed;
+
 protected:
 	CPlayState() { }
 

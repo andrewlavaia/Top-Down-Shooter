@@ -23,6 +23,7 @@
 
 #ifndef ANIMATEDSPRITE_H
 #define ANIMATEDSPRITE_H
+#include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/Graphics/Drawable.hpp>
@@ -52,6 +53,9 @@ public:
     bool isPlaying() const;
     sf::Time getFrameTime() const;
     void setFrame(std::size_t newFrame, bool resetTime = true);
+
+    // every animated sprite should have an invisible sf::sprite behind it that will serve as a hitbox for collision tests
+    sf::Sprite hitbox;
 
 private:
     const Animation* m_animation;
