@@ -15,8 +15,7 @@ NPC::NPC(Type type)
       position.x = 200;
       position.y = 200;
       speed = 4;
-      weight = .5;
-      distance_travelled = 0;
+      weight = 1;
 
       directions.push_back(Direction(Direction::Down, 100));
       directions.push_back(Direction(Direction::Up, 100));
@@ -33,7 +32,7 @@ NPC::NPC(Type type)
       position.x = 300;
       position.y = 300;
       speed = 2;
-      weight = 2;
+      weight = 1;
       directions.push_back(Direction(Direction::Up, 100));
       directions.push_back(Direction(Direction::Down, 100));
       break;

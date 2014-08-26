@@ -3,6 +3,7 @@
 #include <iostream>
 
 Hero::Hero()
+  : weapon( new Weapon(Weapon::Hands) )
 {
   position.x = 50;
   position.y = 50;
@@ -57,12 +58,68 @@ void Hero::CreateAnimations(const TextureManager& textures)
 
 }
 
-
+// Moves hero sprite
 void Hero::MoveAnimatedSprite(double interpolation)
 {
-  // move hero sprite
   sf::Vector2f distance = this->position - this->animatedSprite.getPosition();
   this->animatedSprite.move( distance.x * interpolation, distance.y * interpolation );
   this->animatedSprite.hitbox.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
-
 }
+
+void Hero::PickupWeapon(std::vector< std::unique_ptr<Weapon> >& v)
+{
+   for(std::vector< std::unique_ptr<Weapon> >::iterator it = v.begin(); it != v.end(); ++it)
+   {
+      if( (*it)->getType() == Weapon::Lasso ) // if collision with weapon
+      {
+        DropWeapon(v);
+        weapon = std::move(*it);
+        it = v.erase(it);
+        std::cout << "Hero picked up the weapon. Now holding weapon type " << weapon->getType() << std::endl;
+        weapon->reduceDurability();
+        break; // can only pickup one weapon at a time
+      }
+   }
+}
+
+void Hero::DropWeapon(std::vector< std::unique_ptr<Weapon> >& v)
+{
+  if(weapon->getType() != Weapon::Hands) // AND DURABILITY != 0, not implemented yet
+  {
+    if (weapon->getDurability() > 0) // if weapon durability <=0 at time of drop, weapon is destroyed)
+    {
+      v.push_back(std::move(weapon));
+    }
+    else
+    {
+      std::cout<< "weapon destroyed, durability too low" << std::endl;
+    }
+
+    std::unique_ptr<Weapon> w(new Weapon(Weapon::Hands));
+    weapon = std::move(w);
+    std::cout << "Hero dropped the weapon. Now holding weapon type " << weapon->getType() << std::endl;
+  }
+}
+
+
+/*
+// Dynamically creates a new Weapon object and returns a smart pointer to it
+std::unique_ptr<Weapon> Hero::CreateWeapon(Weapon::Type type)
+{
+  std::unique_ptr<Weapon> p_weapon( new Weapon(type) );
+  return p_weapon;
+}
+
+void Hero::DropWeapon ()
+{
+  std::unique_ptr<Weapon> temp = Hero::CreateWeapon(Weapon::Hands);
+  weapon = std::move(temp);
+}
+
+void Hero::PickupWeapon(std::unique_ptr<Weapon>& weap)
+{
+  //std::cout << weapon->getType() << std::endl;
+  weapon = std::move(weap);
+  //std::cout << weapon->getType() << std::endl;
+}
+*/

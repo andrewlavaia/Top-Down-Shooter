@@ -16,11 +16,11 @@ public:
     Chumba,
   };
 
-  explicit NPC(Type type);
+  explicit                                NPC(Type type);
 
-  void CreateAnimatedSprite();                            // psuedo constructor for AnimatedSprite
-  void CreateAnimations(const TextureManager& textures);  // required method to assign animations
-  void MoveAnimatedSprite(double interpolation);          // Animates sprite towards its new location based on time factor
+  void                                    CreateAnimatedSprite();                            // psuedo constructor for AnimatedSprite
+  void                                    CreateAnimations(const TextureManager& textures);  // required method to assign animations
+  void                                    MoveAnimatedSprite(double interpolation);          // Animates sprite towards its new location based on time factor
 
   AnimatedSprite                          animatedSprite;
   Animation                               walkAnimationDown;

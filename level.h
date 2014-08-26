@@ -2,6 +2,7 @@
 #define LEVEL
 
 #include <vector>
+#include <memory>
 #include "mapmanager.h"
 #include "texturemanager.h"
 #include "hero.h"
@@ -10,16 +11,18 @@
 class Level
 {
 public:
-  Level();
+                                          Level();
 
-  void Load(int id);
+  void                                    Load(int id);
+  void                                    CreateNPC(NPC::Type type);
+  std::unique_ptr<Weapon>                 CreateWeapon(Weapon::Type type);
 
-  NPC* CreateNPC(NPC::Type type);
 
-  MapManager mp;
-  TextureManager textures;
-  Hero hero;
-  std::vector<NPC*> npc;
+  MapManager                              mp;
+  TextureManager                          textures;
+  Hero                                    hero;
+  std::vector< std::unique_ptr<NPC> >     npc;
+  std::vector< std::unique_ptr<Weapon> >  weapon;
 
 private:
   Level(const Level&);              // Disallow copy constructor

@@ -77,17 +77,43 @@ void CPlayState::HandleEvents(CGameEngine* game)
     noKeyPressed = false;
   }
 
-  // ANIMATIONS SHOULD GET MOVED TO UPDATE GAME LOGIC SECTION
-  // CAN'T MOVE TO DRAW SECTION BECAUSE NEEDS TO STAY IN FIXED TIME STAMP
-  // FOR SMOOTH ANIMATIONS
+  // Dodge Left
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+    this->level.hero.position.x -= this->level.hero.speed * 3;
+    noKeyPressed = false;
+  }
+  // Dodge Right
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+    this->level.hero.position.x += this->level.hero.speed * 3;
+    noKeyPressed = false;
+  }
+  // Dodge Down
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+    this->level.hero.position.y += this->level.hero.speed * 3;
+    noKeyPressed = false;
+  }
+  // Dodge Up
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+    this->level.hero.position.y -= this->level.hero.speed * 3;
+    noKeyPressed = false;
+  }
 
+  // Pickup Weapon
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
+    this->level.hero.PickupWeapon(this->level.weapon);
+  }
+
+  // Drop Weapon
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+    this->level.hero.DropWeapon(this->level.weapon);
+  }
 
   // Spawning Controls
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-      this->level.npc.push_back(this->level.CreateNPC(NPC::Chumba));
+    this->level.CreateNPC(NPC::Chumba);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
-      this->level.npc.push_back(this->level.CreateNPC(NPC::Goomba));
+    this->level.CreateNPC(NPC::Goomba);
   }
 
   // Load next level
@@ -106,13 +132,32 @@ void CPlayState::Update(CGameEngine* game)
   // Collision Tests
   // ---------------
 
-  // how much the npc moves is based on hero's strength factor, npc's weight and the current distance between hero and npc
   for (unsigned i = 0; i < this->level.npc.size(); ++i)
   {
+    // if hero hits any npc (based on hero strength, npc weight, and distance factor)
     if(Collision::BoundingBoxTest(this->level.hero.animatedSprite.hitbox, this->level.npc[i]->animatedSprite.hitbox))
     {
-      this->level.npc[i]->position.x += this->level.hero.strength * this->level.npc[i]->weight * (this->level.npc[i]->position.x - this->level.hero.position.x);
-      this->level.npc[i]->position.y += this->level.hero.strength * this->level.npc[i]->weight * (this->level.npc[i]->position.y - this->level.hero.position.y);
+      this->level.npc[i]->position.x += this->level.hero.strength * (1/this->level.npc[i]->weight) * (this->level.npc[i]->position.x - this->level.hero.position.x);
+      this->level.npc[i]->position.y += this->level.hero.strength * (1/this->level.npc[i]->weight) * (this->level.npc[i]->position.y - this->level.hero.position.y);
+    }
+
+    // if any npc runs into another npc (based on weight of each npc)
+    for (unsigned j = 0; j <this->level.npc.size(); ++j)
+    {
+      if(Collision::BoundingBoxTest(this->level.npc[j]->animatedSprite.hitbox, this->level.npc[i]->animatedSprite.hitbox))
+      {
+        // initialize variables so that
+        int ix = this->level.npc[i]->position.x;
+        int iy = this->level.npc[i]->position.y;
+        int jx = this->level.npc[j]->position.x;
+        int jy = this->level.npc[j]->position.y;
+
+        this->level.npc[i]->position.x += (1/this->level.npc[i]->weight) * (ix - jx);
+        this->level.npc[i]->position.y += (1/this->level.npc[i]->weight) * (iy - jy);
+
+        this->level.npc[j]->position.x += (1/this->level.npc[j]->weight) * (jx - ix);
+        this->level.npc[j]->position.y += (1/this->level.npc[j]->weight) * (jy - iy);
+      }
     }
   }
 
@@ -255,6 +300,18 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     window.draw(this->level.npc[i]->animatedSprite);
     window.draw(this->level.npc[i]->animatedSprite.hitbox); // debug only
   }
+
+  // ---------------
+  // Draw Weapons
+  // ---------------
+  window.draw(this->level.hero.weapon->sprite);
+
+/*
+  for (std::vector< std::unique_ptr<Weapon> >::const_iterator it = this->level.weapon.begin(); it != this->level.weapon.end(); it++)
+  {
+    window.draw( (**it).sprite );
+  }
+*/
 
   // ---------------
   // Update Window

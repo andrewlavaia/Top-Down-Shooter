@@ -7,33 +7,40 @@
 #include "TextureManager.h"
 #include "animation.h"
 #include "animatedsprite.h"
+#include "weapon.h"
 
 class Hero
 {
 public:
-  Hero();
+                                Hero();
 
-  void CreateAnimatedSprite();                            // psuedo constructor for AnimatedSprite
-  void CreateAnimations(const TextureManager& textures);  // required method to assign animations
-  void MoveAnimatedSprite(double interpolation);          // Animates sprite towards its new location based on time factor
+  void                          CreateAnimatedSprite();
+  void                          CreateAnimations(const TextureManager& textures);
+  void                          MoveAnimatedSprite(double interpolation);
 
-  sf::Vector2f position;
 
-  AnimatedSprite animatedSprite;
+  sf::Vector2f                  position;
+  AnimatedSprite                animatedSprite;
 
-  double speed;
-  double strength;
+  double                        speed;
+  double                        strength;
 
-  Animation walkAnimationDown;
-  Animation walkAnimationUp;
-  Animation walkAnimationRight;
-  Animation walkAnimationLeft;
+  Animation                     walkAnimationDown;
+  Animation                     walkAnimationUp;
+  Animation                     walkAnimationRight;
+  Animation                     walkAnimationLeft;
+  Animation*                    currentAnimation;
 
-  Animation* currentAnimation;
+  void                          PickupWeapon(std::vector< std::unique_ptr<Weapon> >& v);
+  void                          DropWeapon(std::vector< std::unique_ptr<Weapon> >& v);
+
+  std::unique_ptr<Weapon>       weapon;
 
 private:
-  Hero(const Hero&);              // Disallow copy constructor
-  Hero& operator=(const Hero&);   // Disallow assignment
+                                Hero(const Hero&);              // Disallow copy constructor
+                                Hero& operator=(const Hero&);   // Disallow assignment
+
+
 
 };
 

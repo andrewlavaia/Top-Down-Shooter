@@ -76,6 +76,8 @@
 		<Unit filename="texturemanager.h" />
 		<Unit filename="tile.h" />
 		<Unit filename="timer.h" />
+		<Unit filename="weapon.cpp" />
+		<Unit filename="weapon.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

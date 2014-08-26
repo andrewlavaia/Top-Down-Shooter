@@ -6,10 +6,13 @@ Level::Level()
 
 }
 
-// need to add destructor that removes all npcs created
-
 void Level::Load(int id)
 {
+
+  // Delete all existing NPCs and deallocate memory
+  npc.clear(); // std::unique_ptr will delete pointed to object automatically
+
+  // Load Level
   switch (id)
   {
     case 1:
@@ -20,8 +23,13 @@ void Level::Load(int id)
       hero.CreateAnimatedSprite();
       hero.CreateAnimations(textures);
 
-      npc.push_back(CreateNPC(NPC::Goomba));
-      npc.push_back(CreateNPC(NPC::Chumba));
+      CreateNPC(NPC::Goomba);
+      CreateNPC(NPC::Chumba);
+
+      weapon.push_back(CreateWeapon(Weapon::Lasso));
+      weapon.push_back(CreateWeapon(Weapon::Pole));
+      weapon.push_back(CreateWeapon(Weapon::Pole));
+      weapon.push_back(CreateWeapon(Weapon::Lasso));
 
       break;
 
@@ -32,8 +40,8 @@ void Level::Load(int id)
       hero.CreateAnimatedSprite();
       hero.CreateAnimations(textures);
 
-      npc.push_back(CreateNPC(NPC::Goomba));
-      npc.push_back(CreateNPC(NPC::Chumba));
+      CreateNPC(NPC::Goomba);
+      CreateNPC(NPC::Chumba);
 
       break;
 
@@ -44,11 +52,33 @@ void Level::Load(int id)
   }
 }
 
-NPC* Level::CreateNPC(NPC::Type type)
+// Dynamically creates a new NPC object and returns a smart pointer to it
+void Level::CreateNPC(NPC::Type type)
 {
-  NPC* p_enemy;
-  p_enemy = new NPC(type);
+  std::unique_ptr<NPC> p_enemy( new NPC(type) );
   p_enemy->CreateAnimatedSprite();
   p_enemy->CreateAnimations(this->textures);
-  return p_enemy;
+  npc.push_back( std::move(p_enemy) );
 }
+
+// Dynamically creates a new Weapon object and returns a smart pointer to it
+std::unique_ptr<Weapon> Level::CreateWeapon(Weapon::Type type)
+{
+  std::unique_ptr<Weapon> p_weapon( new Weapon(type) );
+  return p_weapon;
+}
+
+
+
+/// DEPRECATED - not needed with smart pointer implementation
+/*
+// Iterates through the vector of NPC pointers, deallocates the memory, and then clears the container
+void Level::DeleteAllNPCs()
+{
+    for (std::vector<NPC*>::const_iterator it = npc.begin(); it !=npc.end(); it++)
+    {
+      delete *it;
+    }
+    npc.clear(); //necessary, otherwise leaves a vector of dead pointers
+}
+*/

@@ -1,15 +1,73 @@
+Hero 
+-------------
 
-AI -> charging opponent
+Primary Attack
+Secondary Attack
+Dash
+Drop Weapon
 
-bonus round, how many people can you bounce in x seconds? (after rounds 2 and 4?)
 
-special moves -> dodge left, dodge right, charge (with spritesheets)
-fatigue/energy bar for hero displayed at all times
+Weapons
+-------------
+Weapons can be picked up off the ground in each level. Hero picks up weapons by grabbing them with hands. Each weapon has a durability rating that will destroy the object after a certain number of uses.
+
+Hands:
+Primary Attack - Grab: when next to NPC, can grab them and pick them up if hero strength > npc weight, otherwise can only drag them at half speed. When next to weapon/object, equips weapon/object
+Secondary Attack - Throw/Release: distance thrown determined by hero strength vs npc weight, release frees npc from drag mechanic
+
+Lasso:
+Primary Attack - Rope'em: throws lasso a distance to try and attempts to attach to any npc or other collidable object
+Secondary Attack - Swing/Drag: can swing rope Mario 64 style with npc/object attached if strength is high enough
+   
+Pole: (or any pole-like object - guitars, sledge hammer, tree branch, sign, etc ) 
+Primary Attack - Push: can push npcs quickly with a wide range
+Secondary Attack - Swing: knockback or knockdown npc
+
+Garbage Can: 
+Primary Attack - Throw: hurls garbage can and knocks down npc
+Secondary Attack - Stuff: stuffs npc in garbage can allowing hero to roll the can
+
+
+NPCs
+---------------
+Old Man: 
+speed - slow 
+weight - light
+
+Regular Adult:
+speed - average 
+weight - average
+
+Child:
+speed - very fast 
+weight - very light
+
+Biker
+speed - slow 
+weight - heavy
+
+Sumo
+speed - slowest 
+weight - heaviest
+
+
+Implementation Details
+-------------------------
+Hero should have a std::unique_ptr to weapon. This is initialized to bare hands, and reset to bare hands any time drop weapon is called by the hero. Hero handles creating its own hands weapon. 
+
+Level has a std::vector<std::unique_ptr<Weapon>>
+
+To Dos
+// fatigue/energy bar for hero displayed at all times
+
+sprite sheets
+background sheets
+
+collidable objects in world
 
 start menu
 stats screen
 hero select screen
-tournament bracket screen / opponent bio screen
 victory / game over screen
 
 music
