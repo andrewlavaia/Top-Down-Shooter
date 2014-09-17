@@ -56,22 +56,70 @@ void CPlayState::HandleEvents(CGameEngine* game)
   // -----------------
   // Keyboard Events
   // -----------------
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+
+  if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left) )
+  {
+    this->level.hero.setOrientation(Orientation::NW);
     this->level.hero.position.x -= this->level.hero.speed;
-    this->level.hero.currentAnimation = &this->level.hero.walkAnimationLeft;
-    noKeyPressed = false;
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-    this->level.hero.position.x += this->level.hero.speed;
-    this->level.hero.currentAnimation = &this->level.hero.walkAnimationRight;
-    noKeyPressed = false;
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
     this->level.hero.position.y -= this->level.hero.speed;
     this->level.hero.currentAnimation = &this->level.hero.walkAnimationUp;
     noKeyPressed = false;
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+  else
+  if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
+  {
+    this->level.hero.setOrientation(Orientation::NE);
+    this->level.hero.position.x += this->level.hero.speed;
+    this->level.hero.position.y -= this->level.hero.speed;
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimationUp;
+    noKeyPressed = false;
+  }
+  else
+  if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left) )
+  {
+    this->level.hero.setOrientation(Orientation::SW);
+    this->level.hero.position.x -= this->level.hero.speed;
+    this->level.hero.position.y += this->level.hero.speed;
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimationDown;
+    noKeyPressed = false;
+  }
+  else
+  if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
+  {
+    this->level.hero.setOrientation(Orientation::SE);
+    this->level.hero.position.x += this->level.hero.speed;
+    this->level.hero.position.y += this->level.hero.speed;
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimationDown;
+    noKeyPressed = false;
+  }
+  else
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+  {
+    this->level.hero.setOrientation(Orientation::W);
+    this->level.hero.position.x -= this->level.hero.speed;
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimationLeft;
+    noKeyPressed = false;
+  }
+  else
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+  {
+    this->level.hero.setOrientation(Orientation::E);
+    this->level.hero.position.x += this->level.hero.speed;
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimationRight;
+    noKeyPressed = false;
+  }
+  else
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+  {
+    this->level.hero.setOrientation(Orientation::N);
+    this->level.hero.position.y -= this->level.hero.speed;
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimationUp;
+    noKeyPressed = false;
+  }
+  else
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+  {
+    this->level.hero.setOrientation(Orientation::S);
     this->level.hero.position.y += this->level.hero.speed;
     this->level.hero.currentAnimation = &this->level.hero.walkAnimationDown;
     noKeyPressed = false;
@@ -99,13 +147,23 @@ void CPlayState::HandleEvents(CGameEngine* game)
   }
 
   // Pickup Weapon
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::T) && this->level.hero.grabbed_npc == nullptr ) {
     this->level.hero.PickupWeapon(this->level.weapon);
   }
 
   // Drop Weapon
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
     this->level.hero.DropWeapon(this->level.weapon);
+  }
+
+  // Primary Attack
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+    this->level.hero.PrimaryAttack(this->level.npc);
+  }
+
+  // Secondary Attack
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
+    this->level.hero.SecondaryAttack(this->level.npc);
   }
 
   // Spawning Controls
@@ -132,31 +190,39 @@ void CPlayState::Update(CGameEngine* game)
   // Collision Tests
   // ---------------
 
-  for (unsigned i = 0; i < this->level.npc.size(); ++i)
+  for (std::vector< std::unique_ptr<NPC> >::iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it)
   {
     // if hero hits any npc (based on hero strength, npc weight, and distance factor)
-    if(Collision::BoundingBoxTest(this->level.hero.animatedSprite.hitbox, this->level.npc[i]->animatedSprite.hitbox))
+    if(Collision::BoundingBoxTest(this->level.hero.animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
     {
-      this->level.npc[i]->position.x += this->level.hero.strength * (1/this->level.npc[i]->weight) * (this->level.npc[i]->position.x - this->level.hero.position.x);
-      this->level.npc[i]->position.y += this->level.hero.strength * (1/this->level.npc[i]->weight) * (this->level.npc[i]->position.y - this->level.hero.position.y);
+      // Check if NPC was just thrown
+      // NOT IMPLEMENTED YET - Check current animation != throw animation
+        double ix = (*it)->position.x;
+        double iy = (*it)->position.y;
+        double jx = this->level.hero.position.x;
+        double jy = this->level.hero.position.y;
+
+        (*it)->position.x += (1/(*it)->getWeight()) * (ix - jx)/2;
+        (*it)->position.y += (1/(*it)->getWeight()) * (iy - jy)/2;
     }
 
+
     // if any npc runs into another npc (based on weight of each npc)
-    for (unsigned j = 0; j <this->level.npc.size(); ++j)
+    for (std::vector< std::unique_ptr<NPC> >::iterator jt = this->level.npc.begin(); jt != this->level.npc.end(); ++jt)
     {
-      if(Collision::BoundingBoxTest(this->level.npc[j]->animatedSprite.hitbox, this->level.npc[i]->animatedSprite.hitbox))
+      if(Collision::BoundingBoxTest( (*jt)->animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
       {
-        // initialize variables so that
-        int ix = this->level.npc[i]->position.x;
-        int iy = this->level.npc[i]->position.y;
-        int jx = this->level.npc[j]->position.x;
-        int jy = this->level.npc[j]->position.y;
+        // initialize variables first so that each npc moves back the same distance
+        double ix = (*it)->position.x;
+        double iy = (*it)->position.y;
+        double jx = (*jt)->position.x;
+        double jy = (*jt)->position.y;
 
-        this->level.npc[i]->position.x += (1/this->level.npc[i]->weight) * (ix - jx);
-        this->level.npc[i]->position.y += (1/this->level.npc[i]->weight) * (iy - jy);
+        (*it)->position.x += (1/(*it)->getWeight()) * (ix - jx)/4;
+        (*it)->position.y += (1/(*it)->getWeight()) * (iy - jy)/4;
 
-        this->level.npc[j]->position.x += (1/this->level.npc[j]->weight) * (jx - ix);
-        this->level.npc[j]->position.y += (1/this->level.npc[j]->weight) * (jy - iy);
+        (*jt)->position.x += (1/(*jt)->getWeight()) * (jx - ix)/4;
+        (*jt)->position.y += (1/(*jt)->getWeight()) * (jy - iy)/4;
       }
     }
   }
@@ -166,93 +232,32 @@ void CPlayState::Update(CGameEngine* game)
   // -------------------
 
   this->level.hero.animatedSprite.play(*this->level.hero.currentAnimation);
-  for (unsigned i = 0; i < this->level.npc.size(); ++i) {
-    this->level.npc[i]->animatedSprite.play(*this->level.npc[i]->currentAnimation);
-  }
-
-  if (this->noKeyPressed) {
+  if (this->noKeyPressed) { // AND if current animation has completed (not implemented yet)
     this->level.hero.animatedSprite.stop();
   }
+  this->level.hero.animatedSprite.update(game->frameTime);
+
+  // -------------------
+  // NPC Animation
+  // -------------------
+
+  for (unsigned i = 0; i < this->level.npc.size(); ++i) {
+    this->level.npc[i]->animatedSprite.play(*this->level.npc[i]->currentAnimation);
+    this->level.npc[i]->animatedSprite.update(game->frameTime);
+  }
+
+  /*
+  for (std::vector< std::unique_ptr<NPC> >::iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it) {
+    (*it)->animatedSprite.play( (*it)->currentAnimation );
+  }
+  */
 
   // -------------------
   // NPC AI and Movement
   // -------------------
 
-  for (unsigned i = 0; i < this->level.npc.size(); ++i)
-  {
-    //random number generator : rand()%(max-min+1) + min
-    //this->level.npc[i]->position.x += ((rand()%3)-1) * this->level.npc[i]->speed; // [-1,0,1] * speed
-    //std::cout << level.npc[i]->distance_travelled << " - " << this->level.npc[i]->directions[this->level.npc[i]->direction_it].getDistance() << std::endl;
+  this->level.MoveNPCs();
 
-    // Fetch current direction
-    Direction d = *this->level.npc[i]->directions_it;
-
-    // Check if NPC has travelled further than distance set in Direction object
-    if(this->level.npc[i]->distance_travelled > d.getDistance())
-    {
-      //this->level.npc[i]->animatedSprite.rotate(this->level.npc[i]->directions.front().angle);
-
-      // If distance exceeded, reset distance counter and increment iterator
-      this->level.npc[i]->distance_travelled = 0;
-      this->level.npc[i]->directions_it++;
-
-      // if iterator points to end of vector, reset to beginning
-      if (this->level.npc[i]->directions_it == this->level.npc[i]->directions.end())
-      {
-        this->level.npc[i]->directions_it = this->level.npc[i]->directions.begin();
-      }
-
-    }
-    else // check direction and move npc accordingly
-    {
-
-      switch (d.getType())
-      {
-        case Direction::Up :
-          this->level.npc[i]->position.y -= this->level.npc[i]->speed;
-          break;
-
-        case Direction::Down :
-          this->level.npc[i]->position.y += this->level.npc[i]->speed;
-          break;
-
-        case Direction::Right :
-          this->level.npc[i]->position.x += this->level.npc[i]->speed;
-          break;
-
-        case Direction::Left :
-          this->level.npc[i]->position.x -= this->level.npc[i]->speed;
-          break;
-
-        case Direction::Up_Left :
-          this->level.npc[i]->position.x -= this->level.npc[i]->speed/2;
-          this->level.npc[i]->position.y -= this->level.npc[i]->speed/2;
-          break;
-
-        case Direction::Up_Right :
-          this->level.npc[i]->position.x += this->level.npc[i]->speed/2;
-          this->level.npc[i]->position.y -= this->level.npc[i]->speed/2;
-          break;
-
-        case Direction::Down_Left :
-          this->level.npc[i]->position.x -= this->level.npc[i]->speed/2;
-          this->level.npc[i]->position.y += this->level.npc[i]->speed/2;
-          break;
-
-        case Direction::Down_Right :
-          this->level.npc[i]->position.x += this->level.npc[i]->speed/2;
-          this->level.npc[i]->position.y += this->level.npc[i]->speed/2;
-          break;
-
-        case Direction::Pause :
-          //do nothing;
-          break;
-      }
-
-      this->level.npc[i]->distance_travelled += this->level.npc[i]->speed;
-
-    } // end else
-  } // end NPC loop
 
 } // end CPlayState::Update
 
@@ -284,34 +289,40 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // Draw Hero
   // -------------
 
-  this->level.hero.animatedSprite.update(game->frameTime);
   this->level.hero.MoveAnimatedSprite(interpolation);
   window.draw(this->level.hero.animatedSprite);
   window.draw(this->level.hero.animatedSprite.hitbox); // debug only
+
 
   // ---------------
   // Draw NPCs
   // ---------------
 
-  for (unsigned i = 0; i < this->level.npc.size(); ++i)
+  for (std::vector< std::unique_ptr<NPC> >::const_iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it)
   {
-    this->level.npc[i]->animatedSprite.update(game->frameTime);
-    this->level.npc[i]->MoveAnimatedSprite(interpolation);
-    window.draw(this->level.npc[i]->animatedSprite);
-    window.draw(this->level.npc[i]->animatedSprite.hitbox); // debug only
+    (*it)->MoveAnimatedSprite(interpolation);
+    window.draw( (*it)->animatedSprite );
+    window.draw( (*it)->animatedSprite.hitbox ); // debug only
+  }
+
+  if(this->level.hero.grabbed_npc != nullptr)
+  {
+    this->level.hero.grabbed_npc->MoveAnimatedSprite(interpolation);
+    window.draw(this->level.hero.grabbed_npc->animatedSprite);
   }
 
   // ---------------
   // Draw Weapons
   // ---------------
+
+  //if(this->level.hero.weapon.get() != nullptr) // BUG - arithmetic error on drawing weapon sprite?
   window.draw(this->level.hero.weapon->sprite);
 
-/*
-  for (std::vector< std::unique_ptr<Weapon> >::const_iterator it = this->level.weapon.begin(); it != this->level.weapon.end(); it++)
+  for (std::vector< std::unique_ptr<Weapon> >::const_iterator it = this->level.weapon.begin(); it != this->level.weapon.end(); ++it)
   {
-    window.draw( (**it).sprite );
+    window.draw( (*it)->sprite );
   }
-*/
+
 
   // ---------------
   // Update Window

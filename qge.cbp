@@ -49,6 +49,8 @@
 		<Unit filename="animatedsprite.h" />
 		<Unit filename="animation.cpp" />
 		<Unit filename="animation.h" />
+		<Unit filename="attack.cpp" />
+		<Unit filename="attack.h" />
 		<Unit filename="collision.cpp" />
 		<Unit filename="collision.h" />
 		<Unit filename="direction.h" />
@@ -70,6 +72,7 @@
 		<Unit filename="menustate.h" />
 		<Unit filename="npc.cpp" />
 		<Unit filename="npc.h" />
+		<Unit filename="orientation.h" />
 		<Unit filename="playstate.cpp" />
 		<Unit filename="playstate.h" />
 		<Unit filename="texturemanager.cpp" />

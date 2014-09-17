@@ -20,7 +20,8 @@ namespace Textures {
 
   enum ID {
     Hero,
-    NPC
+    NPC,
+    Hitbox
   };
 }
 

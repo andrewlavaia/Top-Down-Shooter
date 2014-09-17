@@ -17,15 +17,14 @@ NPC::NPC(Type type)
       speed = 4;
       weight = 1;
 
-      directions.push_back(Direction(Direction::Down, 100));
-      directions.push_back(Direction(Direction::Up, 100));
-      directions.push_back(Direction(Direction::Up_Left, 50));
-      directions.push_back(Direction(Direction::Up_Right, 50));
-      directions.push_back(Direction(Direction::Down_Left, 50));
-      directions.push_back(Direction(Direction::Down_Right, 50));
-      directions.push_back(Direction(Direction::Pause, 50));
-      directions.push_back(Direction(Direction::Right, 100));
-      directions.push_back(Direction(Direction::Left, 100));
+      directions.push_back(Direction(Orientation::S, 100, speed));
+      directions.push_back(Direction(Orientation::N, 100, speed));
+      directions.push_back(Direction(Orientation::NW, 50, speed));
+      directions.push_back(Direction(Orientation::NE, 50, speed));
+      directions.push_back(Direction(Orientation::SW, 50, speed));
+      directions.push_back(Direction(Orientation::SE, 50, speed));
+      directions.push_back(Direction(Orientation::E, 100, speed));
+      directions.push_back(Direction(Orientation::W, 100, speed));
       break;
 
     case NPC::Chumba :
@@ -33,24 +32,23 @@ NPC::NPC(Type type)
       position.y = 300;
       speed = 2;
       weight = 1;
-      directions.push_back(Direction(Direction::Up, 100));
-      directions.push_back(Direction(Direction::Down, 100));
+      directions.push_back(Direction(Orientation::N, 100, speed));
+      directions.push_back(Direction(Orientation::S, 100, speed));
+      directions.push_back(Direction(Orientation::E, 250, speed, false));
       break;
   }
 
   directions_it = directions.begin(); // intialize pointer (MUST be done after vector is populated)
 
-}
-
-void NPC::CreateAnimatedSprite()
-{
+  // set up AnimatedSprite
   animatedSprite.setOrigin(16,16);
   animatedSprite.setPosition(position.x,position.y);
+
 
   // set hitbox for collision testing
   sf::Texture texture;
   texture.create(20,20);
-  animatedSprite.hitbox.setTexture(texture); // aassign empty texture 20x20 pixels
+  animatedSprite.hitbox.setTexture(texture); // assign empty texture 20x20 pixels
   animatedSprite.hitbox.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
   animatedSprite.hitbox.setOrigin(10, 10);
   animatedSprite.hitbox.setPosition(position.x,position.y);
@@ -92,6 +90,5 @@ void NPC::MoveAnimatedSprite(double interpolation)
   sf::Vector2f distance = this->position - this->animatedSprite.getPosition();
   this->animatedSprite.move( distance.x * interpolation, distance.y * interpolation );
   this->animatedSprite.hitbox.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
-
 }
 

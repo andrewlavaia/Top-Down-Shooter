@@ -43,7 +43,7 @@ int main()
     game.Draw(interpolation);
     //std::cout << interpolation <<std::endl;
 
-    std::cout << "Frame Rendered in: " << game.timer.GetCounter()<<std::endl;
+    //std::cout << "Frame Rendered in: " << game.timer.GetCounter()<<std::endl;
 	}
 
   // cleanup the engine

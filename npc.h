@@ -18,7 +18,6 @@ public:
 
   explicit                                NPC(Type type);
 
-  void                                    CreateAnimatedSprite();                            // psuedo constructor for AnimatedSprite
   void                                    CreateAnimations(const TextureManager& textures);  // required method to assign animations
   void                                    MoveAnimatedSprite(double interpolation);          // Animates sprite towards its new location based on time factor
 
@@ -30,14 +29,17 @@ public:
   Animation*                              currentAnimation;
 
   sf::Vector2f                            position;
-  double                                  speed;
-  double                                  weight;
+
   std::vector<Direction>                  directions;
-  std::vector<Direction>::const_iterator  directions_it;
+  std::vector<Direction>::iterator        directions_it;
   double                                  distance_travelled;
 
+  double                                  getWeight() { return weight; }
+
 private:
-  Type                                     type;
+  Type                                    type;
+  double                                  speed;
+  double                                  weight;
 
 };
 

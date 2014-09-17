@@ -2,33 +2,32 @@
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
+#include "orientation.h"
+
 class Direction
 {
   public:
-    enum Type {
-      Up,
-      Down,
-      Left,
-      Right,
-      Up_Left,
-      Up_Right,
-      Down_Left,
-      Down_Right,
-      Pause,
-    };
-
-    Direction (Type t, float d)
+    Direction (Orientation::Type t, double d, double s, bool r = true)
      {
        type = t;
        distance = d;
+       speed = s;
+       repeat = r;
      }
 
-    float getDistance() { return distance; }
-    Type getType() { return type; }
+    Orientation::Type getType() { return type; }
+    double getDistance() { return distance; }
+    double getSpeed() { return speed; }
+    bool isRepeat() { return repeat; }
 
   private:
-    Type type;
-    float distance;
+    Orientation::Type type;
+    double distance;
+    double speed;
+    bool repeat;
+    Animation* animation;
+    //currentAnimation
+
 };
 
 #endif

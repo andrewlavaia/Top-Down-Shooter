@@ -15,7 +15,8 @@ public:
 
   void                                    Load(int id);
   void                                    CreateNPC(NPC::Type type);
-  std::unique_ptr<Weapon>                 CreateWeapon(Weapon::Type type);
+  void                                    CreateWeapon(Weapon::Type type);
+  void                                    MoveNPCs();
 
 
   MapManager                              mp;
