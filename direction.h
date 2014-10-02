@@ -25,7 +25,6 @@ class Direction
     double distance;
     double speed;
     bool repeat;
-    Animation* animation;
     //currentAnimation
 
 };

@@ -10,9 +10,10 @@ class Attack
 {
   public:
     enum Type {
-      Grab,
       Push,
-      Smash,
+      Kick,
+      Smash, // a powerful push
+      RopeEm,
     };
 
     Attack(Type t) { type = t; }

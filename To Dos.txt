@@ -1,10 +1,10 @@
-Hero 
+Controls
 -------------
-
-Primary Attack
-Secondary Attack
-Dash
-Drop Weapon
+a: grab NPC / pickup weapon
+b: release NPC / drop weapon
+x: throw npc / throw weapon
+R: primary attack
+L: secondary attack
 
 
 Weapons
@@ -13,7 +13,7 @@ Weapons can be picked up off the ground in each level. Hero picks up weapons by 
 
 Hands:
 Primary Attack - Grab: when next to NPC, can grab them and pick them up if hero strength > npc weight, otherwise can only drag them at half speed. When next to weapon/object, equips weapon/object
-Secondary Attack - Throw/Release: distance thrown determined by hero strength vs npc weight, release frees npc from drag mechanic
+Secondary Attack - Spin: Mario 64 spinning for throwing purposes
 
 Lasso:
 Primary Attack - Rope'em: throws lasso a distance to try and attempts to attach to any npc or other collidable object
@@ -53,23 +53,29 @@ weight - heaviest
 
 Implementation Details
 -------------------------
-Hero should have a std::unique_ptr to weapon. This is initialized to bare hands, and reset to bare hands any time drop weapon is called by the hero. Hero handles creating its own hands weapon. 
+Movable Entity
+	position
+	animatedSprite
+	directions
+	directions_it
+	distance_travelled
 
-Level has a std::vector<std::unique_ptr<Weapon>>
 
-To Dos
-// fatigue/energy bar for hero displayed at all times
 
-sprite sheets
-background sheets
+Features for future version
+----------------------------
+- collidable objects in map
+- victory conditions
+- npc loading zones
+- npc deaths
+- Brainstorm: security cameras to see if abuse caught on film in later levels?
 
-collidable objects in world
 
+
+States Needed
+--------------------------
 start menu
 stats screen
 hero select screen
 victory / game over screen
-
-music
-sound effects
 

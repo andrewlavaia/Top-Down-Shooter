@@ -6,9 +6,17 @@ Weapon::Weapon(Type t)
     attack2(Attack::Push)  // default initialization
 {
   type = t;
+
+  // Default Weapon Settings
+  attack_modifier = 1;
   durability = 5;
+  range = 1;
   position.x = rand()%1024;    //random number generator : rand()%(max-min+1) + min
   position.y = rand()%768;
+
+  distance_travelled = 0;
+  directions.clear();
+
 
   sf::Texture texture;
   texture.create(10,10);
@@ -21,27 +29,35 @@ Weapon::Weapon(Type t)
   {
     case Weapon::Hands :
       attack_modifier = 1;
-      attack1.setType(Attack::Grab);
-      attack2.setType(Attack::Push);
+      range = 1;
+      attack1.setType(Attack::Push);
+      attack2.setType(Attack::Kick);
+      directions.push_back(Direction(Orientation::S, 1, 0)); //initalize
       break;
 
     case Weapon::Pole :
-      attack_modifier = 2;
+      attack_modifier = 3;
+      range = 3;
       attack1.setType(Attack::Push);
-      attack2.setType(Attack::Push);
+      attack2.setType(Attack::Smash);
+      directions.push_back(Direction(Orientation::S, 1, 0)); //initalize
+      break;
+
+    case Weapon::Lasso :
+      attack_modifier = 1;
+      range = 10;
+      attack1.setType(Attack::Push);
+      attack2.setType(Attack::RopeEm);
+      directions.push_back(Direction(Orientation::S, 100, 1));
+      directions.push_back(Direction(Orientation::N, 100, 1));
+      break;
   }
 
+  directions_it = directions.begin();
 }
 
-/*
-void Weapon::Grab(Hero& hero, std::unique_ptr<NPC>& npc)
+void Weapon::MoveSprite(double interpolation)
 {
-  // Animate hands
-
-  // pick up npc
-  //npc->position.x = hero.position.x;
-  //npc->position.y = hero.position.y;
-  npc->animatedSprite.rotate(90);
-  npc->animatedSprite.hitbox.rotate(90);
+  sf::Vector2f distance = this->position - this->sprite.getPosition();
+  this->sprite.move( distance.x * interpolation, distance.y * interpolation );
 }
-*/

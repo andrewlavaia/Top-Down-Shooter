@@ -34,7 +34,8 @@ NPC::NPC(Type type)
       weight = 1;
       directions.push_back(Direction(Orientation::N, 100, speed));
       directions.push_back(Direction(Orientation::S, 100, speed));
-      directions.push_back(Direction(Orientation::E, 250, speed, false));
+      directions.push_back(Direction(Orientation::NE, 100, speed, false));
+      directions.push_back(Direction(Orientation::NW, 100, speed, false));
       break;
   }
 

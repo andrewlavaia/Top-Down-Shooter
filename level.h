@@ -17,6 +17,7 @@ public:
   void                                    CreateNPC(NPC::Type type);
   void                                    CreateWeapon(Weapon::Type type);
   void                                    MoveNPCs();
+  void                                    MoveWeapons();
 
 
   MapManager                              mp;
@@ -28,6 +29,9 @@ public:
 private:
   Level(const Level&);              // Disallow copy constructor
   Level& operator=(const Level&);   // Disallow assignment
+
+  template <typename T>
+    void MoveObject(T& it);
 
 };
 
