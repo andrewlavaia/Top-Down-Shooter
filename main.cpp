@@ -8,7 +8,7 @@ int main()
 {
   // Create main window
   sf::RenderWindow window;
-  window.create(sf::VideoMode(1024, 768), "Sumo", sf::Style::Default);
+  window.create(sf::VideoMode(1024, 768), "Subway", sf::Style::Default);
 
   // Set window settings
   window.setFramerateLimit(200);

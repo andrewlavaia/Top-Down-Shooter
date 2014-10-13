@@ -7,24 +7,32 @@
 #include "texturemanager.h"
 #include "hero.h"
 #include "npc.h"
+#include "collidable.h"
 
 class Level
 {
 public:
-                                          Level();
+                                              Level();
 
-  void                                    Load(int id);
-  void                                    CreateNPC(NPC::Type type);
-  void                                    CreateWeapon(Weapon::Type type);
-  void                                    MoveNPCs();
-  void                                    MoveWeapons();
+  void                                        Load(int id);
+  void                                        CreateNPC(NPC::Type type);
+  void                                        CreateWeapon(Weapon::Type type);
+  void                                        CreateCollidable(Collidable::Type type, double x, double y, double width, double height);
+  void                                        MoveNPCs();
+  void                                        MoveWeapons();
+  void                                        DestroyNPC(std::vector<std::unique_ptr<NPC>>::iterator it);
+  void                                        CheckCollision_NPCtoHero(std::vector<std::unique_ptr<NPC>>::iterator it);
+  void                                        CheckCollision_NPCtoNPC(std::vector<std::unique_ptr<NPC>>::iterator it);
+  void                                        CheckCollision_NPCtoCollidable(std::vector<std::unique_ptr<NPC>>::iterator it);
 
 
-  MapManager                              mp;
-  TextureManager                          textures;
-  Hero                                    hero;
-  std::vector< std::unique_ptr<NPC> >     npc;
-  std::vector< std::unique_ptr<Weapon> >  weapon;
+  MapManager                                  mp;
+  TextureManager                              textures;
+
+  Hero                                        hero;
+  std::vector< std::unique_ptr<NPC> >         npc;
+  std::vector< std::unique_ptr<Weapon> >      weapon;
+  std::vector< std::unique_ptr<Collidable> >  collidables;
 
 private:
   Level(const Level&);              // Disallow copy constructor

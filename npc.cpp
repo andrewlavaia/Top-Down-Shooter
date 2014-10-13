@@ -93,3 +93,12 @@ void NPC::MoveAnimatedSprite(double interpolation)
   this->animatedSprite.hitbox.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
 }
 
+void NPC::MoveOppo(double d)
+{
+  Orientation o;
+  o.setType(directions_it->getType());
+  directions_it = directions.insert(directions_it + 1,
+                                    Direction(o.getOppo(),d,directions_it->getSpeed(),false));
+  distance_travelled = 0;
+}
+

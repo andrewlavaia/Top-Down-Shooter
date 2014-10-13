@@ -7,16 +7,24 @@
 class Direction
 {
   public:
-    Direction (Orientation::Type t, double d, double s, bool r = true)
+    Direction (Orientation::Type t, double dist, double spd, bool rpt = true)
      {
-       type = t;
-       distance = d;
-       speed = s;
-       repeat = r;
+        type = t;
+        distance = dist;
+        speed = spd;
+        repeat = rpt;
+
+        // avoid logic errors
+        if(dist <=0 || spd <= 0)
+       {
+         //std::cout<<"Avoid negative distance or speed when creating Direction objects. Values each set to 1." <<std::endl;
+         distance = 1;
+         speed = 1;
+       }
      }
 
     Orientation::Type getType() { return type; }
-    double getDistance() { return distance; }
+    unsigned getDistance() { return distance; }
     double getSpeed() { return speed; }
     bool isRepeat() { return repeat; }
 

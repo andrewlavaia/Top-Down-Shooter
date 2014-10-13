@@ -72,34 +72,33 @@ void Hero::MoveAnimatedSprite(double interpolation)
 
 void Hero::PrimaryAttack(std::vector< std::unique_ptr<NPC> >& npc_vec)
 {
-    AttackNPC(this->weapon->getPrimaryAttack(),
-              this->weapon->getAttackModifier(),
-              this->weapon->getRange(),
-              npc_vec);
+  AttackNPC(this->weapon->getPrimaryAttack(),
+            this->weapon->getAttackModifier(),
+            this->weapon->getRange(),
+            npc_vec);
 }
 
 void Hero::SecondaryAttack(std::vector< std::unique_ptr<NPC> >& npc_vec)
 {
-    AttackNPC(this->weapon->getSecondaryAttack(),
-          this->weapon->getAttackModifier(),
-          this->weapon->getRange(),
-          npc_vec);
+  AttackNPC(this->weapon->getSecondaryAttack(),
+        this->weapon->getAttackModifier(),
+        this->weapon->getRange(),
+        npc_vec);
 }
 
 
 void Hero::Throw(std::vector< std::unique_ptr<NPC> >& npc_vec,
                  std::vector< std::unique_ptr<Weapon> >& weap_vec)
 {
-
-    if (roped_npc != nullptr)
-    {
-      ThrowNPC(npc_vec);
-    }
-    else
-    {
-      ThrowNPC(npc_vec);
-      ThrowWeapon(weap_vec);
-    }
+  if (roped_npc != nullptr)
+  {
+    ThrowNPC(npc_vec);
+  }
+  else
+  {
+    ThrowNPC(npc_vec);
+    ThrowWeapon(weap_vec);
+  }
 }
 
 void Hero::Pickup(std::vector< std::unique_ptr<NPC> >& npc_vec,
@@ -263,7 +262,9 @@ void Hero::ThrowNPC(std::vector< std::unique_ptr<NPC> >& npc_vec)
     double throw_speed = 20;
     double throw_distance = 100 * ( strength/grabbed_npc->getWeight() );
     grabbed_npc->directions.push_back(Direction(getOrientation(), throw_distance, throw_speed, false));
-    grabbed_npc->directions_it = grabbed_npc->directions.end() - 1;
+    grabbed_npc->directions.push_back(Direction(getOrientationObj().getOppo(),throw_distance, grabbed_npc->getSpeed(), false)); //npc walks back after thrown
+    grabbed_npc->directions_it = grabbed_npc->directions.end() - 2;
+    grabbed_npc->distance_travelled = 0;
     // collision ERROR when throwing down
     grabbed_npc->animatedSprite.rotate(-90);
     npc_vec.push_back(std::move(grabbed_npc));

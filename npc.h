@@ -20,6 +20,7 @@ public:
 
   void                                    CreateAnimations(const TextureManager& textures);  // required method to assign animations
   void                                    MoveAnimatedSprite(double interpolation);          // Animates sprite towards its new location based on time factor
+  void                                    MoveOppo(double d);
 
   AnimatedSprite                          animatedSprite;
   Animation                               walkAnimationDown;
@@ -35,6 +36,8 @@ public:
   double                                  distance_travelled;
 
   double                                  getWeight() { return weight; }
+  double                                  getSpeed()  { return speed;}
+
 
 private:
   Type                                    type;

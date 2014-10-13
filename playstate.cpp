@@ -188,7 +188,14 @@ void CPlayState::Update(CGameEngine* game)
 
   for (std::vector< std::unique_ptr<NPC> >::iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it)
   {
-    // if hero hits any npc (based on hero strength, npc weight, and distance factor)
+
+    this->level.CheckCollision_NPCtoHero(it);
+    this->level.CheckCollision_NPCtoNPC(it);
+    this->level.CheckCollision_NPCtoCollidable(it);
+    if (it == this->level.npc.end()) { break; }
+
+    /*
+    // if hero hits any npc, npc bumped back (based on hero strength, npc weight, and distance factor)
     if(Collision::BoundingBoxTest(this->level.hero.animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
     {
       // Check if NPC was just thrown
@@ -203,11 +210,12 @@ void CPlayState::Update(CGameEngine* game)
     }
 
 
-    // if any npc runs into another npc (based on weight of each npc)
+    // if any npc runs into another npc, they each are bumped back (based on their weight)
     for (std::vector< std::unique_ptr<NPC> >::iterator jt = this->level.npc.begin(); jt != this->level.npc.end(); ++jt)
     {
       if(Collision::BoundingBoxTest( (*jt)->animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
       {
+
         // initialize variables first so that each npc moves back the same distance
         double ix = (*it)->position.x;
         double iy = (*it)->position.y;
@@ -219,16 +227,66 @@ void CPlayState::Update(CGameEngine* game)
 
         (*jt)->position.x += (1/(*jt)->getWeight()) * (jx - ix)/4;
         (*jt)->position.y += (1/(*jt)->getWeight()) * (jy - iy)/4;
+
       }
     }
-  }
+
+
+    // check npc collision with collidables
+    for (std::vector< std::unique_ptr<Collidable> >::const_iterator kt = this->level.collidables.begin(); kt != this->level.collidables.end(); ++kt)
+    {
+      if(Collision::BoundingBoxTest( (*kt)->sprite, (*it)->animatedSprite.hitbox ))
+       {
+          switch( (*kt)->getType() )
+          {
+            case Collidable::SubwayDoor :
+              std::cout << "NPC has entered the subway" << std::endl;
+              (*it)->directions.clear();
+              break;
+
+            case Collidable::SubwayRail :
+              std::cout << "NPC has perished" << std::endl;
+              this->level.DestroyNPC(it);
+              if(it == this->level.npc.end()) { return; } // Necessary, otherwise there will be a crash on removing last item from vector
+              break;
+
+            case Collidable::SubwayPlatform :
+              std::cout << "NPC shall not pass" << std::endl;
+              if((*it)->directions_it->getSpeed() < 5)
+              {
+                (*it)->MoveOppo(1);
+              }
+              break;
+
+            case Collidable::ImmovableObject :
+              std::cout << "NPC hit immovable object" << std::endl;
+              if((*it)->directions_it->getSpeed() > 10)
+              {
+                std::cout << "NPC killed by immovable object" << std::endl;
+                this->level.DestroyNPC(it);
+                if ( it == this->level.npc.end()) { return; }
+              }
+              else
+              {
+                (*it)->MoveOppo(1);
+              }
+
+              break;
+          }
+       }
+    }
+
+    */
+
+  } // end npc loop
 
   // -------------------
   // Hero Animation
   // -------------------
 
   this->level.hero.animatedSprite.play(*this->level.hero.currentAnimation);
-  if (this->noKeyPressed) { // AND if current animation has completed (not implemented yet)
+  if (this->noKeyPressed) // AND if current animation has completed (not implemented yet)
+  {
     this->level.hero.animatedSprite.stop();
   }
   this->level.hero.animatedSprite.update(game->frameTime);
@@ -275,9 +333,9 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   sf::RenderWindow &window = game->window;
   window.clear(sf::Color(255, 255, 255));
 
-  // -------------
-  // Draw Tiles
-  // -------------
+  // --------------------
+  // Draw Map
+  // --------------------
 
   // note: copying the tilemap initially is much quicker than using the member function calls in loop
   std::vector<std::vector<Tile>> tilemap = this->level.mp.GetTiles();
@@ -289,6 +347,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     }
   }
 
+
   // -------------
   // Draw Hero
   // -------------
@@ -298,6 +357,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
 
   // DRAW HIT BOXES FOR DEBUG ONLY
   window.draw(this->level.hero.animatedSprite.hitbox);
+
   float range = this->level.hero.weapon->getRange();
   sf::Sprite range_modified_hitbox = this->level.hero.animatedSprite.hitbox;
   range_modified_hitbox.setOrigin(10,20);
@@ -343,6 +403,15 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     window.draw( (*it)->sprite );
   }
 
+  // --------------------
+  // Draw Collidables
+  // --------------------
+
+
+  for(std::vector< std::unique_ptr<Collidable> >::const_iterator it = this->level.collidables.begin(); it != this->level.collidables.end(); ++it)
+  {
+    window.draw( (*it)->sprite );
+  }
 
   // ---------------
   // Update Window

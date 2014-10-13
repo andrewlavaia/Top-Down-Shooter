@@ -53,6 +53,8 @@ weight - heaviest
 
 Implementation Details
 -------------------------
+Optional - can make Hero, NPC, and Weapon inherit from a base class:
+
 Movable Entity
 	position
 	animatedSprite
@@ -60,15 +62,25 @@ Movable Entity
 	directions_it
 	distance_travelled
 
+MapManager class needs to change. Should just load a simple image but will then be populated with a vector of collidable objects.
+Types of collidable objects
+	SubwayCar - no effect on hero or weapon, but score increases if NPC collides
+	ImmovableObject - (ie a pillar) nothing can pass through
+	SubwayRail - Hero or NPC die if they touch 
+	PlatformEdge - NPCs will not walk over unless they are pushed, thrown, or otherwise forced over
 
+CollidableObject
+	position
+	sprite (needed for collision detection)
+					
 
 Features for future version
 ----------------------------
-- collidable objects in map
 - victory conditions
-- npc loading zones
-- npc deaths
+- Game Timer
+- Active Weapon Icon
 - Brainstorm: security cameras to see if abuse caught on film in later levels?
+- Brainstorm: 300 style speed up and slow time affect
 
 
 
@@ -78,4 +90,5 @@ start menu
 stats screen
 hero select screen
 victory / game over screen
+level select/debriefing screen
 
