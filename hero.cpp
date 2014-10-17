@@ -10,13 +10,13 @@ Hero::Hero()
   position.x = 50;
   position.y = 50;
 
-  speed = 5;
+  speed = 10;
   strength = 1;
 
   setOrientation(Orientation::S);
 
   // set up AnimatedSprite
-  animatedSprite.setOrigin(16,16);
+  animatedSprite.setOrigin(29,22);
   animatedSprite.setPosition(position.x,position.y);
 
   // set hitbox for collision testing
@@ -31,6 +31,7 @@ Hero::Hero()
 
 void Hero::CreateAnimations(const TextureManager& textures)
 {
+  /*
   walkAnimationDown.setSpriteSheet(textures.Get(Textures::Hero));
   walkAnimationDown.addFrame(sf::IntRect(32, 0, 32, 32));
   walkAnimationDown.addFrame(sf::IntRect(64, 0, 32, 32));
@@ -54,8 +55,23 @@ void Hero::CreateAnimations(const TextureManager& textures)
   walkAnimationUp.addFrame(sf::IntRect(64, 96, 32, 32));
   walkAnimationUp.addFrame(sf::IntRect(32, 96, 32, 32));
   walkAnimationUp.addFrame(sf::IntRect( 0, 96, 32, 32));
+  */
 
-  currentAnimation = &walkAnimationRight;
+  walkAnimation.setSpriteSheet(textures.Get(Textures::Hero2));
+  int sprite_count = 12;
+  int width = 391;
+  int height = 319;
+
+  for (int i = 0; i < sprite_count; ++i)
+  {
+    walkAnimation.addFrame(sf::IntRect(  i * width, 0, width,  height));
+  }
+
+  double scale_factor = 0.10;
+  animatedSprite.setScale(scale_factor,scale_factor);
+  animatedSprite.setOrigin(width/2, height/2);
+
+  currentAnimation = &walkAnimation;
 
 }
 

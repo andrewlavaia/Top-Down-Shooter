@@ -35,7 +35,9 @@
 class AnimatedSprite : public sf::Drawable, public sf::Transformable
 {
 public:
-    explicit AnimatedSprite(sf::Time frameTime = sf::seconds(0.2f), bool paused = false, bool looped = true);
+
+    // Fastest animation allowed is dependent on game logic ticks per second because animation is done at fixed speed in game logic loop
+    explicit AnimatedSprite(sf::Time frameTime = sf::seconds(0.04f), bool paused = false, bool looped = true);
 
     void update(sf::Time deltaTime);
     void setAnimation(const Animation& animation);

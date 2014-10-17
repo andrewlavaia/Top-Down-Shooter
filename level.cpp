@@ -5,6 +5,7 @@
 Level::Level()
 {
   textures.Load(Textures::Hero, "spritesheet.png");
+  textures.Load(Textures::Hero2, "spritesheet2.png");
   textures.Load(Textures::NPC, "character-sprite-map.gif");
 }
 

@@ -29,10 +29,13 @@ public:
   double                        speed;
   double                        strength;
 
+  /*
   Animation                     walkAnimationDown;
   Animation                     walkAnimationUp;
   Animation                     walkAnimationRight;
   Animation                     walkAnimationLeft;
+  */
+  Animation                     walkAnimation;
   Animation*                    currentAnimation;
 
 
