@@ -50,35 +50,35 @@ Sumo
 speed - slowest 
 weight - heaviest
 
+Collidable Objects
+---------------------
+SubwayCar - no effect on hero or weapon, but score increases if NPC collides
+ImmovableObject - (ie a pillar) nothing can pass through
+SubwayRail - Hero or NPC die if they touch 
+PlatformEdge - NPCs will not walk over unless they are pushed, thrown, or otherwise forced over
+
+
 
 Implementation Details
 -------------------------
-Optional - can make Hero, NPC, and Weapon inherit from a base class:
+MapManager class needs to change. Should just load a simple image.
 
-Movable Entity
-	position
-	animatedSprite
-	directions
-	directions_it
-	distance_travelled
+weapons and NPCs can be converted to shared_ptr (will simplify attacks and will get rid of all unneccesary move logic)
 
-MapManager class needs to change. Should just load a simple image but will then be populated with a vector of collidable objects.
-Types of collidable objects
-	SubwayCar - no effect on hero or weapon, but score increases if NPC collides
-	ImmovableObject - (ie a pillar) nothing can pass through
-	SubwayRail - Hero or NPC die if they touch 
-	PlatformEdge - NPCs will not walk over unless they are pushed, thrown, or otherwise forced over
+Can create one additional base class Entity->AnimatedEntity,ImmovableEntity. Level can then hold a single vector populated with all Entity (which will greatly simplify drawing and collision logic)
 
-CollidableObject
-	position
-	sprite (needed for collision detection)
-					
+Each animatedEntity can have its own collision logic wrapped in an overloaded function shown below. The animatedEntity will react differently depending on what object it collided with.					
+	Collided(const NPC& n);
+	Collided(const Hero& h);
+	Collided(const Weapon& w);
+	Collided(const Collidable& c);
+
 
 Features for future version
 ----------------------------
 - victory conditions
-- Game Timer
 - Active Weapon Icon
+- Animated subway car
 - Brainstorm: security cameras to see if abuse caught on film in later levels?
 - Brainstorm: 300 style speed up and slow time affect
 

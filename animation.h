@@ -36,8 +36,9 @@ public:
     void addFrame(sf::IntRect rect);
     void setSpriteSheet(const sf::Texture& texture);
     const sf::Texture* getSpriteSheet() const;
-    std::size_t getSize() const;
+    std::size_t getSize() const;  // returns number of frames
     const sf::IntRect& getFrame(std::size_t n) const;
+
 
 private:
     std::vector<sf::IntRect> m_frames;

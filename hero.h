@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Time.hpp>
+#include "animatedentity.h"
 #include "TextureManager.h"
 #include "animation.h"
 #include "animatedsprite.h"
@@ -13,7 +14,7 @@
 #include "attack.h"
 #include "orientation.h"
 
-class Hero
+class Hero : public AnimatedEntity
 {
 public:
 
@@ -22,35 +23,37 @@ public:
   void                          CreateAnimations(const TextureManager& textures);
   void                          MoveAnimatedSprite(double interpolation);
 
-
-  sf::Vector2f                  position;
-  AnimatedSprite                animatedSprite;
+  //Animation                     CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count);
+  //sf::Vector2f                  position;
+  //AnimatedSprite                animatedSprite;
+  //Animation*                    currentAnimation;
 
   double                        speed;
   double                        strength;
 
-  /*
-  Animation                     walkAnimationDown;
-  Animation                     walkAnimationUp;
-  Animation                     walkAnimationRight;
-  Animation                     walkAnimationLeft;
-  */
   Animation                     walkAnimation;
-  Animation*                    currentAnimation;
+  Animation                     grabAnimation;
+  Animation                     punchAnimation;
+  Animation                     kickAnimation;
+
 
 
   void                          PrimaryAttack(std::vector< std::unique_ptr<NPC> >& npc_vec);
   void                          SecondaryAttack(std::vector< std::unique_ptr<NPC> >& npc_vec);
   void                          Throw(std::vector< std::unique_ptr<NPC> >& npc_vec,
-                                      std::vector< std::unique_ptr<Weapon> >& weap_vec);
+                                      std::vector< std::shared_ptr<Weapon> >& weap_vec);
   void                          Pickup(std::vector< std::unique_ptr<NPC> >& npc_vec,
-                                      std::vector< std::unique_ptr<Weapon> >& weap_vec);
+                                      std::vector< std::shared_ptr<Weapon> >& weap_vec);
   void                          Drop(std::vector< std::unique_ptr<NPC> >& npc_vec,
-                                      std::vector< std::unique_ptr<Weapon> >& weap_vec);
+                                      std::vector< std::shared_ptr<Weapon> >& weap_vec);
 
-  std::unique_ptr<Weapon>       weapon;
+  //std::unique_ptr<Weapon>       weapon;
   std::unique_ptr<NPC>          grabbed_npc;     // used to hold grabbed NPCs
   std::unique_ptr<NPC>          roped_npc;       // used to hold roped NPCs
+
+  Weapon                        getWeapon();
+  std::shared_ptr<Weapon>       weapon;
+  Weapon                        default_weapon;
 
   // getters + setters
   void                          setOrientation(Orientation::Type t) { orientation.setType(t); }
@@ -65,14 +68,15 @@ private:
 
   void                          AttackNPC(Attack atk, double modifier, double rng, std::vector< std::unique_ptr<NPC> >& npc_vec);
   void                          ThrowNPC(std::vector< std::unique_ptr<NPC> >& npc_vec);
-  void                          ThrowWeapon(std::vector< std::unique_ptr<Weapon> >& weap_vec);
-  void                          PickupWeapon(std::vector< std::unique_ptr<Weapon> >& weap_vec);
-  void                          DropWeapon(std::vector< std::unique_ptr<Weapon> >& weap_vec);
+  void                          ThrowWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec);
+  void                          PickupWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec);
+  void                          DropWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec);
   void                          PickupNPC(std::vector< std::unique_ptr<NPC> >& npc_vec);
   void                          DropNPC(std::vector< std::unique_ptr<NPC> >& npc_vec);
 
   std::unique_ptr<Weapon>       m_weapon_storage;  // used to hold Hands weapon permanently
   Orientation                   orientation;
+
 
 
 

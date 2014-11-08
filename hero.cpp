@@ -3,9 +3,11 @@
 #include <iostream>
 
 Hero::Hero()
-  : weapon( new Weapon(Weapon::Hands) ),
+  : //weapon( new Weapon(Weapon::Hands) ),
     grabbed_npc(nullptr),
-    roped_npc(nullptr)
+    roped_npc(nullptr),
+    weapon(nullptr),
+    default_weapon(Weapon::Hands)
 {
   position.x = 50;
   position.y = 50;
@@ -31,80 +33,65 @@ Hero::Hero()
 
 void Hero::CreateAnimations(const TextureManager& textures)
 {
-  /*
-  walkAnimationDown.setSpriteSheet(textures.Get(Textures::Hero));
-  walkAnimationDown.addFrame(sf::IntRect(32, 0, 32, 32));
-  walkAnimationDown.addFrame(sf::IntRect(64, 0, 32, 32));
-  walkAnimationDown.addFrame(sf::IntRect(32, 0, 32, 32));
-  walkAnimationDown.addFrame(sf::IntRect( 0, 0, 32, 32));
 
-  walkAnimationLeft.setSpriteSheet(textures.Get(Textures::Hero));
-  walkAnimationLeft.addFrame(sf::IntRect(32, 32, 32, 32));
-  walkAnimationLeft.addFrame(sf::IntRect(64, 32, 32, 32));
-  walkAnimationLeft.addFrame(sf::IntRect(32, 32, 32, 32));
-  walkAnimationLeft.addFrame(sf::IntRect( 0, 32, 32, 32));
-
-  walkAnimationRight.setSpriteSheet(textures.Get(Textures::Hero));
-  walkAnimationRight.addFrame(sf::IntRect(32, 64, 32, 32));
-  walkAnimationRight.addFrame(sf::IntRect(64, 64, 32, 32));
-  walkAnimationRight.addFrame(sf::IntRect(32, 64, 32, 32));
-  walkAnimationRight.addFrame(sf::IntRect( 0, 64, 32, 32));
-
-  walkAnimationUp.setSpriteSheet(textures.Get(Textures::Hero));
-  walkAnimationUp.addFrame(sf::IntRect(32, 96, 32, 32));
-  walkAnimationUp.addFrame(sf::IntRect(64, 96, 32, 32));
-  walkAnimationUp.addFrame(sf::IntRect(32, 96, 32, 32));
-  walkAnimationUp.addFrame(sf::IntRect( 0, 96, 32, 32));
-  */
-
-  walkAnimation.setSpriteSheet(textures.Get(Textures::Hero2));
-  int sprite_count = 12;
-  int width = 391;
-  int height = 319;
-
-  for (int i = 0; i < sprite_count; ++i)
-  {
-    walkAnimation.addFrame(sf::IntRect(  i * width, 0, width,  height));
-  }
+  walkAnimation = CreateAnimation(textures.Get(Textures::Hero_Run), 391, 319, 12);
+  grabAnimation = CreateAnimation(textures.Get(Textures::Hero_Grab), 388, 319, 6);
+  punchAnimation = CreateAnimation(textures.Get(Textures::Hero_Punch), 398, 279, 6);
+  kickAnimation = CreateAnimation(textures.Get(Textures::Hero_Kick), 385, 371, 6);
 
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);
-  animatedSprite.setOrigin(width/2, height/2);
 
   currentAnimation = &walkAnimation;
+  animatedSprite.play(*currentAnimation);
 
 }
+/*
+Animation Hero::CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count)
+{
+  Animation animation;
+  animation.setSpriteSheet(tex);
+  for (unsigned i = 0; i < sprite_count; ++i)
+  {
+    animation.addFrame(sf::IntRect( i * width, 0, width,  height));
+  }
 
+  return animation;
+}
+*/
 // Moves hero sprite
 void Hero::MoveAnimatedSprite(double interpolation)
 {
+  animatedSprite.setOrigin(animatedSprite.getLocalBounds().width/2, animatedSprite.getLocalBounds().height/2);
   sf::Vector2f distance = this->position - this->animatedSprite.getPosition();
   this->animatedSprite.move( distance.x * interpolation, distance.y * interpolation );
   this->animatedSprite.hitbox.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
-  this->weapon->sprite.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
+
+  if(weapon != nullptr)
+    this->weapon->animatedSprite.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
 }
 
 
 
 void Hero::PrimaryAttack(std::vector< std::unique_ptr<NPC> >& npc_vec)
 {
-  AttackNPC(this->weapon->getPrimaryAttack(),
-            this->weapon->getAttackModifier(),
-            this->weapon->getRange(),
+  AttackNPC(this->getWeapon().getPrimaryAttack(),
+            this->getWeapon().getAttackModifier(),
+            this->getWeapon().getRange(),
             npc_vec);
 }
 
 void Hero::SecondaryAttack(std::vector< std::unique_ptr<NPC> >& npc_vec)
 {
-  AttackNPC(this->weapon->getSecondaryAttack(),
-        this->weapon->getAttackModifier(),
-        this->weapon->getRange(),
+  AttackNPC(this->getWeapon().getSecondaryAttack(),
+        this->getWeapon().getAttackModifier(),
+        this->getWeapon().getRange(),
         npc_vec);
 }
 
 
 void Hero::Throw(std::vector< std::unique_ptr<NPC> >& npc_vec,
-                 std::vector< std::unique_ptr<Weapon> >& weap_vec)
+                 std::vector< std::shared_ptr<Weapon> >& weap_vec)
 {
   if (roped_npc != nullptr)
   {
@@ -118,14 +105,14 @@ void Hero::Throw(std::vector< std::unique_ptr<NPC> >& npc_vec,
 }
 
 void Hero::Pickup(std::vector< std::unique_ptr<NPC> >& npc_vec,
-                 std::vector< std::unique_ptr<Weapon> >& weap_vec)
+                 std::vector< std::shared_ptr<Weapon> >& weap_vec)
 {
   PickupNPC(npc_vec);
   PickupWeapon(weap_vec);
 }
 
 void Hero::Drop(std::vector< std::unique_ptr<NPC> >& npc_vec,
-                 std::vector< std::unique_ptr<Weapon> >& weap_vec)
+                 std::vector< std::shared_ptr<Weapon> >& weap_vec)
 {
   if (roped_npc != nullptr)
   {
@@ -147,10 +134,32 @@ void Hero::Drop(std::vector< std::unique_ptr<NPC> >& npc_vec,
 
 void Hero::AttackNPC( Attack atk, double modifier, double rng, std::vector< std::unique_ptr<NPC> >& npc_vec)
 {
-  // Play Attack Animation
+
   // Test Collision of animated weapon hitbox instead of hero hitbox? -> NOT IMPLEMENTED YET
   if (grabbed_npc == nullptr && roped_npc == nullptr)
   {
+
+    // Play Attack Animation
+    switch(atk.getType())
+    {
+      case Attack::Push :
+        currentAnimation = &punchAnimation;
+        break;
+
+      case Attack::Kick :
+        currentAnimation = &kickAnimation;
+        break;
+
+      case Attack::Smash :
+        currentAnimation = &punchAnimation;
+        break;
+
+      case Attack::RopeEm :
+        break;
+    }
+
+
+    // Test Collision
     for(std::vector< std::unique_ptr<NPC> >::iterator it = npc_vec.begin(); it != npc_vec.end(); ++it)
     {
       // Use range attribute of weapon to alter hero's hitbox
@@ -195,13 +204,58 @@ void Hero::AttackNPC( Attack atk, double modifier, double rng, std::vector< std:
   }
 }
 
+void Hero::PickupWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec)
+{
+  if (grabbed_npc == nullptr)
+  {
+    currentAnimation = &grabAnimation;
+    for(std::vector< std::shared_ptr<Weapon> >::iterator it = weap_vec.begin(); it != weap_vec.end(); ++it)
+    {
+      if(Collision::BoundingBoxTest( (*it)->animatedSprite.hitbox, animatedSprite.hitbox) )
+      {
+        DropWeapon(weap_vec);
+        weapon = *it;
+        weapon->reduceDurability();
+        std::cout << "Hero picked up the weapon. Now holding weapon type " << weapon->getType() << std::endl;
+        break; // can only pickup one weapon
+      }
+    }
+
+  }
+}
+
+void Hero::DropWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec)
+{
+  if(weapon != nullptr)
+  {
+    weapon = nullptr;
+    std::cout << "Hero dropped the weapon." << std::endl;
+  }
+}
+
+void Hero::ThrowWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec)
+{
+  if (weapon != nullptr)
+  {
+    // set throw animation
+    double throw_speed = 20;
+    double throw_distance = 250 * strength;
+    weapon->directions.push_back(Direction(getOrientation(), throw_distance, throw_speed, false));
+    weapon->directions_it = weapon->directions.end() - 1;
+
+    weapon = nullptr;
+  }
+}
+
+/*
 void Hero::PickupWeapon(std::vector< std::unique_ptr<Weapon> >& weap_vec)
 {
   if (grabbed_npc == nullptr)
   {
+    currentAnimation = &grabAnimation;
     for(std::vector< std::unique_ptr<Weapon> >::iterator it = weap_vec.begin(); it != weap_vec.end(); ++it)
     {
-      if(Collision::BoundingBoxTest( (*it)->sprite, animatedSprite.hitbox) )
+      if(Collision::BoundingBoxTest( (*it)->animatedSprite.hitbox, animatedSprite.hitbox) )
       {
         DropWeapon(weap_vec);
         m_weapon_storage = std::move(weapon); // store hands weapon, weapon = nullptr
@@ -212,6 +266,7 @@ void Hero::PickupWeapon(std::vector< std::unique_ptr<Weapon> >& weap_vec)
         break; // can only pickup one weapon
       }
     }
+
   }
 }
 
@@ -232,14 +287,33 @@ void Hero::DropWeapon(std::vector< std::unique_ptr<Weapon> >& weap_vec)
   }
 }
 
+void Hero::ThrowWeapon(std::vector< std::unique_ptr<Weapon> >& weap_vec)
+{
+  if (weapon->getType() != Weapon::Hands)
+  {
+    // set throw animation
+    double throw_speed = 20;
+    double throw_distance = 250 * strength;
+    weapon->directions.push_back(Direction(getOrientation(), throw_distance, throw_speed, false));
+    weapon->directions_it = weapon->directions.end() - 1;
+
+    weap_vec.push_back(std::move(weapon));
+    weapon = std::move(m_weapon_storage);
+  }
+}
+*/
 
 void Hero::PickupNPC(std::vector< std::unique_ptr<NPC> >& npc_vec)
 {
   if (grabbed_npc == nullptr)
   {
-    if (weapon->getType() != Weapon::Hands) {
+
+    if (weapon != nullptr)
+    {
       return;
     }
+
+    currentAnimation = &grabAnimation;
 
     for(std::vector< std::unique_ptr<NPC> >::iterator it = npc_vec.begin(); it != npc_vec.end(); ++it)
     {
@@ -260,6 +334,7 @@ void Hero::DropNPC(std::vector< std::unique_ptr<NPC> >& npc_vec)
 {
   if (grabbed_npc != nullptr)
   {
+    grabbed_npc->animatedSprite.play();
     grabbed_npc->animatedSprite.rotate(-90);
     npc_vec.push_back(std::move(grabbed_npc));
   }
@@ -282,23 +357,16 @@ void Hero::ThrowNPC(std::vector< std::unique_ptr<NPC> >& npc_vec)
     grabbed_npc->directions_it = grabbed_npc->directions.end() - 2;
     grabbed_npc->distance_travelled = 0;
     // collision ERROR when throwing down
+    grabbed_npc->animatedSprite.play();
     grabbed_npc->animatedSprite.rotate(-90);
     npc_vec.push_back(std::move(grabbed_npc));
   }
 }
 
-void Hero::ThrowWeapon(std::vector< std::unique_ptr<Weapon> >& weap_vec)
+Weapon Hero::getWeapon()
 {
-  if (weapon->getType() != Weapon::Hands)
-  {
-    // set throw animation
-    double throw_speed = 20;
-    double throw_distance = 250 * strength;
-    weapon->directions.push_back(Direction(getOrientation(), throw_distance, throw_speed, false));
-    weapon->directions_it = weapon->directions.end() - 1;
-
-    weap_vec.push_back(std::move(weapon));
-    weapon = std::move(m_weapon_storage);
-  }
+  if (weapon == nullptr)
+    return default_weapon;
+  else
+    return *weapon;
 }
-

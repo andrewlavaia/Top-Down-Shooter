@@ -1,6 +1,7 @@
 #include "gameengine.h"
 #include "menustate.h"
 #include "timer.h"
+#include "helpers.h"
 
 
 
@@ -30,6 +31,7 @@ int main()
 	while (game.Running())
 	{
     game.timer.StartCounter();
+    game.frameTime = game.frameClock.restart();
 
     while(game.tick_timer.GetCounter() > next_game_tick)
     {

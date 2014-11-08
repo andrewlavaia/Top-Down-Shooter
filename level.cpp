@@ -3,18 +3,34 @@
 #include <math.h> // sqrt
 
 Level::Level()
+  : victory_requirement(5),
+    npc_success_count(0),
+    gameover_time(sf::seconds(30.0f))
 {
-  textures.Load(Textures::Hero, "spritesheet.png");
-  textures.Load(Textures::Hero2, "spritesheet2.png");
-  textures.Load(Textures::NPC, "character-sprite-map.gif");
+  textures.Load(Textures::Hero_Run, "hero_run.png");
+  textures.Load(Textures::Hero_Grab, "hero_grab.png");
+  textures.Load(Textures::Hero_Punch, "hero_punch.png");
+  textures.Load(Textures::Hero_Kick, "hero_kick.png");
+  textures.Load(Textures::NPC, "spritesheet.png");
+
+  if(!font_HUD.loadFromFile("calibri.ttf"))
+  {
+    //throw exception...
+    std::cout<<"Font Not Loaded"<<std::endl;
+  }
+  text_timer.setFont(font_HUD);
+  text_timer.setCharacterSize(40);
+  text_timer.setColor(sf::Color::Black);
+  text_timer.setPosition(400,20);
 }
 
 void Level::Load(int id)
 {
+  running_time.restart();
 
   // clear vectors and deallocate memory
   npc.clear(); // std::unique_ptr will delete object automatically, deleting any existing NPCs
-  weapon.clear();
+  weapons.clear();
   collidables.clear();
 
   // Load Level
@@ -71,8 +87,11 @@ void Level::CreateNPC(NPC::Type type)
 // Dynamically creates a new Weapon object and returns a smart pointer to it
 void Level::CreateWeapon(Weapon::Type type)
 {
-  std::unique_ptr<Weapon> p_weapon( new Weapon(type) );
-  weapon.push_back( std::move(p_weapon) );
+ // std::unique_ptr<Weapon> p_weapon( new Weapon(type) );
+ // weapon.push_back( std::move(p_weapon) );
+
+  std::shared_ptr<Weapon> w(new Weapon(type));
+  weapons.push_back(w);
 }
 
 // Dynamically creates a new Collidable object and returns a smart pointer to it
@@ -114,13 +133,11 @@ void Level::MoveWeapons()
     hero.weapon->position = hero.position;
   }
 
-  for (std::vector< std::unique_ptr<Weapon> >::iterator it = weapon.begin(); it != weapon.end(); ++it)
+  for (std::vector< std::shared_ptr<Weapon> >::iterator it = weapons.begin(); it != weapons.end(); ++it)
   {
     MoveObject(it);
   }
-
 }
-
 
 template <typename T>
 void Level::MoveObject(T& it)
@@ -159,38 +176,46 @@ void Level::MoveObject(T& it)
   {
     case Orientation::N :
       (*it)->position.y -= (*it)->directions_it->getSpeed();
+      (*it)->animatedSprite.setRotation(0);
       break;
 
     case Orientation::S :
       (*it)->position.y += (*it)->directions_it->getSpeed();
+      (*it)->animatedSprite.setRotation(180);
       break;
 
     case Orientation::E :
       (*it)->position.x += (*it)->directions_it->getSpeed();
+      (*it)->animatedSprite.setRotation(90);
       break;
 
     case Orientation::W :
       (*it)->position.x -= (*it)->directions_it->getSpeed();
+      (*it)->animatedSprite.setRotation(270);
       break;
 
     case Orientation::NW :
       (*it)->position.x -= hypotenuse/2;
       (*it)->position.y -= hypotenuse/2;
+      (*it)->animatedSprite.setRotation(315);
       break;
 
     case Orientation::NE :
       (*it)->position.x += hypotenuse/2;
       (*it)->position.y -= hypotenuse/2;
+      (*it)->animatedSprite.setRotation(45);
       break;
 
     case Orientation::SW :
       (*it)->position.x -= hypotenuse/2;
       (*it)->position.y += hypotenuse/2;
+      (*it)->animatedSprite.setRotation(225);
       break;
 
     case Orientation::SE :
       (*it)->position.x += hypotenuse/2;
       (*it)->position.y += hypotenuse/2;
+      (*it)->animatedSprite.setRotation(135);
       break;
 
   }
@@ -290,6 +315,7 @@ void Level::CheckCollision_NPCtoCollidable(std::vector<std::unique_ptr<NPC>>::it
         {
           case Collidable::SubwayDoor :
             std::cout << "NPC has entered the subway" << std::endl;
+            npc_success_count++;
             (*it)->directions.clear();
             break;
 
@@ -328,4 +354,21 @@ void Level::CheckCollision_NPCtoCollidable(std::vector<std::unique_ptr<NPC>>::it
   } //end collidable loop
 }
 
+bool Level::Victory()
+{
+  if(npc_success_count >= victory_requirement && running_time.getElapsedTime() < gameover_time)
+    return true;
+  else
+    return false;
+}
+
+float Level::getRunningTime()
+{
+  return running_time.getElapsedTime().asSeconds();
+}
+
+float Level::getGameOverTime()
+{
+  return gameover_time.asSeconds();
+}
 

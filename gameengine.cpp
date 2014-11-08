@@ -11,6 +11,12 @@ void CGameEngine::Init()
 	running = true;
 	timer.StartCounter();
 	tick_timer.StartCounter();
+
+	if(!font.loadFromFile("calibri.ttf"))
+  {
+    //throw exception...
+    std::cout<<"Font Not Loaded"<<std::endl;
+  }
 }
 
 void CGameEngine::Cleanup()

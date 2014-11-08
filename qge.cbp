@@ -45,6 +45,8 @@
 			<Add directory="C:/Program Files (x86)/SFML/lib" />
 			<Add directory="C:/Program Files (x86)/SFGUI/lib" />
 		</Linker>
+		<Unit filename="animatedentity.cpp" />
+		<Unit filename="animatedentity.h" />
 		<Unit filename="animatedsprite.cpp" />
 		<Unit filename="animatedsprite.h" />
 		<Unit filename="animation.cpp" />
@@ -59,6 +61,7 @@
 		<Unit filename="gameengine.cpp" />
 		<Unit filename="gameengine.h" />
 		<Unit filename="gamestate.h" />
+		<Unit filename="helpers.h" />
 		<Unit filename="hero.cpp" />
 		<Unit filename="hero.h" />
 		<Unit filename="highscorestate.cpp" />

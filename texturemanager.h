@@ -19,8 +19,10 @@
 namespace Textures {
 
   enum ID {
-    Hero,
-    Hero2,
+    Hero_Run,
+    Hero_Grab,
+    Hero_Punch,
+    Hero_Kick,
     NPC,
     Hitbox
   };

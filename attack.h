@@ -19,9 +19,10 @@ class Attack
     Attack(Type t) { type = t; }
 
     Type getType() { return type; }
-    void setType(Attack::Type t) { type = t; }
-    Animation getAnimation() { return animation; };
+    Animation getAnimation() { return animation; }
 
+    void setType(Attack::Type t) { type = t; }
+    void setAnimation(Animation a) { animation = a; }
 
   private:
     Type type;

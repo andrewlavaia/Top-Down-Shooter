@@ -20,10 +20,18 @@ Weapon::Weapon(Type t)
 
   sf::Texture texture;
   texture.create(10,10);
-  sprite.setTexture(texture); // aassign empty texture 20x20 pixels
-  sprite.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
-  sprite.setOrigin(5, 5);
-  sprite.setPosition(position.x,position.y);
+  throwAnimation = CreateAnimation(texture,10,10,1);
+  currentAnimation = &throwAnimation;
+  animatedSprite.play(*currentAnimation);
+  animatedSprite.setLooped(true);
+  animatedSprite.setFrameTime(sf::seconds(0.16));
+  animatedSprite.setColor(sf::Color(255,0,0)); // semi-transparent red hitbox
+
+  //sprite.setTexture(texture); // aassign empty texture 20x20 pixels
+  //sprite.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
+  //sprite.setOrigin(5, 5);
+  //sprite.setPosition(position.x,position.y);
+
 
   switch(type)
   {
@@ -32,7 +40,7 @@ Weapon::Weapon(Type t)
       range = 1;
       attack1.setType(Attack::Push);
       attack2.setType(Attack::Kick);
-      directions.push_back(Direction(Orientation::S, 1, 0)); //initalize
+      directions.push_back(Direction(Orientation::S, 1, 0)); //initialize
       break;
 
     case Weapon::Pole :
@@ -40,7 +48,7 @@ Weapon::Weapon(Type t)
       range = 3;
       attack1.setType(Attack::Push);
       attack2.setType(Attack::Smash);
-      directions.push_back(Direction(Orientation::S, 1, 0)); //initalize
+      directions.push_back(Direction(Orientation::S, 1, 0)); //initialize
       break;
 
     case Weapon::Lasso :
@@ -48,16 +56,10 @@ Weapon::Weapon(Type t)
       range = 10;
       attack1.setType(Attack::Push);
       attack2.setType(Attack::RopeEm);
-      directions.push_back(Direction(Orientation::S, 100, 1));
-      directions.push_back(Direction(Orientation::N, 100, 1));
+      directions.push_back(Direction(Orientation::S, 100, 1)); //initialize
+      directions.push_back(Direction(Orientation::N, 100, 1)); //initialize
       break;
   }
 
   directions_it = directions.begin();
-}
-
-void Weapon::MoveSprite(double interpolation)
-{
-  sf::Vector2f distance = this->position - this->sprite.getPosition();
-  this->sprite.move( distance.x * interpolation, distance.y * interpolation );
 }

@@ -7,6 +7,13 @@
 #include "collision.h"
 #include <math.h> //sqrt
 
+//attempting to get std::to_string() working
+#include <string>
+#include <iostream>
+#include <memory>
+
+#include "helpers.h"
+
 
 CPlayState CPlayState::PlayState;
 
@@ -74,7 +81,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
     this->level.hero.position.x -= hypotenuse/2;
     this->level.hero.position.y -= hypotenuse/2;
     this->level.hero.animatedSprite.setRotation(315);
-    //this->level.hero.currentAnimation = &this->level.hero.walkAnimationUp;
+    this->level.hero.animatedSprite.play(this->level.hero.walkAnimation);
     noKeyPressed = false;
   }
   else
@@ -84,7 +91,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
     this->level.hero.position.x += hypotenuse/2;
     this->level.hero.position.y -= hypotenuse/2;
     this->level.hero.animatedSprite.setRotation(45);
-    //this->level.hero.currentAnimation = &this->level.hero.walkAnimationUp;
+    this->level.hero.animatedSprite.play(this->level.hero.walkAnimation);
     noKeyPressed = false;
   }
   else
@@ -94,7 +101,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
     this->level.hero.position.x -= hypotenuse/2;
     this->level.hero.position.y += hypotenuse/2;
     this->level.hero.animatedSprite.setRotation(235);
-    //this->level.hero.currentAnimation = &this->level.hero.walkAnimationDown;
+    this->level.hero.animatedSprite.play(this->level.hero.walkAnimation);
     noKeyPressed = false;
   }
   else
@@ -104,7 +111,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
     this->level.hero.position.x += hypotenuse/2;
     this->level.hero.position.y += hypotenuse/2;
     this->level.hero.animatedSprite.setRotation(135);
-    //this->level.hero.currentAnimation = &this->level.hero.walkAnimationDown;
+    this->level.hero.animatedSprite.play(this->level.hero.walkAnimation);
     noKeyPressed = false;
   }
   else
@@ -113,7 +120,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
     this->level.hero.setOrientation(Orientation::W);
     this->level.hero.position.x -= this->level.hero.speed;
     this->level.hero.animatedSprite.setRotation(270);
-    //this->level.hero.currentAnimation = &this->level.hero.walkAnimationLeft;
+    this->level.hero.animatedSprite.play(this->level.hero.walkAnimation);
     noKeyPressed = false;
   }
   else
@@ -122,7 +129,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
     this->level.hero.setOrientation(Orientation::E);
     this->level.hero.position.x += this->level.hero.speed;
     this->level.hero.animatedSprite.setRotation(90);
-    //this->level.hero.currentAnimation = &this->level.hero.walkAnimationRight;
+    this->level.hero.animatedSprite.play(this->level.hero.walkAnimation);
     noKeyPressed = false;
   }
   else
@@ -131,7 +138,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
     this->level.hero.setOrientation(Orientation::N);
     this->level.hero.position.y -= this->level.hero.speed;
     this->level.hero.animatedSprite.setRotation(0);
-    //this->level.hero.currentAnimation = &this->level.hero.walkAnimationUp;
+    this->level.hero.animatedSprite.play(this->level.hero.walkAnimation);
     noKeyPressed = false;
   }
   else
@@ -140,33 +147,40 @@ void CPlayState::HandleEvents(CGameEngine* game)
     this->level.hero.setOrientation(Orientation::S);
     this->level.hero.position.y += this->level.hero.speed;
     this->level.hero.animatedSprite.setRotation(180);
-    //this->level.hero.currentAnimation = &this->level.hero.walkAnimationDown;
+    this->level.hero.animatedSprite.play(this->level.hero.walkAnimation);
     noKeyPressed = false;
   }
 
   // Grab NPC / Pickup Weapon
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
-    this->level.hero.Pickup(this->level.npc, this->level.weapon);
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+  {
+    this->level.hero.Pickup(this->level.npc, this->level.weapons);
+    this->level.hero.animatedSprite.play(*this->level.hero.currentAnimation);
   }
 
   // Release NPC / Drop Weapon
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::SemiColon)) {
-    this->level.hero.Drop(this->level.npc, this->level.weapon);
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::SemiColon))
+  {
+    this->level.hero.Drop(this->level.npc, this->level.weapons);
   }
 
   // Primary Attack
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+  {
     this->level.hero.PrimaryAttack(this->level.npc);
+    this->level.hero.animatedSprite.play(*this->level.hero.currentAnimation);
   }
 
   // Secondary Attack
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+  {
     this->level.hero.SecondaryAttack(this->level.npc);
+    this->level.hero.animatedSprite.play(*this->level.hero.currentAnimation);
   }
 
   // Throw
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-    this->level.hero.Throw(this->level.npc, this->level.weapon);
+    this->level.hero.Throw(this->level.npc, this->level.weapons);
   }
 
 
@@ -187,8 +201,6 @@ void CPlayState::HandleEvents(CGameEngine* game)
 
 void CPlayState::Update(CGameEngine* game)
 {
-  // Reset Animation Clock
-  game->frameTime = game->frameClock.restart();
 
   // ---------------
   // Collision Tests
@@ -202,31 +214,6 @@ void CPlayState::Update(CGameEngine* game)
     if (it == this->level.npc.end()) { break; }
   }
 
-  // -------------------
-  // Hero Animation
-  // -------------------
-
-  this->level.hero.animatedSprite.play(*this->level.hero.currentAnimation);
-  if (this->noKeyPressed) // AND if current animation has completed (not implemented yet)
-  {
-    this->level.hero.animatedSprite.stop();
-  }
-  this->level.hero.animatedSprite.update(game->frameTime);
-
-  // -------------------
-  // NPC Animation
-  // -------------------
-
-  for (unsigned i = 0; i < this->level.npc.size(); ++i) {
-    this->level.npc[i]->animatedSprite.play(*this->level.npc[i]->currentAnimation);
-    this->level.npc[i]->animatedSprite.update(game->frameTime);
-  }
-
-  /*
-  for (std::vector< std::unique_ptr<NPC> >::iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it) {
-    (*it)->animatedSprite.play( (*it)->currentAnimation );
-  }
-  */
 
   // -------------------
   // NPC AI and Movement
@@ -237,23 +224,44 @@ void CPlayState::Update(CGameEngine* game)
 
 
   // -------------------
-  // Weapon Movement
+  // Victory Conditions
+  // -------------------
+
+  if (this->level.Victory())
+  {
+    std::cout<<"Victory"<<std::endl;
+  }
+
+  //std::cout << this->level.getRunningTime() <<std::endl;
+
+  // -------------------
+  // Update HUD
   // -------------------
 
 
-
+  //error with mingw 4.7.1 below
+  this->level.text_timer.setString(to_string(this->level.getGameOverTime() - this->level.getRunningTime()));
 
 } // end CPlayState::Update
 
 
+
+
 void CPlayState::Draw(CGameEngine* game, double interpolation)
 {
+
   // ---------------
   // Initialize Render Window
   // ---------------
 
-  sf::RenderWindow &window = game->window;
+  sf::RenderWindow& window = game->window;
   window.clear(sf::Color(255, 255, 255));
+
+
+    //std::cout<<this->level.hero.animatedSprite.getAnimation()->getSize()<<std::endl;
+/*  if(this->level.hero.currentAnimation.isLastFrame())
+      std::cout<<"end of animation"<<std::endl;
+*/
 
   // --------------------
   // Draw Map
@@ -270,6 +278,36 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   }
 
 
+  // --------------------
+  // Draw HUD
+  // --------------------
+
+  // Draw Timer
+    window.draw(this->level.text_timer);
+
+  // Draw NPC count
+  // Draw current weapon icon
+
+
+
+  // -------------------
+  // Hero Animation Rules
+  // -------------------
+
+  if (this->noKeyPressed && this->level.hero.currentAnimation == &this->level.hero.walkAnimation)
+  {
+    this->level.hero.animatedSprite.stop();
+  }
+
+  if (this->level.hero.currentAnimation != &this->level.hero.walkAnimation && !this->level.hero.animatedSprite.isPlaying())
+  {
+    this->level.hero.currentAnimation = &this->level.hero.walkAnimation;
+  }
+
+  // Update Animation
+  this->level.hero.animatedSprite.update(game->frameTime);
+
+
   // -------------
   // Draw Hero
   // -------------
@@ -280,20 +318,30 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // DRAW HIT BOXES FOR DEBUG ONLY
   window.draw(this->level.hero.animatedSprite.hitbox);
 
-  float range = this->level.hero.weapon->getRange();
-  sf::Sprite range_modified_hitbox = this->level.hero.animatedSprite.hitbox;
-  range_modified_hitbox.setOrigin(10,20);
-  range_modified_hitbox.scale(1,range);
-  range_modified_hitbox.setRotation(this->level.hero.getOrientationObj().getRotation());
-  window.draw(range_modified_hitbox);
+  if (this->level.hero.weapon != nullptr)
+  {
+    float range = this->level.hero.weapon->getRange();
+    sf::Sprite range_modified_hitbox = this->level.hero.animatedSprite.hitbox;
+    range_modified_hitbox.setOrigin(10,20);
+    range_modified_hitbox.scale(1,range);
+    range_modified_hitbox.setRotation(this->level.hero.getOrientationObj().getRotation());
+    window.draw(range_modified_hitbox);
+  }
+
 
 
   // ---------------
   // Draw NPCs
   // ---------------
+/*
+  for (unsigned i = 0; i < this->level.npc.size(); ++i) {
+    this->level.npc[i]->animatedSprite.update(game->frameTime);
+  }
+*/
 
   for (std::vector< std::unique_ptr<NPC> >::const_iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it)
   {
+    (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw( (*it)->animatedSprite );
     //window.draw( (*it)->animatedSprite.hitbox ); // debug only
@@ -319,10 +367,11 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   //if(this->level.hero.weapon.get() != nullptr) // BUG - arithmetic error on drawing weapon sprite?
   //window.draw(this->level.hero.weapon->sprite);
 
-  for (std::vector< std::unique_ptr<Weapon> >::const_iterator it = this->level.weapon.begin(); it != this->level.weapon.end(); ++it)
+  for (std::vector< std::shared_ptr<Weapon> >::const_iterator it = this->level.weapons.begin(); it != this->level.weapons.end(); ++it)
   {
-    (*it)->MoveSprite(interpolation);
-    window.draw( (*it)->sprite );
+    (*it)->animatedSprite.update(game->frameTime);
+    (*it)->MoveAnimatedSprite(interpolation);
+    window.draw( (*it)->animatedSprite );
   }
 
   // --------------------
@@ -339,5 +388,8 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // Update Window
   // ---------------
   window.display();
+
+
+
 }
 

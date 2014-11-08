@@ -5,18 +5,18 @@
 #include <SFML/Graphics.hpp>
 #include  "direction.h"
 #include "attack.h"
+#include "animatedentity.h"
 
 // Level creates the unique_ptr to all new weapons
 // Hero creates the Hands weapon any time another weapon is not held
 
-class Weapon
+class Weapon : public AnimatedEntity
 {
   public:
     enum Type {
       Hands,
       Pole,
       Lasso,
-      GarbageCan
     };
 
     Weapon(Type t);
@@ -29,15 +29,8 @@ class Weapon
     int       getDurability()          { return durability; }
     void      reduceDurability()       { durability--; }
 
-    void      MoveSprite(double interpolation);
+    Animation throwAnimation;
 
-    // used for automated movement of weapons when thrown
-    std::vector<Direction>                  directions;
-    std::vector<Direction>::iterator        directions_it;
-    double                                  distance_travelled;
-
-    sf::Sprite sprite;
-    sf::Vector2f position;
 
   private:
     Type type;
