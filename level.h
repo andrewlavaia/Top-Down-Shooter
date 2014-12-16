@@ -5,6 +5,7 @@
 #include <memory>
 #include "mapmanager.h"
 #include "texturemanager.h"
+#include "animatedentity.h"
 #include "hero.h"
 #include "npc.h"
 #include "collidable.h"
@@ -20,26 +21,26 @@ public:
   void                                        CreateCollidable(Collidable::Type type, double x, double y, double width, double height);
   void                                        MoveNPCs();
   void                                        MoveWeapons();
-  void                                        DestroyNPC(std::vector<std::unique_ptr<NPC>>::iterator it);
-  void                                        CheckCollision_NPCtoHero(std::vector<std::unique_ptr<NPC>>::iterator it);
-  void                                        CheckCollision_NPCtoNPC(std::vector<std::unique_ptr<NPC>>::iterator it);
-  void                                        CheckCollision_NPCtoCollidable(std::vector<std::unique_ptr<NPC>>::iterator it);
+  void                                        DestroyNPC(std::vector<std::shared_ptr<NPC>>::iterator it);
+  void                                        CheckCollision_NPCtoHero(std::vector<std::shared_ptr<NPC>>::iterator it);
+  void                                        CheckCollision_NPCtoNPC(std::vector<std::shared_ptr<NPC>>::iterator it);
+  void                                        CheckCollision_NPCtoCollidable(std::vector<std::shared_ptr<NPC>>::iterator it);
   bool                                        Victory();
+  bool                                        GameOver();
   float                                       getRunningTime();
   float                                       getGameOverTime();
+  unsigned                                    getNPCSuccessCount() { return npc_success_count; };
 
   // HUD Elements
   sf::Text                                    text_timer;
-
+  sf::Text                                    text_npc_count;
 
   MapManager                                  mp;
   TextureManager                              textures;
 
   Hero                                        hero;
-  std::vector< std::unique_ptr<NPC> >         npc;
-  //std::vector< std::unique_ptr<Weapon> >      weapon;
   std::vector< std::unique_ptr<Collidable> >  collidables;
-
+  std::vector< std::shared_ptr<NPC> >         npc;
   std::vector< std::shared_ptr<Weapon> >      weapons;
 
 

@@ -86,12 +86,15 @@ void NPC::CreateAnimations(const TextureManager& textures)
 
   // assign animations based on NPC type
 
-  walkAnimation = CreateAnimation(textures.Get(Textures::Hero_Run), 391, 319, 12);
+  defaultAnimation = CreateAnimation(textures.Get(Textures::Hero_Run), 391, 319, 12);
+  attackedAnimation = defaultAnimation;
+  grabbedAnimation = defaultAnimation;
+  thrownAnimation = defaultAnimation;
 
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);
 
-  currentAnimation = &walkAnimation;
+  currentAnimation = &defaultAnimation;
   animatedSprite.play(*currentAnimation);
   animatedSprite.setLooped(true);
   animatedSprite.setFrameTime(sf::seconds(0.16));

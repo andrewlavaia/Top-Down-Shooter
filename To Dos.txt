@@ -63,8 +63,6 @@ Implementation Details
 -------------------------
 MapManager class needs to change. Should just load a simple image.
 
-weapons and NPCs can be converted to shared_ptr (will simplify attacks and will get rid of all unneccesary move logic)
-
 Can create one additional base class Entity->AnimatedEntity,ImmovableEntity. Level can then hold a single vector populated with all Entity (which will greatly simplify drawing and collision logic)
 
 Each animatedEntity can have its own collision logic wrapped in an overloaded function shown below. The animatedEntity will react differently depending on what object it collided with.					
@@ -76,11 +74,12 @@ Each animatedEntity can have its own collision logic wrapped in an overloaded fu
 
 Features for future version
 ----------------------------
-- victory conditions
 - Active Weapon Icon
-- Animated subway car
+- Animated subway cart
 - Brainstorm: security cameras to see if abuse caught on film in later levels?
 - Brainstorm: 300 style speed up and slow time affect
+- Brainstorm: every npc has a timer above head to determine whether they are on time, late, or fed up
+- Brainstorm: survival of the swarm
 
 
 

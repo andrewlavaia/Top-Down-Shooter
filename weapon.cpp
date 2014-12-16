@@ -20,17 +20,12 @@ Weapon::Weapon(Type t)
 
   sf::Texture texture;
   texture.create(10,10);
-  throwAnimation = CreateAnimation(texture,10,10,1);
-  currentAnimation = &throwAnimation;
+  defaultAnimation = CreateAnimation(texture,10,10,1);
+  currentAnimation = &defaultAnimation;
   animatedSprite.play(*currentAnimation);
   animatedSprite.setLooped(true);
   animatedSprite.setFrameTime(sf::seconds(0.16));
   animatedSprite.setColor(sf::Color(255,0,0)); // semi-transparent red hitbox
-
-  //sprite.setTexture(texture); // aassign empty texture 20x20 pixels
-  //sprite.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
-  //sprite.setOrigin(5, 5);
-  //sprite.setPosition(position.x,position.y);
 
 
   switch(type)

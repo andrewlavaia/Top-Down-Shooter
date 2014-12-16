@@ -25,7 +25,10 @@ public:
   //void                                    MoveOppo(double d);
 
   //AnimatedSprite                          animatedSprite;
-  Animation                               walkAnimation;
+  Animation                                defaultAnimation;
+  Animation                                attackedAnimation;
+  Animation                                grabbedAnimation;
+  Animation                                thrownAnimation;
  // Animation*                              currentAnimation;
 
   //sf::Vector2f                            position;

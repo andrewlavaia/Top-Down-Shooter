@@ -5,14 +5,8 @@
 #include "npc.h"
 #include "timer.h"
 #include "collision.h"
-#include <math.h> //sqrt
-
-//attempting to get std::to_string() working
-#include <string>
-#include <iostream>
-#include <memory>
-
-#include "helpers.h"
+#include <math.h> // sqrt
+#include "helpers.h" // to_string
 
 
 CPlayState CPlayState::PlayState;
@@ -161,7 +155,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
   // Release NPC / Drop Weapon
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::SemiColon))
   {
-    this->level.hero.Drop(this->level.npc, this->level.weapons);
+    this->level.hero.Drop();
   }
 
   // Primary Attack
@@ -180,7 +174,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
 
   // Throw
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-    this->level.hero.Throw(this->level.npc, this->level.weapons);
+    this->level.hero.Throw();
   }
 
 
@@ -206,12 +200,16 @@ void CPlayState::Update(CGameEngine* game)
   // Collision Tests
   // ---------------
 
-  for (std::vector< std::unique_ptr<NPC> >::iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it)
+  for (std::vector< std::shared_ptr<NPC> >::iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it)
   {
+    if( (*it)->checkAgroDistance(this->level.hero) && (*it)->currentAnimation == &(*it)->defaultAnimation)
+      (*it)->Move((*it)->getRelativeOrientation(this->level.hero), .001, (*it)->getSpeed());
+
     this->level.CheckCollision_NPCtoHero(it);
     this->level.CheckCollision_NPCtoNPC(it);
     this->level.CheckCollision_NPCtoCollidable(it);
     if (it == this->level.npc.end()) { break; }
+
   }
 
 
@@ -230,17 +228,21 @@ void CPlayState::Update(CGameEngine* game)
   if (this->level.Victory())
   {
     std::cout<<"Victory"<<std::endl;
+    //push state to victory state
   }
 
-  //std::cout << this->level.getRunningTime() <<std::endl;
+  if (this->level.GameOver())
+  {
+    std::cout << "Game Over" <<std::endl;
+    // push state to game over state
+  }
 
   // -------------------
   // Update HUD
   // -------------------
-
-
-  //error with mingw 4.7.1 below
   this->level.text_timer.setString(to_string(this->level.getGameOverTime() - this->level.getRunningTime()));
+  this->level.text_npc_count.setString(to_string(this->level.getNPCSuccessCount()));
+  //update active_weapon image
 
 } // end CPlayState::Update
 
@@ -257,11 +259,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   sf::RenderWindow& window = game->window;
   window.clear(sf::Color(255, 255, 255));
 
-
-    //std::cout<<this->level.hero.animatedSprite.getAnimation()->getSize()<<std::endl;
-/*  if(this->level.hero.currentAnimation.isLastFrame())
-      std::cout<<"end of animation"<<std::endl;
-*/
 
   // --------------------
   // Draw Map
@@ -282,13 +279,9 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // Draw HUD
   // --------------------
 
-  // Draw Timer
     window.draw(this->level.text_timer);
-
-  // Draw NPC count
-  // Draw current weapon icon
-
-
+    window.draw(this->level.text_npc_count);
+    // draw active weapon image
 
   // -------------------
   // Hero Animation Rules
@@ -324,7 +317,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     sf::Sprite range_modified_hitbox = this->level.hero.animatedSprite.hitbox;
     range_modified_hitbox.setOrigin(10,20);
     range_modified_hitbox.scale(1,range);
-    range_modified_hitbox.setRotation(this->level.hero.getOrientationObj().getRotation());
+    range_modified_hitbox.setRotation(this->level.hero.getOrientation().getRotation());
     window.draw(range_modified_hitbox);
   }
 
@@ -333,13 +326,9 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // ---------------
   // Draw NPCs
   // ---------------
-/*
-  for (unsigned i = 0; i < this->level.npc.size(); ++i) {
-    this->level.npc[i]->animatedSprite.update(game->frameTime);
-  }
-*/
 
-  for (std::vector< std::unique_ptr<NPC> >::const_iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it)
+
+  for (std::vector< std::shared_ptr<NPC> >::const_iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it)
   {
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
@@ -364,8 +353,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // Draw Weapons
   // ---------------
 
-  //if(this->level.hero.weapon.get() != nullptr) // BUG - arithmetic error on drawing weapon sprite?
-  //window.draw(this->level.hero.weapon->sprite);
 
   for (std::vector< std::shared_ptr<Weapon> >::const_iterator it = this->level.weapons.begin(); it != this->level.weapons.end(); ++it)
   {
@@ -377,7 +364,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // --------------------
   // Draw Collidables
   // --------------------
-
 
   for(std::vector< std::unique_ptr<Collidable> >::const_iterator it = this->level.collidables.begin(); it != this->level.collidables.end(); ++it)
   {

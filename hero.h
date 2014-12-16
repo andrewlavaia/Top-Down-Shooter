@@ -23,11 +23,6 @@ public:
   void                          CreateAnimations(const TextureManager& textures);
   void                          MoveAnimatedSprite(double interpolation);
 
-  //Animation                     CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count);
-  //sf::Vector2f                  position;
-  //AnimatedSprite                animatedSprite;
-  //Animation*                    currentAnimation;
-
   double                        speed;
   double                        strength;
 
@@ -36,50 +31,32 @@ public:
   Animation                     punchAnimation;
   Animation                     kickAnimation;
 
-
-
-  void                          PrimaryAttack(std::vector< std::unique_ptr<NPC> >& npc_vec);
-  void                          SecondaryAttack(std::vector< std::unique_ptr<NPC> >& npc_vec);
-  void                          Throw(std::vector< std::unique_ptr<NPC> >& npc_vec,
+  void                          PrimaryAttack(std::vector< std::shared_ptr<NPC> >& npc_vec);
+  void                          SecondaryAttack(std::vector< std::shared_ptr<NPC> >& npc_vec);
+  void                          Pickup(std::vector< std::shared_ptr<NPC> >& npc_vec,
                                       std::vector< std::shared_ptr<Weapon> >& weap_vec);
-  void                          Pickup(std::vector< std::unique_ptr<NPC> >& npc_vec,
-                                      std::vector< std::shared_ptr<Weapon> >& weap_vec);
-  void                          Drop(std::vector< std::unique_ptr<NPC> >& npc_vec,
-                                      std::vector< std::shared_ptr<Weapon> >& weap_vec);
-
-  //std::unique_ptr<Weapon>       weapon;
-  std::unique_ptr<NPC>          grabbed_npc;     // used to hold grabbed NPCs
-  std::unique_ptr<NPC>          roped_npc;       // used to hold roped NPCs
-
+  void                          Drop();
+  void                          Throw();
   Weapon                        getWeapon();
+
+  std::shared_ptr<NPC>          grabbed_npc;     // used to hold grabbed NPCs
+  std::shared_ptr<NPC>          roped_npc;       // used to hold roped NPCs
+
+
   std::shared_ptr<Weapon>       weapon;
   Weapon                        default_weapon;
-
-  // getters + setters
-  void                          setOrientation(Orientation::Type t) { orientation.setType(t); }
-  Orientation                   getOrientationObj() {return orientation; }
-  Orientation::Type             getOrientation() { return orientation.getType(); }
-
-
 
 private:
                                 Hero(const Hero&);              // Disallow copy constructor
                                 Hero& operator=(const Hero&);   // Disallow assignment
 
-  void                          AttackNPC(Attack atk, double modifier, double rng, std::vector< std::unique_ptr<NPC> >& npc_vec);
-  void                          ThrowNPC(std::vector< std::unique_ptr<NPC> >& npc_vec);
-  void                          ThrowWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec);
+  void                          AttackNPC(Attack atk, double modifier, double rng, std::vector< std::shared_ptr<NPC> >& npc_vec);
   void                          PickupWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec);
-  void                          DropWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec);
-  void                          PickupNPC(std::vector< std::unique_ptr<NPC> >& npc_vec);
-  void                          DropNPC(std::vector< std::unique_ptr<NPC> >& npc_vec);
-
-  std::unique_ptr<Weapon>       m_weapon_storage;  // used to hold Hands weapon permanently
-  Orientation                   orientation;
-
-
-
-
+  void                          DropWeapon();
+  void                          ThrowWeapon();
+  void                          PickupNPC(std::vector< std::shared_ptr<NPC> >& npc_vec);
+  void                          DropNPC();
+  void                          ThrowNPC();
 
 };
 

@@ -22,6 +22,11 @@ Level::Level()
   text_timer.setCharacterSize(40);
   text_timer.setColor(sf::Color::Black);
   text_timer.setPosition(400,20);
+
+  text_npc_count.setFont(font_HUD);
+  text_npc_count.setCharacterSize(40);
+  text_npc_count.setColor(sf::Color::Black);
+  text_npc_count.setPosition(700,20);
 }
 
 void Level::Load(int id)
@@ -39,13 +44,13 @@ void Level::Load(int id)
     case 1:
       mp.Load("map2.txt");
                                                    //  x     y   width  height
-      CreateCollidable(Collidable::SubwayDoor,          0,  300,  30,   200);
-      CreateCollidable(Collidable::SubwayRail,          0,    0,  30,   268);
-      CreateCollidable(Collidable::SubwayRail,          0,  500,  30,   300);
-      CreateCollidable(Collidable::ImmovableObject,     0,  269,  30,   31);
-      CreateCollidable(Collidable::ImmovableObject,     0,  469,  30,   31);
-      CreateCollidable(Collidable::SubwayPlatform,      30,   0,  50,   800);
-      CreateCollidable(Collidable::ImmovableObject,     500,  500,  100,  5);
+      CreateCollidable(Collidable::SubwayDoor,          0,   300,  30,   200);
+      CreateCollidable(Collidable::SubwayRail,          0,     0,  30,   268);
+      CreateCollidable(Collidable::SubwayRail,          0,   500,  30,   300);
+      CreateCollidable(Collidable::ImmovableObject,     0,   269,  30,    31);
+      CreateCollidable(Collidable::ImmovableObject,     0,   469,  30,    31);
+      CreateCollidable(Collidable::SubwayPlatform,      30,    0,  50,   800);
+      CreateCollidable(Collidable::ImmovableObject,     500, 500, 100,     5);
 
       hero.CreateAnimations(textures);
 
@@ -119,9 +124,9 @@ void Level::MoveNPCs()
   }
 
 
-  for (std::vector< std::unique_ptr<NPC> >::iterator it = npc.begin(); it != npc.end(); ++it)
+  for (std::vector< std::shared_ptr<NPC> >::iterator it = npc.begin(); it != npc.end(); ++it)
   {
-    MoveObject(it);
+      MoveObject(it);
   }
 
 }
@@ -151,6 +156,7 @@ void Level::MoveObject(T& it)
   {
     // If distance exceeded, reset distance counter and have iterator point to next Direction object
     (*it)->distance_travelled = 0;
+    (*it)->currentAnimation = &(*it)->defaultAnimation;
 
     if((*it)->directions_it->isRepeat())
     {
@@ -167,6 +173,9 @@ void Level::MoveObject(T& it)
     }
 
   }
+
+  // update orientation
+  (*it)->setOrientation((*it)->directions_it->getType());
 
   // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
   double hypotenuse = sqrt((*it)->directions_it->getSpeed()*(*it)->directions_it->getSpeed() + (*it)->directions_it->getSpeed()*(*it)->directions_it->getSpeed());
@@ -234,7 +243,7 @@ void Level::MoveObject(T& it)
   }
 }
 
-void Level::DestroyNPC(std::vector<std::unique_ptr<NPC>>::iterator it)
+void Level::DestroyNPC(std::vector<std::shared_ptr<NPC>>::iterator it)
 {
   // erase remove idiom
   npc.erase( std::remove(npc.begin(), npc.end(), *it),
@@ -243,33 +252,29 @@ void Level::DestroyNPC(std::vector<std::unique_ptr<NPC>>::iterator it)
 }
 
 // Check if NPC has collided with the hero
-void Level::CheckCollision_NPCtoHero(std::vector<std::unique_ptr<NPC>>::iterator it)
+void Level::CheckCollision_NPCtoHero(std::vector<std::shared_ptr<NPC>>::iterator it)
 {
-  // if hero hits any npc, npc bumped back (based on hero strength, npc weight, and distance factor)
+  // if hero hits any npc, npc bumped back (based on hero strength and npc weight)
   if(Collision::BoundingBoxTest(hero.animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
   {
-    // Check if NPC was just thrown
-    // NOT IMPLEMENTED YET - Check current animation != throw animation
-    double ix = (*it)->position.x;
-    double iy = (*it)->position.y;
-    double jx = hero.position.x;
-    double jy = hero.position.y;
-
-    (*it)->position.x += (1/(*it)->getWeight()) * (ix - jx)/2;
-    (*it)->position.y += (1/(*it)->getWeight()) * (iy - jy)/2;
+    //(*it)->position.x += (hero.position.x - (*it)->position.x) * 10;
+    //(*it)->position.y += (hero.position.y - (*it)->position.y) * 10;
+    //(*it)->position += hero.position - (*it)->position; // allows player to stick to npcs by touching them
+    //(*it)->Move(hero.getOrientation().getOppo(),hero.strength/(*it)->getWeight(),15);
+    (*it)->position.x += (hero.strength/(*it)->getWeight()) * ((*it)->position.x - hero.position.x)/4;
+    (*it)->position.y += (hero.strength/(*it)->getWeight()) * ((*it)->position.y - hero.position.y)/4;
   }
 }
 
 // Check if NPC has collided with any of the level's other NPCs
-void Level::CheckCollision_NPCtoNPC(std::vector<std::unique_ptr<NPC>>::iterator it)
+void Level::CheckCollision_NPCtoNPC(std::vector<std::shared_ptr<NPC>>::iterator it)
 {
 
   // if any npc runs into another npc, they each are bumped back (based on their weight)
-  for (std::vector< std::unique_ptr<NPC> >::iterator jt = npc.begin(); jt != npc.end(); ++jt)
+  for (std::vector< std::shared_ptr<NPC> >::iterator jt = npc.begin(); jt != npc.end(); ++jt)
   {
-    if(Collision::BoundingBoxTest( (*jt)->animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
+    if( it != jt && Collision::BoundingBoxTest( (*jt)->animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
     {
-
       // check which npc has more force (mass * speed)
       double i_force = (*it)->directions_it->getSpeed() * (*it)->getWeight();
       double j_force = (*jt)->directions_it->getSpeed() * (*jt)->getWeight();
@@ -282,22 +287,28 @@ void Level::CheckCollision_NPCtoNPC(std::vector<std::unique_ptr<NPC>>::iterator 
 
       if(i_force > j_force) // npc *jt will be pushed back
       {
-        (*jt)->position.x += (1/(*jt)->getWeight()) * (jx - ix)/2;
-        (*jt)->position.y += (1/(*jt)->getWeight()) * (jy - iy)/2;
+        //(*jt)->Move((*it)->directions_it->getType(),5,20);
+        (*jt)->position.x += (1/(*jt)->getWeight()) * (jx - ix)/4;
+        (*jt)->position.y += (1/(*jt)->getWeight()) * (jy - iy)/4;
       }
       else if(i_force < j_force) // npc *it will be pushed back
       {
-        (*it)->position.x += (1/(*it)->getWeight()) * (ix - jx)/2;
-        (*it)->position.y += (1/(*it)->getWeight()) * (iy - jy)/2;
-      }
-      else // i_force = j_force, so both pushed back
-      {
-        (*jt)->position.x += (1/(*jt)->getWeight()) * (jx - ix)/4;
-        (*jt)->position.y += (1/(*jt)->getWeight()) * (jy - iy)/4;
+        //(*it)->Move((*jt)->directions_it->getType(),5,20);
+        //(*it)->MoveOppo(10);
         (*it)->position.x += (1/(*it)->getWeight()) * (ix - jx)/4;
         (*it)->position.y += (1/(*it)->getWeight()) * (iy - jy)/4;
+      }
+      else if(i_force == j_force) // both pushed back
+      {
+        //(*jt)->Move((*it)->directions_it->getType(),5,20);
+        //(*it)->Move((*jt)->directions_it->getType(),5,10); //different distance so no infinite collision if in same direction
+        //(*jt)->MoveOppo(10);
+        //(*it)->MoveOppo(10);
 
-
+        (*jt)->position.x += (1/(*jt)->getWeight()) * (jx - ix)/8;
+        (*jt)->position.y += (1/(*jt)->getWeight()) * (jy - iy)/8;
+        (*it)->position.x += (1/(*it)->getWeight()) * (ix - jx)/8;
+        (*it)->position.y += (1/(*it)->getWeight()) * (iy - jy)/8;
       }
     }
   }
@@ -305,7 +316,7 @@ void Level::CheckCollision_NPCtoNPC(std::vector<std::unique_ptr<NPC>>::iterator 
 }
 
 // Check if NPC has collided with any of the level's Collidables
-void Level::CheckCollision_NPCtoCollidable(std::vector<std::unique_ptr<NPC>>::iterator it)
+void Level::CheckCollision_NPCtoCollidable(std::vector<std::shared_ptr<NPC>>::iterator it)
 {
   for (std::vector< std::unique_ptr<Collidable> >::const_iterator kt = collidables.begin(); kt != collidables.end(); ++kt)
   {
@@ -317,6 +328,8 @@ void Level::CheckCollision_NPCtoCollidable(std::vector<std::unique_ptr<NPC>>::it
             std::cout << "NPC has entered the subway" << std::endl;
             npc_success_count++;
             (*it)->directions.clear();
+            DestroyNPC(it);
+            if (it == npc.end()) { return; } // Necessary, otherwise there will be a crash on removing last item from vector
             break;
 
           case Collidable::SubwayRail :
@@ -330,8 +343,7 @@ void Level::CheckCollision_NPCtoCollidable(std::vector<std::unique_ptr<NPC>>::it
             if((*it)->directions_it->getSpeed() < 10)
             {
               // npc should avoid subway platforms when walking
-
-              // check current animation?
+              // check current animation, otherwise if thrown on platform npc would get stuck?
               //(*it)->MoveOppo(1);
             }
             break;
@@ -357,6 +369,14 @@ void Level::CheckCollision_NPCtoCollidable(std::vector<std::unique_ptr<NPC>>::it
 bool Level::Victory()
 {
   if(npc_success_count >= victory_requirement && running_time.getElapsedTime() < gameover_time)
+    return true;
+  else
+    return false;
+}
+
+bool Level::GameOver()
+{
+  if (running_time.getElapsedTime() > gameover_time)
     return true;
   else
     return false;

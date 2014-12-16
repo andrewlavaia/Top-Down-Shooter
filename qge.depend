@@ -451,11 +451,12 @@
 	"gamestate.h"
 	"level.h"
 
-1415484304 c:\c++\qge\level.h
+1415971204 c:\c++\qge\level.h
 	<vector>
 	<memory>
 	"mapmanager.h"
 	"texturemanager.h"
+	"animatedentity.h"
 	"hero.h"
 	"npc.h"
 	"collidable.h"
@@ -473,7 +474,7 @@
 1398050345 c:\c++\qge\tile.h
 	<SFML/Graphics.hpp>
 
-1415404528 c:\c++\qge\hero.h
+1415924584 c:\c++\qge\hero.h
 	<SFML/Graphics.hpp>
 	<SFML/System/Time.hpp>
 	"animatedentity.h"
@@ -486,7 +487,7 @@
 	"attack.h"
 	"orientation.h"
 
-1414789735 c:\c++\qge\npc.h
+1418163780 c:\c++\qge\npc.h
 	<SFML/Graphics.hpp>
 	"AnimatedEntity.h"
 	"TextureManager.h"
@@ -494,11 +495,10 @@
 	"animatedsprite.h"
 	"direction.h"
 
-1415367559 source:c:\c++\qge\main.cpp
+1415656513 source:c:\c++\qge\main.cpp
 	"gameengine.h"
 	"menustate.h"
 	"timer.h"
-	"helpers.h"
 
 1398539132 c:\c++\qge\menustate.h
 	"gamestate.h"
@@ -512,12 +512,12 @@
 	"highscorestate.h"
 	<iostream>
 
-1414878698 source:c:\c++\qge\npc.cpp
+1418163821 source:c:\c++\qge\npc.cpp
 	<iostream>
 	"npc.h"
 	"direction.h"
 
-1415405550 source:c:\c++\qge\playstate.cpp
+1418053541 source:c:\c++\qge\playstate.cpp
 	"playstate.h"
 	"mapmanager.h"
 	"hero.h"
@@ -525,16 +525,13 @@
 	"timer.h"
 	"collision.h"
 	<math.h>
-	<string>
-	<iostream>
-	<memory>
 	"helpers.h"
 
-1415482542 source:c:\c++\qge\hero.cpp
+1418163853 source:c:\c++\qge\hero.cpp
 	"hero.h"
 	<iostream>
 
-1415367326 source:c:\c++\qge\level.cpp
+1418053275 source:c:\c++\qge\level.cpp
 	"level.h"
 	<math.h>
 
@@ -574,7 +571,7 @@
 	"attack.h"
 	"animatedentity.h"
 
-1414758987 source:c:\c++\qge\weapon.cpp
+1418053193 source:c:\c++\qge\weapon.cpp
 	"weapon.h"
 
 1413894537 c:\c++\qge\attack.h
@@ -596,7 +593,7 @@
 1412857251 source:c:\c++\qge\collidable.cpp
 	"collidable.h"
 
-1415022328 c:\c++\qge\animatedentity.h
+1418053221 c:\c++\qge\animatedentity.h
 	<SFML/Graphics.hpp>
 	"animatedsprite.h"
 	"animation.h"
@@ -604,7 +601,7 @@
 	"texturemanager.h"
 	"orientation.h"
 
-1415059801 source:c:\c++\qge\animatedentity.cpp
+1418053924 source:c:\c++\qge\animatedentity.cpp
 	"animatedentity.h"
 
 1415366529 c:\c++\qge\helpers.h
