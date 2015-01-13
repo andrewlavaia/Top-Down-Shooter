@@ -9,33 +9,35 @@
 #include "animatedsprite.h"
 #include "direction.h"
 
+#include "hero.h"
+#include "weapon.h"
+#include "projectile.h"
+#include "collidable.h"
+
 class NPC : public AnimatedEntity
 {
 public:
   enum Type {
     Goomba,
     Chumba,
+
+    /*
+    Zombie,
+    Human,
+    */
   };
 
-  explicit                                NPC(Type type);
+  explicit                                NPC(Type type, TextureManager& texture);
 
-  void                                    CreateAnimations(const TextureManager& textures);  // required method to assign animations
-  //Animation                               CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count);
-  //void                                    MoveAnimatedSprite(double interpolation);          // Animates sprite towards its new location based on time factor
-  //void                                    MoveOppo(double d);
+  Animation                               defaultAnimation;
+  Animation                               attackedAnimation;
+  Animation                               grabbedAnimation;
+  Animation                               thrownAnimation;
 
-  //AnimatedSprite                          animatedSprite;
-  Animation                                defaultAnimation;
-  Animation                                attackedAnimation;
-  Animation                                grabbedAnimation;
-  Animation                                thrownAnimation;
- // Animation*                              currentAnimation;
-
-  //sf::Vector2f                            position;
-
-  //std::vector<Direction>                  directions;
-  //std::vector<Direction>::iterator        directions_it;
-  //double                                  distance_travelled;
+  virtual Animation* getCurrentAnimation() { return currentAnimation; }
+  virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
+  virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
+  virtual void                            collideWithEntity(const AnimatedEntity& a);
 
   double                                  getWeight() { return weight; }
   double                                  getSpeed()  { return speed;}
@@ -43,8 +45,10 @@ public:
 
 private:
   Type                                    type;
+  Animation*                              currentAnimation;
   double                                  speed;
   double                                  weight;
+  double                                  hp;
 
 };
 

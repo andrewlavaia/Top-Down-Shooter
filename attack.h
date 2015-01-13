@@ -13,7 +13,22 @@ class Attack
       Push,
       Kick,
       Smash, // a powerful push
-      RopeEm,
+      /*
+      Punch,        // default primary
+      Kick,         // default secondary
+      Bite,
+      MeleeBash1H   // (hammer, pistol whip, etc)
+      MeleeBash2H,  // (sledgehammer, rifle butt, etc)
+      MeleePoke,    // (pitch fork)
+      MeleeSlash,   // (swords, knives, etc)
+      PistolShot,
+      ShotgunShot,
+      RifleShot,
+      SMGShot,
+      BowShot,
+      Explosive,    // (rocket launcher, grenade, etc)
+      Stun,         // (taser, etc)
+      */
     };
 
     Attack(Type t) { type = t; }

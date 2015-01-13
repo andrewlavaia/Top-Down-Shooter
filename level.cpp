@@ -11,7 +11,7 @@ Level::Level()
   textures.Load(Textures::Hero_Grab, "hero_grab.png");
   textures.Load(Textures::Hero_Punch, "hero_punch.png");
   textures.Load(Textures::Hero_Kick, "hero_kick.png");
-  textures.Load(Textures::NPC, "spritesheet.png");
+  textures.Load(Textures::NPC_Texture, "spritesheet.png");
 
   if(!font_HUD.loadFromFile("calibri.ttf"))
   {
@@ -34,9 +34,12 @@ void Level::Load(int id)
   running_time.restart();
 
   // clear vectors and deallocate memory
+
+/*
   npc.clear(); // std::unique_ptr will delete object automatically, deleting any existing NPCs
   weapons.clear();
   collidables.clear();
+*/
 
   // Load Level
   switch (id)
@@ -47,10 +50,10 @@ void Level::Load(int id)
       CreateCollidable(Collidable::SubwayDoor,          0,   300,  30,   200);
       CreateCollidable(Collidable::SubwayRail,          0,     0,  30,   268);
       CreateCollidable(Collidable::SubwayRail,          0,   500,  30,   300);
-      CreateCollidable(Collidable::ImmovableObject,     0,   269,  30,    31);
-      CreateCollidable(Collidable::ImmovableObject,     0,   469,  30,    31);
+      CreateCollidable(Collidable::ImmovableObject,     0,   269,  30,    30);
+      CreateCollidable(Collidable::ImmovableObject,     0,   469,  30,    30);
       CreateCollidable(Collidable::SubwayPlatform,      30,    0,  50,   800);
-      CreateCollidable(Collidable::ImmovableObject,     500, 500, 100,     5);
+      CreateCollidable(Collidable::ImmovableObject,     500, 500, 100,    10);
 
       hero.CreateAnimations(textures);
 
@@ -84,9 +87,8 @@ void Level::Load(int id)
 // Dynamically creates a new NPC object and returns a smart pointer to it
 void Level::CreateNPC(NPC::Type type)
 {
-  std::unique_ptr<NPC> p_enemy( new NPC(type) );
-  p_enemy->CreateAnimations(this->textures);
-  npc.push_back( std::move(p_enemy) );
+  std::shared_ptr<NPC> p_npc( new NPC(type, textures) );
+  entities.push_back(p_npc);
 }
 
 // Dynamically creates a new Weapon object and returns a smart pointer to it
@@ -96,18 +98,59 @@ void Level::CreateWeapon(Weapon::Type type)
  // weapon.push_back( std::move(p_weapon) );
 
   std::shared_ptr<Weapon> w(new Weapon(type));
-  weapons.push_back(w);
+  entities.push_back(w);
+}
+
+void Level::CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o)
+{
+  std::shared_ptr<Projectile> p(new Projectile(type, x, y, o));
+  entities.push_back(p);
 }
 
 // Dynamically creates a new Collidable object and returns a smart pointer to it
-void Level::CreateCollidable(Collidable::Type type, double x, double y, double width, double height)
+void Level::CreateCollidable(Collidable::Type type, int x, int y, int width, int height)
 {
-  std::unique_ptr<Collidable> p_collidable( new Collidable(type, x, y, width, height) );
-  collidables.push_back( std::move(p_collidable) );
+  std::shared_ptr<Collidable> p(new Collidable(type, x, y, width, height));
+  entities.push_back(p);
+}
+void Level::MoveEntities()
+{
+  if(hero.grabbed_npc != nullptr)
+  {
+    hero.grabbed_npc->position.x = hero.position.x;
+    hero.grabbed_npc->position.y = hero.position.y - 30;
+    // set currentAnimation to "grabbed"
+  }
+  if (hero.weapon != nullptr)
+  {
+    hero.weapon->position = hero.position;
+  }
+
+  for (std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = entities.begin(); it != entities.end();)
+  {
+    (*it)->Move();
+
+    if(typeid(**it) == typeid(Projectile) && (*it)->directions.empty())
+      DestroyObject(entities, it);
+    else
+      ++it;
+  }
+
 }
 
+void Level::DeleteEntities()
+{
+  for (std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = entities.begin(); it != entities.end(); )
+  {
+    if((*it)->getDestroyFlag() == true)
+      DestroyObject(entities, it);
+    else
+      ++it;
+  }
 
+}
 
+/*
 void Level::MoveNPCs()
 {
   if(hero.grabbed_npc != nullptr)
@@ -117,16 +160,10 @@ void Level::MoveNPCs()
     // set currentAnimation to "grabbed"
   }
 
-  if (hero.roped_npc != nullptr)
-  {
-    // don't move
-    // set currentAnimation to "roped"
-  }
-
 
   for (std::vector< std::shared_ptr<NPC> >::iterator it = npc.begin(); it != npc.end(); ++it)
   {
-      MoveObject(it);
+      (*it)->Move();
   }
 
 }
@@ -140,116 +177,45 @@ void Level::MoveWeapons()
 
   for (std::vector< std::shared_ptr<Weapon> >::iterator it = weapons.begin(); it != weapons.end(); ++it)
   {
-    MoveObject(it);
+    (*it)->Move();
   }
 }
 
-template <typename T>
-void Level::MoveObject(T& it)
+void Level::MoveProjectiles()
 {
-  //random number generator : rand()%(max-min+1) + min
-  //std::cout<<obj.position.x << std::endl;
-  if((*it)->directions.empty() == true) { return; }
-
-  // Check if object has travelled further than distance set in current Direction object
-  if((*it)->distance_travelled > (*it)->directions_it->getDistance())
+  for (std::vector< std::shared_ptr<Projectile> >::iterator it = projectiles.begin(); it != projectiles.end(); )
   {
-    // If distance exceeded, reset distance counter and have iterator point to next Direction object
-    (*it)->distance_travelled = 0;
-    (*it)->currentAnimation = &(*it)->defaultAnimation;
+    (*it)->Move();
 
-    if((*it)->directions_it->isRepeat())
+    if((*it)->directions.empty() == true)
     {
-      (*it)->directions_it++;
+      DestroyObject(projectiles, it);
     }
     else
     {
-      (*it)->directions_it = (*it)->directions.erase( (*it)->directions_it );
+      ++it;
     }
-
-    // if last direction reached after incrementing iterator, reset to beginning
-    if ( (*it)->directions_it == (*it)->directions.end() ) {
-      (*it)->directions_it = (*it)->directions.begin();
-    }
-
-  }
-
-  // update orientation
-  (*it)->setOrientation((*it)->directions_it->getType());
-
-  // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
-  double hypotenuse = sqrt((*it)->directions_it->getSpeed()*(*it)->directions_it->getSpeed() + (*it)->directions_it->getSpeed()*(*it)->directions_it->getSpeed());
-
-  // check direction and move object accordingly
-  switch ( (*it)->directions_it->getType() )
-  {
-    case Orientation::N :
-      (*it)->position.y -= (*it)->directions_it->getSpeed();
-      (*it)->animatedSprite.setRotation(0);
-      break;
-
-    case Orientation::S :
-      (*it)->position.y += (*it)->directions_it->getSpeed();
-      (*it)->animatedSprite.setRotation(180);
-      break;
-
-    case Orientation::E :
-      (*it)->position.x += (*it)->directions_it->getSpeed();
-      (*it)->animatedSprite.setRotation(90);
-      break;
-
-    case Orientation::W :
-      (*it)->position.x -= (*it)->directions_it->getSpeed();
-      (*it)->animatedSprite.setRotation(270);
-      break;
-
-    case Orientation::NW :
-      (*it)->position.x -= hypotenuse/2;
-      (*it)->position.y -= hypotenuse/2;
-      (*it)->animatedSprite.setRotation(315);
-      break;
-
-    case Orientation::NE :
-      (*it)->position.x += hypotenuse/2;
-      (*it)->position.y -= hypotenuse/2;
-      (*it)->animatedSprite.setRotation(45);
-      break;
-
-    case Orientation::SW :
-      (*it)->position.x -= hypotenuse/2;
-      (*it)->position.y += hypotenuse/2;
-      (*it)->animatedSprite.setRotation(225);
-      break;
-
-    case Orientation::SE :
-      (*it)->position.x += hypotenuse/2;
-      (*it)->position.y += hypotenuse/2;
-      (*it)->animatedSprite.setRotation(135);
-      break;
-
-  }
-
-  // update distance travelled
-  if ( (*it)->directions_it->getType() == Orientation::NW ||
-       (*it)->directions_it->getType() == Orientation::NE ||
-       (*it)->directions_it->getType() == Orientation::SW ||
-       (*it)->directions_it->getType() == Orientation::SE)
-  {
-    (*it)->distance_travelled += hypotenuse;
-  }
-  else
-  {
-    (*it)->distance_travelled += (*it)->directions_it->getSpeed();
   }
 }
 
 void Level::DestroyNPC(std::vector<std::shared_ptr<NPC>>::iterator it)
 {
   // erase remove idiom
-  npc.erase( std::remove(npc.begin(), npc.end(), *it),
-                         npc.end() );
+  DestroyObject(npc, it);
+}
+
+*/
+
+template <typename T1, typename T2>
+void Level::DestroyObject(T1& vec, T2& it)
+{
+  // erase remove idiom
+  vec.erase(std::remove(vec.begin(), vec.end(), *it),
+            vec.end());
 
 }
+
+/*
 
 // Check if NPC has collided with the hero
 void Level::CheckCollision_NPCtoHero(std::vector<std::shared_ptr<NPC>>::iterator it)
@@ -318,9 +284,9 @@ void Level::CheckCollision_NPCtoNPC(std::vector<std::shared_ptr<NPC>>::iterator 
 // Check if NPC has collided with any of the level's Collidables
 void Level::CheckCollision_NPCtoCollidable(std::vector<std::shared_ptr<NPC>>::iterator it)
 {
-  for (std::vector< std::unique_ptr<Collidable> >::const_iterator kt = collidables.begin(); kt != collidables.end(); ++kt)
+  for (std::vector< std::shared_ptr<Collidable> >::const_iterator kt = collidables.begin(); kt != collidables.end(); ++kt)
   {
-    if(Collision::BoundingBoxTest( (*kt)->sprite, (*it)->animatedSprite.hitbox ))
+    if(Collision::BoundingBoxTest( (*kt)->animatedSprite.hitbox, (*it)->animatedSprite.hitbox ))
      {
         switch( (*kt)->getType() )
         {
@@ -358,13 +324,14 @@ void Level::CheckCollision_NPCtoCollidable(std::vector<std::shared_ptr<NPC>>::it
             }
             else
             {
-              (*it)->MoveOppo(1);
+              (*it)->AddDirectionOppo(1);
             }
             break;
         } //end switch
      } //end collision test
   } //end collidable loop
 }
+*/
 
 bool Level::Victory()
 {

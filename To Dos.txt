@@ -63,13 +63,7 @@ Implementation Details
 -------------------------
 MapManager class needs to change. Should just load a simple image.
 
-Can create one additional base class Entity->AnimatedEntity,ImmovableEntity. Level can then hold a single vector populated with all Entity (which will greatly simplify drawing and collision logic)
-
-Each animatedEntity can have its own collision logic wrapped in an overloaded function shown below. The animatedEntity will react differently depending on what object it collided with.					
-	Collided(const NPC& n);
-	Collided(const Hero& h);
-	Collided(const Weapon& w);
-	Collided(const Collidable& c);
+Collidables need to be AnimatedEntity's so that they can explode and break. This also allows Level to hold a single container of all Entity objects, will simplify the collision and rendering code. 
 
 
 Features for future version

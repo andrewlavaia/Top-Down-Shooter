@@ -23,7 +23,7 @@ namespace Textures {
     Hero_Grab,
     Hero_Punch,
     Hero_Kick,
-    NPC,
+    NPC_Texture,
     Hitbox
   };
 }

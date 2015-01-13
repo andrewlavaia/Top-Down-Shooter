@@ -21,11 +21,11 @@ Weapon::Weapon(Type t)
   sf::Texture texture;
   texture.create(10,10);
   defaultAnimation = CreateAnimation(texture,10,10,1);
-  currentAnimation = &defaultAnimation;
-  animatedSprite.play(*currentAnimation);
+  setCurrentAnimation(defaultAnimation);
+  animatedSprite.play(*getCurrentAnimation());
   animatedSprite.setLooped(true);
   animatedSprite.setFrameTime(sf::seconds(0.16));
-  animatedSprite.setColor(sf::Color(255,0,0)); // semi-transparent red hitbox
+  animatedSprite.setColor(sf::Color(255,0,0)); // red box
 
 
   switch(type)
@@ -43,14 +43,14 @@ Weapon::Weapon(Type t)
       range = 3;
       attack1.setType(Attack::Push);
       attack2.setType(Attack::Smash);
-      directions.push_back(Direction(Orientation::S, 1, 0)); //initialize
+      //directions.push_back(Direction(Orientation::S, 1, 0)); //initialize
       break;
 
     case Weapon::Lasso :
       attack_modifier = 1;
       range = 10;
       attack1.setType(Attack::Push);
-      attack2.setType(Attack::RopeEm);
+      attack2.setType(Attack::Smash);
       directions.push_back(Direction(Orientation::S, 100, 1)); //initialize
       directions.push_back(Direction(Orientation::N, 100, 1)); //initialize
       break;
@@ -58,3 +58,33 @@ Weapon::Weapon(Type t)
 
   directions_it = directions.begin();
 }
+
+
+void Weapon::collideWithEntity(const AnimatedEntity& a)
+{
+  if (checkCollision(a) == false)
+    return;
+
+  if(typeid(a) == typeid(Hero))
+  {
+    // --durability;
+  }
+  else if(typeid(a) == typeid(NPC))
+  {
+    // --durability;
+  }
+  else if(typeid(a) == typeid(Weapon))
+  {
+    // do nothing
+  }
+  else if(typeid(a) == typeid(Projectile))
+  {
+    // do nothing
+  }
+  else if(typeid(a) == typeid(Collidable))
+  {
+    // --durability;
+  }
+
+}
+

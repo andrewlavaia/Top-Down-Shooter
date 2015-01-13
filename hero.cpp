@@ -5,9 +5,8 @@
 Hero::Hero()
   : //weapon( new Weapon(Weapon::Hands) ),
     grabbed_npc(nullptr),
-    roped_npc(nullptr),
     weapon(nullptr),
-    default_weapon(Weapon::Hands)
+    default_weapon(new Weapon(Weapon::Hands))
 {
   position.x = 50;
   position.y = 50;
@@ -24,7 +23,7 @@ Hero::Hero()
   // set hitbox for collision testing
   sf::Texture hitbox_texture;
   hitbox_texture.create(20,20);
-  animatedSprite.hitbox.setTexture(hitbox_texture); // aassign empty texture 20x20 pixels
+  animatedSprite.hitbox.setTexture(hitbox_texture); // assign empty texture 20x20 pixels
   animatedSprite.hitbox.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
   animatedSprite.hitbox.setOrigin(10, 10);
   animatedSprite.hitbox.setPosition(position.x,position.y);
@@ -41,21 +40,36 @@ void Hero::CreateAnimations(const TextureManager& textures)
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);
 
-  currentAnimation = &walkAnimation;
-  animatedSprite.play(*currentAnimation);
+  setCurrentAnimation(walkAnimation);
+  animatedSprite.play(*getCurrentAnimation());
 }
 
-// Moves hero sprite -> Overrides AnimatedEntity.MoveAnimatedSprite()
-void Hero::MoveAnimatedSprite(double interpolation)
+void Hero::collideWithEntity(const AnimatedEntity& a)
 {
-  animatedSprite.setOrigin(animatedSprite.getLocalBounds().width/2, animatedSprite.getLocalBounds().height/2);
-  sf::Vector2f distance = this->position - this->animatedSprite.getPosition();
-  this->animatedSprite.move( distance.x * interpolation, distance.y * interpolation );
-  this->animatedSprite.hitbox.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
+  if (checkCollision(a) == false)
+    return;
+  //std::cout <<"collision with " << typeid(a).name() <<std::endl;
 
-  if(weapon != nullptr)
-    this->weapon->animatedSprite.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
+  if(typeid(a) == typeid(NPC))
+  {
+    // adjust position?
+  }
+  else if(typeid(a) == typeid(Weapon))
+  {
+    // take damage
+  }
+  else if(typeid(a) == typeid(Projectile))
+  {
+    // take damage
+  }
+  else if(typeid(a) == typeid(Collidable))
+  {
+    // stop movement?
+
+  }
+
 }
+
 
 void Hero::PrimaryAttack(std::vector< std::shared_ptr<NPC> >& npc_vec)
 {
@@ -73,18 +87,11 @@ void Hero::SecondaryAttack(std::vector< std::shared_ptr<NPC> >& npc_vec)
         npc_vec);
 }
 
-
+/*
 void Hero::Throw()
 {
-  if (roped_npc != nullptr)
-  {
-    ThrowNPC();
-  }
-  else
-  {
-    ThrowNPC();
-    ThrowWeapon();
-  }
+  ThrowNPC();
+  ThrowWeapon();
 }
 
 void Hero::Pickup(std::vector< std::shared_ptr<NPC> >& npc_vec,
@@ -96,17 +103,10 @@ void Hero::Pickup(std::vector< std::shared_ptr<NPC> >& npc_vec,
 
 void Hero::Drop()
 {
-  if (roped_npc != nullptr)
-  {
-     DropNPC();
-  }
-  else
-  {
-    DropNPC();
-    DropWeapon();
-  }
+  DropNPC();
+  DropWeapon();
 }
-
+*/
 
 //-----------------------------
 // Private Member Functions
@@ -117,33 +117,31 @@ void Hero::AttackNPC( Attack atk, double modifier, double rng, std::vector< std:
 {
 
   // Test Collision of animated weapon hitbox instead of hero hitbox? -> NOT IMPLEMENTED YET
-  if (grabbed_npc == nullptr && roped_npc == nullptr)
+  if (grabbed_npc == nullptr)
   {
 
     // Play Attack Animation
     switch(atk.getType())
     {
       case Attack::Push :
-        currentAnimation = &punchAnimation;
+        setCurrentAnimation(punchAnimation);
         break;
 
       case Attack::Kick :
-        currentAnimation = &kickAnimation;
+        setCurrentAnimation(kickAnimation);
         break;
 
       case Attack::Smash :
-        currentAnimation = &punchAnimation;
+        setCurrentAnimation(punchAnimation);
         break;
 
-      case Attack::RopeEm :
-        break;
     }
 
 
     // Test Collision
     for(std::vector< std::shared_ptr<NPC> >::iterator it = npc_vec.begin(); it != npc_vec.end(); ++it)
     {
-      if((*it)->currentAnimation == &(*it)->attackedAnimation)
+      if((*it)->getCurrentAnimation() == &(*it)->attackedAnimation)
       {
         break;
       }
@@ -157,28 +155,22 @@ void Hero::AttackNPC( Attack atk, double modifier, double rng, std::vector< std:
 
         if(Collision::BoundingBoxTest( (*it)->animatedSprite.hitbox, range_modified_hitbox) )
         {
-          (*it)->currentAnimation = &(*it)->attackedAnimation;
+          (*it)->setCurrentAnimation((*it)->attackedAnimation);
           switch ( atk.getType() )
           {
             case Attack::Push :
               std::cout << "NPC pushed" << std::endl;
-              (*it)->Move(getOrientation().getType(), modifier * strength * 20 * (1/(*it)->getWeight()), 10);
+              (*it)->AddDirection(getOrientation().getType(), modifier * strength * 20 * (1/(*it)->getWeight()), 10);
               break;
 
             case Attack::Kick :
               std::cout << "NPC kicked" << std::endl;
-              (*it)->Move(getOrientation().getType(), 2 * modifier * strength * 20 * (1/(*it)->getWeight()), 10);
+              (*it)->AddDirection(getOrientation().getType(), 2 * modifier * strength * 20 * (1/(*it)->getWeight()), 10);
               break;
 
             case Attack::Smash :
               std::cout << "NPC smashed" << std::endl;
-              (*it)->Move(getOrientation().getType(), 3 * modifier * strength * 20 * (1/(*it)->getWeight()), 10);
-              break;
-
-            case Attack::RopeEm :
-              std::cout << "NPC roped" << std::endl;
-              roped_npc = *it;
-              roped_npc->animatedSprite.stop();
+              (*it)->AddDirection(getOrientation().getType(), 3 * modifier * strength * 20 * (1/(*it)->getWeight()), 10);
               break;
 
           }
@@ -188,11 +180,62 @@ void Hero::AttackNPC( Attack atk, double modifier, double rng, std::vector< std:
   }
 }
 
+
+void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& vec_ptr_a)
+{
+
+  for(auto it = vec_ptr_a.begin(); it != vec_ptr_a.end(); ++it)
+  {
+    if(typeid(**it) == typeid(NPC) && checkCollision(**it) == true)
+    {
+      Drop();
+      grabbed_npc = std::dynamic_pointer_cast<NPC>(*it);
+    }
+
+    if(typeid(**it) == typeid(Weapon) && checkCollision(**it) == true)
+    {
+      Drop();
+      weapon = std::dynamic_pointer_cast<Weapon>(*it);
+    }
+  }
+}
+
+void Hero::Drop()
+{
+  if(weapon != nullptr)
+    weapon = nullptr;
+
+  if(grabbed_npc != nullptr)
+    grabbed_npc = nullptr;
+}
+
+void Hero::Throw()
+{
+  double throw_speed = 20;
+  double throw_distance = 500;
+
+  if(grabbed_npc != nullptr)
+  {
+    grabbed_npc->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
+    //set status to thrown
+    grabbed_npc = nullptr;
+  }
+
+  if(weapon != nullptr)
+  {
+    weapon->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
+    weapon = nullptr;
+  }
+}
+
+
+
+/*
 void Hero::PickupWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec)
 {
   if (grabbed_npc == nullptr)
   {
-    currentAnimation = &grabAnimation;
+    setCurrentAnimation(grabAnimation);
     for(std::vector< std::shared_ptr<Weapon> >::iterator it = weap_vec.begin(); it != weap_vec.end(); ++it)
     {
       if(Collision::BoundingBoxTest( (*it)->animatedSprite.hitbox, animatedSprite.hitbox) )
@@ -224,7 +267,7 @@ void Hero::ThrowWeapon()
     // set throw animation
     double throw_speed = 20;
     double throw_distance = 250 * strength;
-    weapon->Move(getOrientation().getType(), throw_distance, throw_speed);
+    weapon->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
     //weapon->directions.push_back(Direction(getOrientation().getType(), throw_distance, throw_speed, false));
     //weapon->directions_it = weapon->directions.end() - 1;
 
@@ -242,7 +285,7 @@ void Hero::PickupNPC(std::vector< std::shared_ptr<NPC> >& npc_vec)
       return;
     }
 
-    currentAnimation = &grabAnimation;
+    setCurrentAnimation(grabAnimation);
 
     for(std::vector< std::shared_ptr<NPC> >::iterator it = npc_vec.begin(); it != npc_vec.end(); ++it)
     {
@@ -250,7 +293,7 @@ void Hero::PickupNPC(std::vector< std::shared_ptr<NPC> >& npc_vec)
       {
           std::cout << "NPC grabbed" << std::endl;
           grabbed_npc = *it;
-          grabbed_npc->currentAnimation = &grabbed_npc->grabbedAnimation;
+          grabbed_npc->setCurrentAnimation(grabbed_npc->grabbedAnimation);
           grabbed_npc->animatedSprite.stop();
           grabbed_npc->animatedSprite.rotate(90);
       }
@@ -264,14 +307,8 @@ void Hero::DropNPC()
   {
     grabbed_npc->animatedSprite.play();
     grabbed_npc->animatedSprite.rotate(-90);
-    grabbed_npc->currentAnimation = &grabbed_npc->defaultAnimation;
+    grabbed_npc->setCurrentAnimation(grabbed_npc->defaultAnimation);
     grabbed_npc = nullptr;
-  }
-
-  if (roped_npc != nullptr)
-  {
-    roped_npc->animatedSprite.play();
-    roped_npc = nullptr;
   }
 }
 
@@ -279,10 +316,10 @@ void Hero::ThrowNPC()
 {
   if (grabbed_npc != nullptr)
   {
-    grabbed_npc->currentAnimation = &grabbed_npc->thrownAnimation;
+    grabbed_npc->setCurrentAnimation(grabbed_npc->thrownAnimation);
     double throw_speed = 20;
     double throw_distance = 100 * ( strength/grabbed_npc->getWeight() );
-    grabbed_npc->Move(getOrientation().getType(), throw_distance, throw_speed);
+    grabbed_npc->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
     //grabbed_npc->directions.push_back(Direction(getOrientation().getType(), throw_distance, throw_speed, false));
     //grabbed_npc->directions.push_back(Direction(getOrientation().getOppo(), throw_distance, grabbed_npc->getSpeed(), false)); //npc walks back after thrown
     //grabbed_npc->directions_it = grabbed_npc->directions.end() - 2;
@@ -293,11 +330,12 @@ void Hero::ThrowNPC()
     grabbed_npc = nullptr;
   }
 }
+*/
 
 Weapon Hero::getWeapon()
 {
   if (weapon == nullptr)
-    return default_weapon;
+    return *default_weapon;
   else
     return *weapon;
 }

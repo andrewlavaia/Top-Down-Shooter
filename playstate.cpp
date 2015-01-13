@@ -145,11 +145,11 @@ void CPlayState::HandleEvents(CGameEngine* game)
     noKeyPressed = false;
   }
 
-  // Grab NPC / Pickup Weapon
+  // Pickup NPC or Weapon
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
   {
-    this->level.hero.Pickup(this->level.npc, this->level.weapons);
-    this->level.hero.animatedSprite.play(*this->level.hero.currentAnimation);
+    this->level.hero.Pickup(this->level.entities);
+    this->level.hero.animatedSprite.play(*this->level.hero.getCurrentAnimation());
   }
 
   // Release NPC / Drop Weapon
@@ -161,15 +161,15 @@ void CPlayState::HandleEvents(CGameEngine* game)
   // Primary Attack
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
   {
-    this->level.hero.PrimaryAttack(this->level.npc);
-    this->level.hero.animatedSprite.play(*this->level.hero.currentAnimation);
+    //this->level.hero.PrimaryAttack(this->level.npc);
+    this->level.hero.animatedSprite.play(*this->level.hero.getCurrentAnimation());
   }
 
   // Secondary Attack
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
   {
-    this->level.hero.SecondaryAttack(this->level.npc);
-    this->level.hero.animatedSprite.play(*this->level.hero.currentAnimation);
+    //this->level.hero.SecondaryAttack(this->level.npc);
+    this->level.hero.animatedSprite.play(*this->level.hero.getCurrentAnimation());
   }
 
   // Throw
@@ -179,11 +179,21 @@ void CPlayState::HandleEvents(CGameEngine* game)
 
 
   // Spawning Controls
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
+  {
     this->level.CreateNPC(NPC::Chumba);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+  {
     this->level.CreateNPC(NPC::Goomba);
+  }
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) // Fire Projectile
+  {
+    this->level.CreateProjectile( Projectile::Bullet,
+                                  this->level.hero.position.x,
+                                  this->level.hero.position.y,
+                                  this->level.hero.getOrientation().getType());
   }
 
   // Load next level
@@ -200,25 +210,39 @@ void CPlayState::Update(CGameEngine* game)
   // Collision Tests
   // ---------------
 
-  for (std::vector< std::shared_ptr<NPC> >::iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it)
+  for (std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = this->level.entities.begin(); it != this->level.entities.end(); ++it)
   {
-    if( (*it)->checkAgroDistance(this->level.hero) && (*it)->currentAnimation == &(*it)->defaultAnimation)
-      (*it)->Move((*it)->getRelativeOrientation(this->level.hero), .001, (*it)->getSpeed());
+    //(*it)->restoreDefaultAnimation();
+    //if( typeid(**it) == typeid(NPC) )
+      //std::cout<<(*it)->getCurrentAnimation() <<"--"<< &(*it)->defaultAnimation <<std::endl;
+    if( typeid(**it) == typeid(NPC) &&
+        (*it)->checkAgroDistance(this->level.hero)// &&
+        //(*it)->getCurrentAnimation() == &(*it)->defaultAnimation
+      )
+    {
+      (*it)->AddDirection((*it)->getRelativeOrientation(this->level.hero), .25, (*it)->getSpeed());
+    }
 
-    this->level.CheckCollision_NPCtoHero(it);
-    this->level.CheckCollision_NPCtoNPC(it);
-    this->level.CheckCollision_NPCtoCollidable(it);
-    if (it == this->level.npc.end()) { break; }
+    this->level.hero.collideWithEntity(**it);
 
+    for (std::vector< std::shared_ptr<AnimatedEntity> >::iterator jt = this->level.entities.begin(); jt != this->level.entities.end(); ++jt)
+    {
+      (*it)->collideWithEntity(**jt);
+    }
   }
+
+  // Delete destroyed entities
+    this->level.DeleteEntities();
 
 
   // -------------------
   // NPC AI and Movement
   // -------------------
 
-  this->level.MoveNPCs();
-  this->level.MoveWeapons();
+  //this->level.MoveNPCs();
+  //this->level.MoveWeapons();
+  //this->level.MoveProjectiles();
+  this->level.MoveEntities();
 
 
   // -------------------
@@ -287,14 +311,14 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // Hero Animation Rules
   // -------------------
 
-  if (this->noKeyPressed && this->level.hero.currentAnimation == &this->level.hero.walkAnimation)
+  if (this->noKeyPressed && this->level.hero.getCurrentAnimation() == &this->level.hero.walkAnimation)
   {
     this->level.hero.animatedSprite.stop();
   }
 
-  if (this->level.hero.currentAnimation != &this->level.hero.walkAnimation && !this->level.hero.animatedSprite.isPlaying())
+  if (this->level.hero.getCurrentAnimation() != &this->level.hero.walkAnimation && !this->level.hero.animatedSprite.isPlaying())
   {
-    this->level.hero.currentAnimation = &this->level.hero.walkAnimation;
+    this->level.hero.setCurrentAnimation(this->level.hero.walkAnimation);
   }
 
   // Update Animation
@@ -321,7 +345,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     window.draw(range_modified_hitbox);
   }
 
-
+/*
 
   // ---------------
   // Draw NPCs
@@ -336,6 +360,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     //window.draw( (*it)->animatedSprite.hitbox ); // debug only
 
   }
+*/
 
   if(this->level.hero.grabbed_npc != nullptr)
   {
@@ -343,18 +368,23 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     window.draw(this->level.hero.grabbed_npc->animatedSprite);
   }
 
-  if(this->level.hero.roped_npc != nullptr)
-  {
-    this->level.hero.roped_npc->MoveAnimatedSprite(interpolation);
-    window.draw(this->level.hero.roped_npc->animatedSprite);
-  }
-
   // ---------------
   // Draw Weapons
   // ---------------
 
-
+/*
   for (std::vector< std::shared_ptr<Weapon> >::const_iterator it = this->level.weapons.begin(); it != this->level.weapons.end(); ++it)
+  {
+    (*it)->animatedSprite.update(game->frameTime);
+    (*it)->MoveAnimatedSprite(interpolation);
+     window.draw( (*it)->animatedSprite );
+  }
+
+  // ---------------
+  // Draw Projectiles
+  // ---------------
+
+  for (std::vector< std::shared_ptr<Projectile> >::const_iterator it = this->level.projectiles.begin(); it != this->level.projectiles.end(); ++it)
   {
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
@@ -365,17 +395,31 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // Draw Collidables
   // --------------------
 
-  for(std::vector< std::unique_ptr<Collidable> >::const_iterator it = this->level.collidables.begin(); it != this->level.collidables.end(); ++it)
+  for(std::vector< std::shared_ptr<Collidable> >::const_iterator it = this->level.collidables.begin(); it != this->level.collidables.end(); ++it)
   {
-    window.draw( (*it)->sprite );
+    (*it)->animatedSprite.update(game->frameTime);
+    (*it)->MoveAnimatedSprite(interpolation);
+    window.draw( (*it)->animatedSprite);
+    //window.draw((*it)->animatedSprite.hitbox);
+  }
+*/
+
+  // --------------------
+  // Draw Entities
+  // --------------------
+
+  for(std::vector< std::shared_ptr<AnimatedEntity> >::const_iterator it = this->level.entities.begin(); it != this->level.entities.end(); ++it)
+  {
+    (*it)->animatedSprite.update(game->frameTime);
+    (*it)->MoveAnimatedSprite(interpolation);
+    window.draw( (*it)->animatedSprite);
+    window.draw((*it)->animatedSprite.hitbox);
   }
 
   // ---------------
   // Update Window
   // ---------------
   window.display();
-
-
 
 }
 

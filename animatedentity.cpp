@@ -3,10 +3,9 @@
 
 
 AnimatedEntity::AnimatedEntity()
-  : currentAnimation(nullptr),
-    directions_it(directions.begin()),
-    distance_travelled(0)
-
+  : directions_it(directions.begin()),
+    distance_travelled(0),
+    destroy_flag(false)
 {
     directions.clear();
     setOrientation(Orientation::S);
@@ -28,20 +27,129 @@ void AnimatedEntity::MoveAnimatedSprite(double interpolation)
 {
   animatedSprite.setOrigin(animatedSprite.getLocalBounds().width/2, animatedSprite.getLocalBounds().height/2);
   sf::Vector2f distance = this->position - this->animatedSprite.getPosition();
-  this->animatedSprite.move( distance.x * interpolation, distance.y * interpolation );
+  this->animatedSprite.move(distance.x * interpolation, distance.y * interpolation);
   this->animatedSprite.hitbox.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
 }
 
-void AnimatedEntity::Move(Orientation::Type orientation_type, double distance, double speed)
+void AnimatedEntity::AddDirection(Orientation::Type orientation_type, double distance, double speed)
 {
   directions_it = directions.insert(directions_it,
-                                    Direction(orientation_type,distance,speed,false));
+                                     Direction(orientation_type,distance,speed,false));
   distance_travelled = 0;
 }
 
-void AnimatedEntity::MoveOppo(double d)
+void AnimatedEntity::AddDirectionOppo(double d)
 {
-  Move(getOrientation().getOppo(), d, directions_it->getSpeed());
+  AddDirection(getOrientation().getOppo(), d, directions_it->getSpeed());
+}
+
+void AnimatedEntity::Move()
+{
+  //random number generator : rand()%(max-min+1) + min
+  //std::cout<<obj.position.x << std::endl;
+  if(directions.empty() == true) { return; }
+
+  // Check if object has travelled further than distance set in current Direction object
+  if(distance_travelled > directions_it->getDistance())
+  {
+    // If distance exceeded, reset distance counter and have iterator point to next Direction object
+    distance_travelled = 0;
+
+    restoreDefaultAnimation(); // should this be here?
+
+    if(directions_it->isRepeat())
+    {
+      directions_it++;
+    }
+    else
+    {
+      directions_it = directions.erase(directions_it);
+    }
+
+    // if last direction reached after incrementing iterator, reset to beginning
+    if(directions_it == directions.end())
+    {
+      directions_it = directions.begin();
+    }
+
+  }
+
+  // update orientation
+  setOrientation(directions_it->getType());
+
+  // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
+  double hypotenuse = sqrt(directions_it->getSpeed() * directions_it->getSpeed() + directions_it->getSpeed() * directions_it->getSpeed());
+
+  // check direction and move object accordingly
+  switch(directions_it->getType())
+  {
+    case Orientation::N :
+      position.y -= directions_it->getSpeed();
+      animatedSprite.setRotation(0);
+      break;
+
+    case Orientation::S :
+      position.y += directions_it->getSpeed();
+      animatedSprite.setRotation(180);
+      break;
+
+    case Orientation::E :
+      position.x += directions_it->getSpeed();
+      animatedSprite.setRotation(90);
+      break;
+
+    case Orientation::W :
+      position.x -= directions_it->getSpeed();
+      animatedSprite.setRotation(270);
+      break;
+
+    case Orientation::NW :
+      position.x -= hypotenuse/2;
+      position.y -= hypotenuse/2;
+      animatedSprite.setRotation(315);
+      break;
+
+    case Orientation::NE :
+      position.x += hypotenuse/2;
+      position.y -= hypotenuse/2;
+      animatedSprite.setRotation(45);
+      break;
+
+    case Orientation::SW :
+      position.x -= hypotenuse/2;
+      position.y += hypotenuse/2;
+      animatedSprite.setRotation(225);
+      break;
+
+    case Orientation::SE :
+      position.x += hypotenuse/2;
+      position.y += hypotenuse/2;
+      animatedSprite.setRotation(135);
+      break;
+
+  }
+
+  // update distance travelled
+  if ( directions_it->getType() == Orientation::NW ||
+       directions_it->getType() == Orientation::NE ||
+       directions_it->getType() == Orientation::SW ||
+       directions_it->getType() == Orientation::SE)
+  {
+    distance_travelled += hypotenuse;
+  }
+  else
+  {
+    distance_travelled += directions_it->getSpeed();
+  }
+
+}
+
+bool AnimatedEntity::checkCollision(const AnimatedEntity& a)
+{
+  if(Collision::BoundingBoxTest(animatedSprite.hitbox, a.animatedSprite.hitbox))
+    return true;
+  else
+    return false;
 }
 
 Orientation::Type AnimatedEntity::getRelativeOrientation(const AnimatedEntity& entity)
@@ -81,6 +189,10 @@ Orientation::Type AnimatedEntity::getRelativeOrientation(const AnimatedEntity& e
     return Orientation::S;
   if (x_direction == 0 && y_direction == 0) //collision
     return Orientation::S;
+
+    //should not possible to reach here
+    return Orientation::S;
+
 }
 
 bool AnimatedEntity::checkAgroDistance(const AnimatedEntity& entity)
