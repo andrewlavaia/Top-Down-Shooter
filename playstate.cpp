@@ -216,7 +216,7 @@ void CPlayState::Update(CGameEngine* game)
     //if( typeid(**it) == typeid(NPC) )
       //std::cout<<(*it)->getCurrentAnimation() <<"--"<< &(*it)->defaultAnimation <<std::endl;
     if( typeid(**it) == typeid(NPC) &&
-        (*it)->checkAgroDistance(this->level.hero)// &&
+        (*it)->checkDistance(200, this->level.hero)// &&
         //(*it)->getCurrentAnimation() == &(*it)->defaultAnimation
       )
     {
@@ -239,9 +239,6 @@ void CPlayState::Update(CGameEngine* game)
   // NPC AI and Movement
   // -------------------
 
-  //this->level.MoveNPCs();
-  //this->level.MoveWeapons();
-  //this->level.MoveProjectiles();
   this->level.MoveEntities();
 
 
@@ -335,6 +332,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // DRAW HIT BOXES FOR DEBUG ONLY
   window.draw(this->level.hero.animatedSprite.hitbox);
 
+/*
   if (this->level.hero.weapon != nullptr)
   {
     float range = this->level.hero.weapon->getRange();
@@ -344,75 +342,17 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     range_modified_hitbox.setRotation(this->level.hero.getOrientation().getRotation());
     window.draw(range_modified_hitbox);
   }
-
-/*
-
-  // ---------------
-  // Draw NPCs
-  // ---------------
-
-
-  for (std::vector< std::shared_ptr<NPC> >::const_iterator it = this->level.npc.begin(); it != this->level.npc.end(); ++it)
-  {
-    (*it)->animatedSprite.update(game->frameTime);
-    (*it)->MoveAnimatedSprite(interpolation);
-    window.draw( (*it)->animatedSprite );
-    //window.draw( (*it)->animatedSprite.hitbox ); // debug only
-
-  }
 */
 
-  if(this->level.hero.grabbed_npc != nullptr)
-  {
-    this->level.hero.grabbed_npc->MoveAnimatedSprite(interpolation);
-    window.draw(this->level.hero.grabbed_npc->animatedSprite);
-  }
-
-  // ---------------
-  // Draw Weapons
-  // ---------------
-
-/*
-  for (std::vector< std::shared_ptr<Weapon> >::const_iterator it = this->level.weapons.begin(); it != this->level.weapons.end(); ++it)
-  {
-    (*it)->animatedSprite.update(game->frameTime);
-    (*it)->MoveAnimatedSprite(interpolation);
-     window.draw( (*it)->animatedSprite );
-  }
-
-  // ---------------
-  // Draw Projectiles
-  // ---------------
-
-  for (std::vector< std::shared_ptr<Projectile> >::const_iterator it = this->level.projectiles.begin(); it != this->level.projectiles.end(); ++it)
-  {
-    (*it)->animatedSprite.update(game->frameTime);
-    (*it)->MoveAnimatedSprite(interpolation);
-    window.draw( (*it)->animatedSprite );
-  }
-
-  // --------------------
-  // Draw Collidables
-  // --------------------
-
-  for(std::vector< std::shared_ptr<Collidable> >::const_iterator it = this->level.collidables.begin(); it != this->level.collidables.end(); ++it)
-  {
-    (*it)->animatedSprite.update(game->frameTime);
-    (*it)->MoveAnimatedSprite(interpolation);
-    window.draw( (*it)->animatedSprite);
-    //window.draw((*it)->animatedSprite.hitbox);
-  }
-*/
-
-  // --------------------
+  // ---------------------
   // Draw Entities
-  // --------------------
+  // ---------------------
 
   for(std::vector< std::shared_ptr<AnimatedEntity> >::const_iterator it = this->level.entities.begin(); it != this->level.entities.end(); ++it)
   {
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
-    window.draw( (*it)->animatedSprite);
+    window.draw((*it)->animatedSprite);
     window.draw((*it)->animatedSprite.hitbox);
   }
 

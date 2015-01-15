@@ -7,19 +7,6 @@ Collidable::Collidable(Type t, int x, int y, int width, int height)
   position.x = x + width/2;
   position.y = y + height/2;
 
-  /*
-  sf::Texture texture;
-  texture.create(width, height);
-  sprite.setTexture(texture); // assign empty texture
-  //CRASH IF BELOW IS ACTIVE - window.draw method arithmetic error?
-  //sprite.setColor(sf::Color(0, 0, 255, 100)); // semi-transparent blue hitbox
-  //sprite.setOrigin(width/2, height/2);
-  sprite.setPosition(position.x,position.y);
-  */
-
-  distance_travelled = 0;
-  directions.clear();
-
   //change texture based on type
   sf::Texture texture;
   texture.create(width,height);
@@ -59,7 +46,6 @@ Collidable::Collidable(Type t, int x, int y, int width, int height)
       break;
   }
 
-    directions_it = directions.begin();
 }
 
 void Collidable::collideWithEntity(const AnimatedEntity& a)

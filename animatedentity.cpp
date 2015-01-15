@@ -3,11 +3,11 @@
 
 
 AnimatedEntity::AnimatedEntity()
-  : directions_it(directions.begin()),
-    distance_travelled(0),
+  : distance_travelled(0),
     destroy_flag(false)
 {
     directions.clear();
+    directions_it = directions.begin();
     setOrientation(Orientation::S);
 }
 
@@ -31,10 +31,10 @@ void AnimatedEntity::MoveAnimatedSprite(double interpolation)
   this->animatedSprite.hitbox.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
 }
 
-void AnimatedEntity::AddDirection(Orientation::Type orientation_type, double distance, double speed)
+void AnimatedEntity::AddDirection(Orientation::Type orientation_type, double distance, double speed, bool rpt)
 {
   directions_it = directions.insert(directions_it,
-                                     Direction(orientation_type,distance,speed,false));
+                                     Direction(orientation_type,distance,speed,rpt));
   distance_travelled = 0;
 }
 
@@ -195,14 +195,13 @@ Orientation::Type AnimatedEntity::getRelativeOrientation(const AnimatedEntity& e
 
 }
 
-bool AnimatedEntity::checkAgroDistance(const AnimatedEntity& entity)
+bool AnimatedEntity::checkDistance(double distance, const AnimatedEntity& entity)
 {
   double dist_x = position.x - entity.position.x;
   double dist_y = position.y - entity.position.y;
-  double margin = 200;
-  double nmargin = margin * -1;
+  double ndistance = distance * -1;
 
-  if( (dist_x < margin && dist_x > nmargin) && (dist_y < margin && dist_y > nmargin) )
+  if( (dist_x < distance && dist_x > ndistance) && (dist_y < distance && dist_y > ndistance) )
     return true;
   else
     return false;

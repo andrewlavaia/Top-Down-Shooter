@@ -3,18 +3,15 @@
 #include <iostream>
 
 Hero::Hero()
-  : //weapon( new Weapon(Weapon::Hands) ),
-    grabbed_npc(nullptr),
+  : grabbed_npc(nullptr),
     weapon(nullptr),
-    default_weapon(new Weapon(Weapon::Hands))
+    default_weapon(new Weapon(Weapon::Hands, 50, 50))
 {
   position.x = 50;
   position.y = 50;
 
   speed = 10;
   strength = 1;
-
-
 
   // set up AnimatedSprite
   animatedSprite.setOrigin(29,22);
@@ -70,7 +67,7 @@ void Hero::collideWithEntity(const AnimatedEntity& a)
 
 }
 
-
+/*
 void Hero::PrimaryAttack(std::vector< std::shared_ptr<NPC> >& npc_vec)
 {
   AttackNPC(this->getWeapon().getPrimaryAttack(),
@@ -86,6 +83,8 @@ void Hero::SecondaryAttack(std::vector< std::shared_ptr<NPC> >& npc_vec)
         this->getWeapon().getRange(),
         npc_vec);
 }
+*/
+
 
 /*
 void Hero::Throw()
@@ -112,7 +111,7 @@ void Hero::Drop()
 // Private Member Functions
 // ----------------------------
 
-
+/*
 void Hero::AttackNPC( Attack atk, double modifier, double rng, std::vector< std::shared_ptr<NPC> >& npc_vec)
 {
 
@@ -179,7 +178,7 @@ void Hero::AttackNPC( Attack atk, double modifier, double rng, std::vector< std:
     }
   }
 }
-
+*/
 
 void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& vec_ptr_a)
 {
@@ -196,17 +195,21 @@ void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& vec_ptr_a)
     {
       Drop();
       weapon = std::dynamic_pointer_cast<Weapon>(*it);
+      weapon->animatedSprite.hitbox.setScale(1, weapon->getRange());
+      weapon->animatedSprite.hitbox.setRotation(this->getOrientation().getRotation());
     }
   }
 }
 
 void Hero::Drop()
 {
-  if(weapon != nullptr)
-    weapon = nullptr;
-
   if(grabbed_npc != nullptr)
     grabbed_npc = nullptr;
+  else if(weapon != nullptr)
+  {
+    weapon->animatedSprite.hitbox.setScale(1,1);
+    weapon = nullptr;
+  }
 }
 
 void Hero::Throw()
@@ -223,6 +226,7 @@ void Hero::Throw()
 
   if(weapon != nullptr)
   {
+    weapon->animatedSprite.hitbox.setScale(1,1);
     weapon->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
     weapon = nullptr;
   }

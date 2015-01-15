@@ -3,9 +3,9 @@
 #define WEAPON_H
 
 #include <SFML/Graphics.hpp>
-#include  "direction.h"
-#include "attack.h"
 #include "animatedentity.h"
+#include "direction.h"
+#include "attack.h"
 
 #include "npc.h"
 #include "projectile.h"
@@ -41,7 +41,7 @@ class Weapon : public AnimatedEntity
       */
     };
 
-    Weapon(Type t);
+    Weapon(Type t, double x, double y);
 
     Type      getType()                { return type; }
     Attack    getPrimaryAttack()       { return attack1; }
@@ -58,6 +58,7 @@ class Weapon : public AnimatedEntity
     virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
     virtual void collideWithEntity(const AnimatedEntity& a);
 
+   // sf::Texture hitbox_texture;
 
   private:
     Type type;
@@ -67,6 +68,8 @@ class Weapon : public AnimatedEntity
     int durability;
     double attack_modifier;
     double range;
+
+
 };
 
 #endif

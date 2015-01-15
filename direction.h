@@ -24,7 +24,7 @@ class Direction
      }
 
     Orientation::Type getType() { return type; }
-    unsigned getDistance() { return distance; }
+    double getDistance() { return distance; }
     double getSpeed() { return speed; }
     bool isRepeat() { return repeat; }
 

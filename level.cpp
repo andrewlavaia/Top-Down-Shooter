@@ -33,13 +33,8 @@ void Level::Load(int id)
 {
   running_time.restart();
 
-  // clear vectors and deallocate memory
-
-/*
-  npc.clear(); // std::unique_ptr will delete object automatically, deleting any existing NPCs
-  weapons.clear();
-  collidables.clear();
-*/
+  // clear vector and deallocate memory
+  entities.clear();
 
   // Load Level
   switch (id)
@@ -60,10 +55,10 @@ void Level::Load(int id)
       CreateNPC(NPC::Goomba);
       CreateNPC(NPC::Chumba);
 
-      CreateWeapon(Weapon::Lasso);
-      CreateWeapon(Weapon::Pole);
-      CreateWeapon(Weapon::Pole);
-      CreateWeapon(Weapon::Lasso);
+      CreateWeapon(Weapon::Lasso, 20, 50);
+      CreateWeapon(Weapon::Pole, 400, 400);
+      CreateWeapon(Weapon::Pole, 200, 200);
+      CreateWeapon(Weapon::Lasso, 700,700);
 
       break;
 
@@ -87,32 +82,33 @@ void Level::Load(int id)
 // Dynamically creates a new NPC object and returns a smart pointer to it
 void Level::CreateNPC(NPC::Type type)
 {
-  std::shared_ptr<NPC> p_npc( new NPC(type, textures) );
-  entities.push_back(p_npc);
+  //std::shared_ptr<NPC> p_npc( new NPC(type, textures) );
+  auto p = std::make_shared<NPC>(type,textures);
+  entities.push_back(p);
 }
 
 // Dynamically creates a new Weapon object and returns a smart pointer to it
-void Level::CreateWeapon(Weapon::Type type)
+void Level::CreateWeapon(Weapon::Type type, double x, double y)
 {
- // std::unique_ptr<Weapon> p_weapon( new Weapon(type) );
- // weapon.push_back( std::move(p_weapon) );
-
-  std::shared_ptr<Weapon> w(new Weapon(type));
-  entities.push_back(w);
+  //std::shared_ptr<Weapon> w(new Weapon(type, x, y));
+  auto p = std::make_shared<Weapon>(type, x, y);
+  entities.push_back(p);
 }
 
 void Level::CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o)
 {
-  std::shared_ptr<Projectile> p(new Projectile(type, x, y, o));
+  //std::shared_ptr<Projectile> p(new Projectile(type, x, y, o));
+  auto p = std::make_shared<Projectile>(type, x, y, o);
   entities.push_back(p);
 }
 
-// Dynamically creates a new Collidable object and returns a smart pointer to it
 void Level::CreateCollidable(Collidable::Type type, int x, int y, int width, int height)
 {
-  std::shared_ptr<Collidable> p(new Collidable(type, x, y, width, height));
+  //std::shared_ptr<Collidable> p(new Collidable(type, x, y, width, height));
+  auto p = std::make_shared<Collidable>(type, x, y, width, height);
   entities.push_back(p);
 }
+
 void Level::MoveEntities()
 {
   if(hero.grabbed_npc != nullptr)
@@ -124,13 +120,14 @@ void Level::MoveEntities()
   if (hero.weapon != nullptr)
   {
     hero.weapon->position = hero.position;
+    hero.weapon->animatedSprite.hitbox.setRotation(hero.getOrientation().getRotation());
   }
 
-  for (std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = entities.begin(); it != entities.end();)
+  for (auto it = entities.begin(); it != entities.end();)
   {
     (*it)->Move();
 
-    if(typeid(**it) == typeid(Projectile) && (*it)->directions.empty())
+    if(typeid(**it) == typeid(Projectile) && (*it)->isNotMoving())
       DestroyObject(entities, it);
     else
       ++it;
@@ -140,71 +137,15 @@ void Level::MoveEntities()
 
 void Level::DeleteEntities()
 {
-  for (std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = entities.begin(); it != entities.end(); )
+  for (auto it = entities.begin(); it != entities.end(); )
   {
-    if((*it)->getDestroyFlag() == true)
+    if((*it)->isDestroyed())
       DestroyObject(entities, it);
     else
       ++it;
   }
 
 }
-
-/*
-void Level::MoveNPCs()
-{
-  if(hero.grabbed_npc != nullptr)
-  {
-    hero.grabbed_npc->position.x = hero.position.x;
-    hero.grabbed_npc->position.y = hero.position.y - 30;
-    // set currentAnimation to "grabbed"
-  }
-
-
-  for (std::vector< std::shared_ptr<NPC> >::iterator it = npc.begin(); it != npc.end(); ++it)
-  {
-      (*it)->Move();
-  }
-
-}
-
-void Level::MoveWeapons()
-{
-  if (hero.weapon != nullptr)
-  {
-    hero.weapon->position = hero.position;
-  }
-
-  for (std::vector< std::shared_ptr<Weapon> >::iterator it = weapons.begin(); it != weapons.end(); ++it)
-  {
-    (*it)->Move();
-  }
-}
-
-void Level::MoveProjectiles()
-{
-  for (std::vector< std::shared_ptr<Projectile> >::iterator it = projectiles.begin(); it != projectiles.end(); )
-  {
-    (*it)->Move();
-
-    if((*it)->directions.empty() == true)
-    {
-      DestroyObject(projectiles, it);
-    }
-    else
-    {
-      ++it;
-    }
-  }
-}
-
-void Level::DestroyNPC(std::vector<std::shared_ptr<NPC>>::iterator it)
-{
-  // erase remove idiom
-  DestroyObject(npc, it);
-}
-
-*/
 
 template <typename T1, typename T2>
 void Level::DestroyObject(T1& vec, T2& it)

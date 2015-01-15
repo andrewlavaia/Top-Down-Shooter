@@ -1,7 +1,7 @@
 
 #include "weapon.h"
 
-Weapon::Weapon(Type t)
+Weapon::Weapon(Type t, double x, double y)
   : attack1(Attack::Push), // default initialization
     attack2(Attack::Push)  // default initialization
 {
@@ -10,12 +10,10 @@ Weapon::Weapon(Type t)
   // Default Weapon Settings
   attack_modifier = 1;
   durability = 5;
-  range = 1;
-  position.x = rand()%1024;    //random number generator : rand()%(max-min+1) + min
-  position.y = rand()%768;
+  range = 2;
 
-  distance_travelled = 0;
-  directions.clear();
+  position.x = x; //rand()%1024;    //random number generator : rand()%(max-min+1) + min
+  position.y = y; //rand()%768;
 
 
   sf::Texture texture;
@@ -24,39 +22,48 @@ Weapon::Weapon(Type t)
   setCurrentAnimation(defaultAnimation);
   animatedSprite.play(*getCurrentAnimation());
   animatedSprite.setLooped(true);
-  animatedSprite.setFrameTime(sf::seconds(0.16));
-  animatedSprite.setColor(sf::Color(255,0,0)); // red box
+  //animatedSprite.setFrameTime(sf::seconds(0.16));
+  animatedSprite.setColor(sf::Color(255,150,0)); // orange box
+  animatedSprite.setPosition(position.x, position.y);
+
+
+  // set hitbox for collision testing
+  sf::Texture hitbox_texture;
+  hitbox_texture.create(10,10);
+  animatedSprite.hitbox.setTexture(hitbox_texture); // assign empty texture
+  animatedSprite.hitbox.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
+  animatedSprite.hitbox.setOrigin(5, 10);
+  animatedSprite.hitbox.setPosition(position.x, position.y);
 
 
   switch(type)
   {
     case Weapon::Hands :
       attack_modifier = 1;
-      range = 1;
+      range = 2;
       attack1.setType(Attack::Push);
       attack2.setType(Attack::Kick);
-      directions.push_back(Direction(Orientation::S, 1, 0)); //initialize
       break;
 
     case Weapon::Pole :
       attack_modifier = 3;
-      range = 3;
+      range = 5;
       attack1.setType(Attack::Push);
       attack2.setType(Attack::Smash);
-      //directions.push_back(Direction(Orientation::S, 1, 0)); //initialize
       break;
 
-    case Weapon::Lasso :
+
+    case Weapon::Lasso:
       attack_modifier = 1;
       range = 10;
+
       attack1.setType(Attack::Push);
       attack2.setType(Attack::Smash);
-      directions.push_back(Direction(Orientation::S, 100, 1)); //initialize
-      directions.push_back(Direction(Orientation::N, 100, 1)); //initialize
+
       break;
+
   }
 
-  directions_it = directions.begin();
 }
 
 

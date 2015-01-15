@@ -30,14 +30,11 @@ NPC::NPC(Type type, TextureManager& texture)
       speed = 4;
       weight = 1;
 
-      directions.push_back(Direction(Orientation::S, 100, speed));
-      directions.push_back(Direction(Orientation::N, 100, speed));
-      directions.push_back(Direction(Orientation::NW, 50, speed));
-      directions.push_back(Direction(Orientation::NE, 50, speed));
-      directions.push_back(Direction(Orientation::SW, 50, speed));
-      directions.push_back(Direction(Orientation::SE, 50, speed));
-      directions.push_back(Direction(Orientation::E, 100, speed));
-      directions.push_back(Direction(Orientation::W, 100, speed));
+      AddDirection(Orientation::S, 100, speed);
+      AddDirection(Orientation::NW, 100, speed);
+      AddDirection(Orientation::NE, 50, speed);
+      AddDirection(Orientation::SW, 50, speed);
+
       break;
 
     case NPC::Chumba :
@@ -45,14 +42,13 @@ NPC::NPC(Type type, TextureManager& texture)
       position.y = 300;
       speed = 2;
       weight = 1;
-      directions.push_back(Direction(Orientation::N, 100, speed));
-      directions.push_back(Direction(Orientation::S, 100, speed));
-      directions.push_back(Direction(Orientation::NE, 100, speed, false));
-      directions.push_back(Direction(Orientation::NW, 100, speed, false));
+      AddDirection(Orientation::S, 100, speed);
+      AddDirection(Orientation::NW, 100, speed);
+      AddDirection(Orientation::NE, 50, speed);
+      AddDirection(Orientation::SW, 50, speed);
       break;
   }
 
-  directions_it = directions.begin(); // intialize pointer (MUST be done after vector is populated)
 
   // set up AnimatedSprite
   animatedSprite.setOrigin(16,16);
@@ -60,9 +56,9 @@ NPC::NPC(Type type, TextureManager& texture)
 
 
   // set hitbox for collision testing
-  sf::Texture tex;
-  tex.create(20,20);
-  animatedSprite.hitbox.setTexture(tex); // assign empty texture 20x20 pixels
+  sf::Texture hitbox_texture;
+  hitbox_texture.create(20,20);
+  animatedSprite.hitbox.setTexture(hitbox_texture); // assign empty texture 20x20 pixels
   animatedSprite.hitbox.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
   animatedSprite.hitbox.setOrigin(10, 10);
   animatedSprite.hitbox.setPosition(position.x,position.y);

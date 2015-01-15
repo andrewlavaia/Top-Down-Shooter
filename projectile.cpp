@@ -2,6 +2,8 @@
 #include "projectile.h"
 
 Projectile::Projectile(Type t, double x, double y, Orientation::Type o)
+
+
 {
   type = t;
   orientation = o;
@@ -14,8 +16,6 @@ Projectile::Projectile(Type t, double x, double y, Orientation::Type o)
   position.x = x;
   position.y = y;
 
-  distance_travelled = 0;
-  directions.clear();
 
   //change texture based on type
   sf::Texture texture;
@@ -27,11 +27,18 @@ Projectile::Projectile(Type t, double x, double y, Orientation::Type o)
   //animatedSprite.setFrameTime(sf::seconds(0.16));
   animatedSprite.setColor(sf::Color(255,255,0));
   animatedSprite.setPosition(position.x, position.y);
+
+
+  sf::Texture hitbox_texture;
+  hitbox_texture.create(5,5);
+  animatedSprite.hitbox.setTexture(hitbox_texture); // assign empty texture
+  animatedSprite.hitbox.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
+  animatedSprite.hitbox.setOrigin(2.5, 2.5);
   animatedSprite.hitbox.setPosition(position.x, position.y);
 
-  directions.push_back(Direction(orientation, range, speed, false));
+  AddDirection(orientation, range, speed, false);
 
-  directions_it = directions.begin();
+  //directions_it = directions.begin();
 }
 
 void Projectile::collideWithEntity(const AnimatedEntity& a)
@@ -41,11 +48,11 @@ void Projectile::collideWithEntity(const AnimatedEntity& a)
 
   if(typeid(a) == typeid(Hero))
   {
-   destroy_flag = true;
+    Destroy();
   }
   else if(typeid(a) == typeid(NPC))
   {
-    destroy_flag = true;
+    Destroy();
   }
   else if(typeid(a) == typeid(Weapon))
   {
@@ -57,7 +64,7 @@ void Projectile::collideWithEntity(const AnimatedEntity& a)
   }
   else if(typeid(a) == typeid(Collidable))
   {
-    destroy_flag = true; // will automatically collide with anything in top left of screen before moving
+    Destroy();
   }
 
 }

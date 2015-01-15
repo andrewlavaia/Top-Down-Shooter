@@ -19,14 +19,10 @@ public:
 
   void                                        Load(int id);
   void                                        CreateNPC(NPC::Type type);
-  void                                        CreateWeapon(Weapon::Type type);
+  void                                        CreateWeapon(Weapon::Type type, double x, double y);
   void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
   void                                        MoveEntities();
-  //void                                        MoveNPCs();
-  //void                                        MoveWeapons();
-  //void                                        MoveProjectiles();
-  //void                                        DestroyNPC(std::vector<std::shared_ptr<NPC>>::iterator it);
   //void                                        CheckCollision_NPCtoHero(std::vector<std::shared_ptr<NPC>>::iterator it);
   //void                                        CheckCollision_NPCtoNPC(std::vector<std::shared_ptr<NPC>>::iterator it);
   //void                                        CheckCollision_NPCtoCollidable(std::vector<std::shared_ptr<NPC>>::iterator it);
@@ -45,11 +41,7 @@ public:
   TextureManager                              textures;
 
   Hero                                        hero;
-  //std::vector< std::shared_ptr<Collidable> >  collidables;
-  //std::vector< std::shared_ptr<NPC> >         npc;
-  //std::vector< std::shared_ptr<Weapon> >      weapons;
-  //std::vector< std::shared_ptr<Projectile> >  projectiles;
-  std::vector< std::shared_ptr<AnimatedEntity> > entities;
+  std::vector<std::shared_ptr<AnimatedEntity>> entities;
 
 private:
   Level(const Level&);                        // Disallow copy constructor
