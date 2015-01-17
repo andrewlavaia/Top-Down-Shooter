@@ -7,23 +7,20 @@ Level::Level()
     npc_success_count(0),
     gameover_time(sf::seconds(30.0f))
 {
-  textures.Load(Textures::Hero_Run, "hero_run.png");
-  textures.Load(Textures::Hero_Grab, "hero_grab.png");
-  textures.Load(Textures::Hero_Punch, "hero_punch.png");
-  textures.Load(Textures::Hero_Kick, "hero_kick.png");
-  textures.Load(Textures::NPC_Texture, "spritesheet.png");
+  textures.load(Textures::Hero_Run, "hero_run.png");
+  textures.load(Textures::Hero_Grab, "hero_grab.png");
+  textures.load(Textures::Hero_Punch, "hero_punch.png");
+  textures.load(Textures::Hero_Kick, "hero_kick.png");
+  textures.load(Textures::NPC_Texture, "spritesheet.png");
 
-  if(!font_HUD.loadFromFile("calibri.ttf"))
-  {
-    //throw exception...
-    std::cout<<"Font Not Loaded"<<std::endl;
-  }
-  text_timer.setFont(font_HUD);
+  fonts.load(Fonts::Calibri, "calibri.ttf");
+
+  text_timer.setFont(fonts.get(Fonts::Calibri));
   text_timer.setCharacterSize(40);
   text_timer.setColor(sf::Color::Black);
   text_timer.setPosition(400,20);
 
-  text_npc_count.setFont(font_HUD);
+  text_npc_count.setFont(fonts.get(Fonts::Calibri));
   text_npc_count.setCharacterSize(40);
   text_npc_count.setColor(sf::Color::Black);
   text_npc_count.setPosition(700,20);
@@ -139,7 +136,7 @@ void Level::DeleteEntities()
 {
   for (auto it = entities.begin(); it != entities.end(); )
   {
-    if((*it)->isDestroyed())
+    if((*it)->isDestroyed() && !(*it)->animatedSprite.isPlaying())
       DestroyObject(entities, it);
     else
       ++it;

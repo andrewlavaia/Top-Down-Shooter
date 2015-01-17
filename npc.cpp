@@ -3,19 +3,19 @@
 #include "npc.h"
 #include "direction.h"
 
-NPC::NPC(Type type, TextureManager& texture)
+NPC::NPC(Type type, ResourceHolder<sf::Texture, Textures::ID>& texture)
   : type(type)
 {
 
-  defaultAnimation = CreateAnimation(texture.Get(Textures::Hero_Run), 391, 319, 12);
-  attackedAnimation = defaultAnimation;
-  grabbedAnimation = defaultAnimation;
-  thrownAnimation = defaultAnimation;
+  moveAnimation = CreateAnimation(texture.get(Textures::Hero_Run), 391, 319, 12);
+  attackedAnimation = moveAnimation;
+  grabbedAnimation = moveAnimation;
+  thrownAnimation = CreateAnimation(texture.get(Textures::Hero_Run), 391, 319, 10);
 
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);
 
-  setCurrentAnimation(defaultAnimation);
+  setCurrentAnimation(moveAnimation);
   animatedSprite.play(*getCurrentAnimation());
   animatedSprite.setLooped(true);
   animatedSprite.setFrameTime(sf::seconds(0.16));
@@ -30,10 +30,10 @@ NPC::NPC(Type type, TextureManager& texture)
       speed = 4;
       weight = 1;
 
-      AddDirection(Orientation::S, 100, speed);
-      AddDirection(Orientation::NW, 100, speed);
-      AddDirection(Orientation::NE, 50, speed);
-      AddDirection(Orientation::SW, 50, speed);
+      AddDirection(Orientation::S, 100, speed, true);
+      AddDirection(Orientation::NW, 100, speed, true);
+      AddDirection(Orientation::NE, 50, speed, true);
+      AddDirection(Orientation::SW, 50, speed, true);
 
       break;
 
@@ -42,10 +42,10 @@ NPC::NPC(Type type, TextureManager& texture)
       position.y = 300;
       speed = 2;
       weight = 1;
-      AddDirection(Orientation::S, 100, speed);
-      AddDirection(Orientation::NW, 100, speed);
-      AddDirection(Orientation::NE, 50, speed);
-      AddDirection(Orientation::SW, 50, speed);
+      AddDirection(Orientation::S, 100, speed, true);
+      AddDirection(Orientation::NW, 100, speed, true);
+      AddDirection(Orientation::NE, 50, speed, true);
+      AddDirection(Orientation::SW, 50, speed, true);
       break;
   }
 

@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 #include "mapmanager.h"
-#include "texturemanager.h"
+#include "resourceholder.h"
 #include "animatedentity.h"
 #include "hero.h"
 #include "npc.h"
@@ -38,10 +38,11 @@ public:
   sf::Text                                    text_npc_count;
 
   MapManager                                  mp;
-  TextureManager                              textures;
+
 
   Hero                                        hero;
   std::vector<std::shared_ptr<AnimatedEntity>> entities;
+
 
 private:
   Level(const Level&);                        // Disallow copy constructor
@@ -50,13 +51,15 @@ private:
   template <typename T1, typename T2>
     void DestroyObject(T1& vec, T2& it);
 
-  unsigned                                     victory_requirement;
-  unsigned                                     npc_success_count;
-  unsigned                                     npc_death_count;
-  sf::Time                                     gameover_time;
-  sf::Clock                                    running_time;
+  unsigned                                    victory_requirement;
+  unsigned                                    npc_success_count;
+  unsigned                                    npc_death_count;
+  sf::Time                                    gameover_time;
+  sf::Clock                                   running_time;
+  ResourceHolder<sf::Texture, Textures::ID>   textures;
+  ResourceHolder<sf::Font, Fonts::ID>         fonts;
 
-  sf::Font                                     font_HUD;
+
 
 };
 

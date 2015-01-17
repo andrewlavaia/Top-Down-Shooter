@@ -27,17 +27,18 @@ Hero::Hero()
 
 }
 
-void Hero::CreateAnimations(const TextureManager& textures)
+void Hero::CreateAnimations(const ResourceHolder<sf::Texture, Textures::ID>& textures)
 {
-  walkAnimation = CreateAnimation(textures.Get(Textures::Hero_Run), 391, 319, 12);
-  grabAnimation = CreateAnimation(textures.Get(Textures::Hero_Grab), 388, 319, 6);
-  punchAnimation = CreateAnimation(textures.Get(Textures::Hero_Punch), 398, 279, 6);
-  kickAnimation = CreateAnimation(textures.Get(Textures::Hero_Kick), 385, 371, 6);
+  moveAnimation = CreateAnimation(textures.get(Textures::Hero_Run), 391, 319, 12);
+  grabAnimation = CreateAnimation(textures.get(Textures::Hero_Grab), 388, 319, 6);
+  punchAnimation = CreateAnimation(textures.get(Textures::Hero_Punch), 398, 279, 6);
+  kickAnimation = CreateAnimation(textures.get(Textures::Hero_Kick), 385, 371, 6);
 
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);
 
-  setCurrentAnimation(walkAnimation);
+  setCurrentAnimation(moveAnimation);
+  animatedSprite.setLooped(false);
   animatedSprite.play(*getCurrentAnimation());
 }
 
@@ -189,6 +190,7 @@ void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& vec_ptr_a)
     {
       Drop();
       grabbed_npc = std::dynamic_pointer_cast<NPC>(*it);
+      grabbed_npc->setCurrentAnimation(grabbed_npc->grabbedAnimation);
     }
 
     if(typeid(**it) == typeid(Weapon) && checkCollision(**it) == true)
@@ -219,8 +221,8 @@ void Hero::Throw()
 
   if(grabbed_npc != nullptr)
   {
+    grabbed_npc->setCurrentAnimation(grabbed_npc->thrownAnimation);
     grabbed_npc->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
-    //set status to thrown
     grabbed_npc = nullptr;
   }
 

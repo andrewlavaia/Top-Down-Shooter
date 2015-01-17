@@ -3,15 +3,19 @@
 
 
 AnimatedEntity::AnimatedEntity()
-  : distance_travelled(0),
-    destroy_flag(false)
+  : destroy_flag(false),
+    distance_travelled(0)
 {
+    sf::Texture texture;
+    texture.create(1,1);
+    moveAnimation = CreateAnimation(texture,0,0,1); // hidden
+    deathAnimation = CreateAnimation(texture,10,10,1); // hidden
     directions.clear();
     directions_it = directions.begin();
     setOrientation(Orientation::S);
 }
 
-Animation AnimatedEntity::CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count)
+std::shared_ptr<Animation> AnimatedEntity::CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count)
 {
   Animation animation;
   animation.setSpriteSheet(tex);
@@ -20,7 +24,7 @@ Animation AnimatedEntity::CreateAnimation(const sf::Texture& tex, unsigned width
     animation.addFrame(sf::IntRect( i * width, 0, width,  height));
   }
 
-  return animation;
+  return std::make_shared<Animation>(animation);
 }
 
 void AnimatedEntity::MoveAnimatedSprite(double interpolation)
@@ -54,8 +58,6 @@ void AnimatedEntity::Move()
   {
     // If distance exceeded, reset distance counter and have iterator point to next Direction object
     distance_travelled = 0;
-
-    restoreDefaultAnimation(); // should this be here?
 
     if(directions_it->isRepeat())
     {
@@ -144,15 +146,15 @@ void AnimatedEntity::Move()
 
 }
 
-bool AnimatedEntity::checkCollision(const AnimatedEntity& a)
+bool AnimatedEntity::checkCollision(const AnimatedEntity& a) const
 {
-  if(Collision::BoundingBoxTest(animatedSprite.hitbox, a.animatedSprite.hitbox))
+  if(Collision::BoundingBoxTest(animatedSprite.hitbox, a.animatedSprite.hitbox) && !a.isDestroyed())
     return true;
   else
     return false;
 }
 
-Orientation::Type AnimatedEntity::getRelativeOrientation(const AnimatedEntity& entity)
+Orientation::Type AnimatedEntity::getRelativeOrientation(const AnimatedEntity& entity) const
 {
   double dist_x = position.x - entity.position.x;
   double dist_y = position.y - entity.position.y;
@@ -195,7 +197,7 @@ Orientation::Type AnimatedEntity::getRelativeOrientation(const AnimatedEntity& e
 
 }
 
-bool AnimatedEntity::checkDistance(double distance, const AnimatedEntity& entity)
+bool AnimatedEntity::checkDistance(double distance, const AnimatedEntity& entity) const
 {
   double dist_x = position.x - entity.position.x;
   double dist_y = position.y - entity.position.y;
@@ -205,5 +207,13 @@ bool AnimatedEntity::checkDistance(double distance, const AnimatedEntity& entity
     return true;
   else
     return false;
+}
+
+void AnimatedEntity::Destroy()
+{
+   setCurrentAnimation(deathAnimation);
+   animatedSprite.setLooped(false);
+   //animatedSprite.play(*getCurrentAnimation());
+   destroy_flag = true;
 }
 

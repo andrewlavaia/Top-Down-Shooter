@@ -18,8 +18,8 @@ Weapon::Weapon(Type t, double x, double y)
 
   sf::Texture texture;
   texture.create(10,10);
-  defaultAnimation = CreateAnimation(texture,10,10,1);
-  setCurrentAnimation(defaultAnimation);
+  moveAnimation = CreateAnimation(texture,10,10,1);
+  setCurrentAnimation(moveAnimation);
   animatedSprite.play(*getCurrentAnimation());
   animatedSprite.setLooped(true);
   //animatedSprite.setFrameTime(sf::seconds(0.16));

@@ -83,8 +83,8 @@
 		<Unit filename="playstate.h" />
 		<Unit filename="projectile.cpp" />
 		<Unit filename="projectile.h" />
-		<Unit filename="texturemanager.cpp" />
-		<Unit filename="texturemanager.h" />
+		<Unit filename="resourceholder.h" />
+		<Unit filename="resourceholder.inl" />
 		<Unit filename="tile.h" />
 		<Unit filename="timer.h" />
 		<Unit filename="weapon.cpp" />

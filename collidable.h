@@ -33,9 +33,9 @@ class Collidable : public AnimatedEntity
     Collidable(Type t, int x, int y, int width, int height);
 
 
-    virtual Animation* getCurrentAnimation() { return currentAnimation; }
-    virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
-    virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
+    //virtual Animation* getCurrentAnimation() { return currentAnimation; }
+    //virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
+    //virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
     virtual void collideWithEntity(const AnimatedEntity& a);
 
     Type getType() { return type; }
@@ -45,7 +45,6 @@ class Collidable : public AnimatedEntity
 
   private:
     Type type;
-    Animation* currentAnimation;
 
 };
 

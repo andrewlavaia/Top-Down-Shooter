@@ -29,15 +29,15 @@ public:
   double getRange() { return range; }
   double getDamage() { return damage; }
 
-  virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
-  virtual Animation* getCurrentAnimation() { return currentAnimation; }
-  virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
+  //virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
+  //virtual Animation* getCurrentAnimation() { return currentAnimation; }
+  //virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
   virtual void collideWithEntity(const AnimatedEntity& a);
 
 private:
   Type type;
   Orientation::Type orientation;
-  Animation* currentAnimation;
+
   double speed;
   double range;
   double damage;

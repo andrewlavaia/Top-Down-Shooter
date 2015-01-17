@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Time.hpp>
 #include "animatedentity.h"
-#include "TextureManager.h"
+#include "resourceholder.h"
 #include "animation.h"
 #include "animatedsprite.h"
 #include "collidable.h"
@@ -23,19 +23,18 @@ public:
 
                                 Hero();
 
-  void                          CreateAnimations(const TextureManager& textures);
+  void                          CreateAnimations(const ResourceHolder<sf::Texture, Textures::ID>& textures);
 
   double                        speed;
   double                        strength;
 
-  Animation                     walkAnimation;
-  Animation                     grabAnimation;
-  Animation                     punchAnimation;
-  Animation                     kickAnimation;
+  std::shared_ptr<Animation>    walkAnimation;
+  std::shared_ptr<Animation>    grabAnimation;
+  std::shared_ptr<Animation>    punchAnimation;
+  std::shared_ptr<Animation>    kickAnimation;
 
-  virtual Animation*            getCurrentAnimation() { return currentAnimation; }
-  virtual void                  setCurrentAnimation(Animation& a) { currentAnimation = &a; }
-  virtual void                  restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
+
+  //virtual void                  restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
 
   void                          collideWithEntity(const AnimatedEntity& a);
 
@@ -62,8 +61,6 @@ private:
   void                          PickupNPC(std::vector< std::shared_ptr<NPC> >& npc_vec);
   void                          DropNPC();
   void                          ThrowNPC();
-
-  Animation*                    currentAnimation;
 
 
   double                        hp;

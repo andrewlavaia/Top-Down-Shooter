@@ -53,16 +53,15 @@ class Weapon : public AnimatedEntity
 
     //Animation throwAnimation;
 
-    virtual Animation* getCurrentAnimation() { return currentAnimation; }
-    virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
-    virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
+    //virtual Animation* getCurrentAnimation() { return currentAnimation; }
+    //virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
+    //virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
     virtual void collideWithEntity(const AnimatedEntity& a);
 
    // sf::Texture hitbox_texture;
 
   private:
     Type type;
-    Animation* currentAnimation;
     Attack attack1;
     Attack attack2;
     int durability;

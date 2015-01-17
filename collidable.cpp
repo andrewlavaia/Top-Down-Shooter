@@ -10,8 +10,8 @@ Collidable::Collidable(Type t, int x, int y, int width, int height)
   //change texture based on type
   sf::Texture texture;
   texture.create(width,height);
-  defaultAnimation = CreateAnimation(texture,width,height,1);
-  setCurrentAnimation(defaultAnimation);
+  moveAnimation = CreateAnimation(texture,width,height,1);
+  setCurrentAnimation(moveAnimation);
   animatedSprite.play(*getCurrentAnimation());
   animatedSprite.setLooped(true);
   animatedSprite.setFrameTime(sf::seconds(0.16));

@@ -3,8 +3,7 @@
 #define NPC_H
 
 #include <SFML/Graphics.hpp>
-#include "AnimatedEntity.h"
-#include "TextureManager.h"
+#include "animatedentity.h"
 #include "animation.h"
 #include "animatedsprite.h"
 #include "direction.h"
@@ -27,16 +26,16 @@ public:
     */
   };
 
-  explicit                                NPC(Type type, TextureManager& texture);
+  explicit                                NPC(Type type, ResourceHolder<sf::Texture, Textures::ID>& texture);
 
-  Animation                               defaultAnimation;
-  Animation                               attackedAnimation;
-  Animation                               grabbedAnimation;
-  Animation                               thrownAnimation;
+  std::shared_ptr<Animation>              defaultAnimation;
+  std::shared_ptr<Animation>              attackedAnimation;
+  std::shared_ptr<Animation>              grabbedAnimation;
+  std::shared_ptr<Animation>              thrownAnimation;
 
-  virtual Animation* getCurrentAnimation() { return currentAnimation; }
-  virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
-  virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
+  //virtual Animation* getCurrentAnimation() { return currentAnimation; }
+  //virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
+  //virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
   virtual void                            collideWithEntity(const AnimatedEntity& a);
 
   double                                  getWeight() { return weight; }
@@ -45,7 +44,6 @@ public:
 
 private:
   Type                                    type;
-  Animation*                              currentAnimation;
   double                                  speed;
   double                                  weight;
   double                                  hp;

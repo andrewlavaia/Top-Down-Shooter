@@ -20,8 +20,9 @@ Projectile::Projectile(Type t, double x, double y, Orientation::Type o)
   //change texture based on type
   sf::Texture texture;
   texture.create(5,5);
-  defaultAnimation = CreateAnimation(texture,5,5,1);
-  setCurrentAnimation(defaultAnimation);
+  moveAnimation = CreateAnimation(texture,5,5,1);
+
+  setCurrentAnimation(moveAnimation);
   animatedSprite.play(*getCurrentAnimation());
   animatedSprite.setLooped(true);
   //animatedSprite.setFrameTime(sf::seconds(0.16));
