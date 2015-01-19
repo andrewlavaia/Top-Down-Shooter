@@ -3,14 +3,15 @@
 #include "npc.h"
 #include "direction.h"
 
-NPC::NPC(Type type, ResourceHolder<sf::Texture, Textures::ID>& texture)
+NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
   : type(type)
 {
 
-  moveAnimation = CreateAnimation(texture.get(Textures::Hero_Run), 391, 319, 12);
+  moveAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
   attackedAnimation = moveAnimation;
   grabbedAnimation = moveAnimation;
-  thrownAnimation = CreateAnimation(texture.get(Textures::Hero_Run), 391, 319, 10);
+  thrownAnimation = moveAnimation;
+  //thrownAnimation = CreateAnimation(texture.get(Textures::Hero_Run), 391, 319, 10);
 
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);
@@ -27,25 +28,25 @@ NPC::NPC(Type type, ResourceHolder<sf::Texture, Textures::ID>& texture)
     case NPC::Goomba :
       position.x = 200;
       position.y = 200;
-      speed = 4;
+      setSpeed(4);
       weight = 1;
 
-      AddDirection(Orientation::S, 100, speed, true);
-      AddDirection(Orientation::NW, 100, speed, true);
-      AddDirection(Orientation::NE, 50, speed, true);
-      AddDirection(Orientation::SW, 50, speed, true);
+      AddDirection(Orientation::S, 100, getSpeed(), true);
+      AddDirection(Orientation::NW, 100, getSpeed(), true);
+      AddDirection(Orientation::NE, 50, getSpeed(), true);
+      AddDirection(Orientation::SW, 50, getSpeed(), true);
 
       break;
 
     case NPC::Chumba :
       position.x = 300;
       position.y = 300;
-      speed = 2;
+      setSpeed(2);
       weight = 1;
-      AddDirection(Orientation::S, 100, speed, true);
-      AddDirection(Orientation::NW, 100, speed, true);
-      AddDirection(Orientation::NE, 50, speed, true);
-      AddDirection(Orientation::SW, 50, speed, true);
+      AddDirection(Orientation::S, 100, getSpeed(), true);
+      AddDirection(Orientation::NW, 100, getSpeed(), true);
+      AddDirection(Orientation::NE, 50, getSpeed(), true);
+      AddDirection(Orientation::SW, 50, getSpeed(), true);
       break;
   }
 

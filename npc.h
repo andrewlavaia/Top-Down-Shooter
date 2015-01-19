@@ -26,9 +26,8 @@ public:
     */
   };
 
-  explicit                                NPC(Type type, ResourceHolder<sf::Texture, Textures::ID>& texture);
+  explicit                                NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations);
 
-  std::shared_ptr<Animation>              defaultAnimation;
   std::shared_ptr<Animation>              attackedAnimation;
   std::shared_ptr<Animation>              grabbedAnimation;
   std::shared_ptr<Animation>              thrownAnimation;
@@ -39,14 +38,11 @@ public:
   virtual void                            collideWithEntity(const AnimatedEntity& a);
 
   double                                  getWeight() { return weight; }
-  double                                  getSpeed()  { return speed;}
 
 
 private:
   Type                                    type;
-  double                                  speed;
   double                                  weight;
-  double                                  hp;
 
 };
 

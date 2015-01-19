@@ -5,16 +5,11 @@
 #include <SFML/Graphics.hpp>
 #include "animatedentity.h"
 #include "direction.h"
-#include "attack.h"
-
 #include "npc.h"
 #include "projectile.h"
 #include "collidable.h"
 
 class Hero;
-
-// Level creates the unique_ptr to all new weapons
-// Hero creates the Hands weapon any time another weapon is not held
 
 class Weapon : public AnimatedEntity
 {
@@ -43,29 +38,21 @@ class Weapon : public AnimatedEntity
 
     Weapon(Type t, double x, double y);
 
+    std::shared_ptr<Animation> primaryAttackAnimation;
+    std::shared_ptr<Animation> secondaryAttackAnimation;
+
     Type      getType()                { return type; }
-    Attack    getPrimaryAttack()       { return attack1; }
-    Attack    getSecondaryAttack()     { return attack2; }
-    double    getAttackModifier()      { return attack_modifier; }
+    double    getDamageModifier()      { return damage_modifier; }
     double    getRange()               { return range; }
     int       getDurability()          { return durability; }
     void      reduceDurability()       { durability--; }
 
-    //Animation throwAnimation;
-
-    //virtual Animation* getCurrentAnimation() { return currentAnimation; }
-    //virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
-    //virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
     virtual void collideWithEntity(const AnimatedEntity& a);
-
-   // sf::Texture hitbox_texture;
 
   private:
     Type type;
-    Attack attack1;
-    Attack attack2;
     int durability;
-    double attack_modifier;
+    double damage_modifier;
     double range;
 
 

@@ -15,6 +15,8 @@ Level::Level()
 
   fonts.load(Fonts::Calibri, "calibri.ttf");
 
+  animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
+
   text_timer.setFont(fonts.get(Fonts::Calibri));
   text_timer.setCharacterSize(40);
   text_timer.setColor(sf::Color::Black);
@@ -79,8 +81,7 @@ void Level::Load(int id)
 // Dynamically creates a new NPC object and returns a smart pointer to it
 void Level::CreateNPC(NPC::Type type)
 {
-  //std::shared_ptr<NPC> p_npc( new NPC(type, textures) );
-  auto p = std::make_shared<NPC>(type,textures);
+  auto p = std::make_shared<NPC>(type,animations);
   entities.push_back(p);
 }
 

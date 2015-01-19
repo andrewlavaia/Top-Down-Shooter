@@ -4,7 +4,9 @@
 
 AnimatedEntity::AnimatedEntity()
   : destroy_flag(false),
-    distance_travelled(0)
+    distance_travelled(0),
+    hitpoints(10),
+    speed(1)
 {
     sf::Texture texture;
     texture.create(1,1);
@@ -213,7 +215,12 @@ void AnimatedEntity::Destroy()
 {
    setCurrentAnimation(deathAnimation);
    animatedSprite.setLooped(false);
-   //animatedSprite.play(*getCurrentAnimation());
    destroy_flag = true;
 }
 
+void AnimatedEntity::TakeDamage(double damage)
+{
+  hitpoints = hitpoints - damage;
+  if(hitpoints <= 0)
+    Destroy();
+}

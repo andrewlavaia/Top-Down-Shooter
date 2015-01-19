@@ -67,7 +67,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
 */
 
   // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
-  double hypotenuse = sqrt((this->level.hero.speed * this->level.hero.speed) + (this->level.hero.speed * this->level.hero.speed));
+  double hypotenuse = sqrt((this->level.hero.getSpeed() * this->level.hero.getSpeed()) + (this->level.hero.getSpeed() * this->level.hero.getSpeed()));
 
   if ( sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A) )
   {
@@ -112,7 +112,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
     this->level.hero.setOrientation(Orientation::W);
-    this->level.hero.position.x -= this->level.hero.speed;
+    this->level.hero.position.x -= this->level.hero.getSpeed();
     this->level.hero.animatedSprite.setRotation(270);
     //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
     noKeyPressed = false;
@@ -121,7 +121,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
     this->level.hero.setOrientation(Orientation::E);
-    this->level.hero.position.x += this->level.hero.speed;
+    this->level.hero.position.x += this->level.hero.getSpeed();
     this->level.hero.animatedSprite.setRotation(90);
     //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
     noKeyPressed = false;
@@ -130,7 +130,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
   {
     this->level.hero.setOrientation(Orientation::N);
-    this->level.hero.position.y -= this->level.hero.speed;
+    this->level.hero.position.y -= this->level.hero.getSpeed();
     this->level.hero.animatedSprite.setRotation(0);
     //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
     noKeyPressed = false;
@@ -139,7 +139,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
   {
     this->level.hero.setOrientation(Orientation::S);
-    this->level.hero.position.y += this->level.hero.speed;
+    this->level.hero.position.y += this->level.hero.getSpeed();
     this->level.hero.animatedSprite.setRotation(180);
     //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
     noKeyPressed = false;
@@ -161,8 +161,8 @@ void CPlayState::HandleEvents(CGameEngine* game)
   // Primary Attack
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
   {
-    //this->level.hero.PrimaryAttack(this->level.npc);
-    this->level.hero.setCurrentAnimation(this->level.hero.punchAnimation);
+    this->level.hero.PrimaryAttack();
+    //this->level.hero.setCurrentAnimation(this->level.hero.punchAnimation);
     //this->level.hero.animatedSprite.play(*this->level.hero.getCurrentAnimation());
   }
 

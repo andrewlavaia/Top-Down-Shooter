@@ -11,21 +11,19 @@
 #include "collidable.h"
 #include "projectile.h"
 #include "collision.h"
-#include "attack.h"
 #include "orientation.h"
 
 class NPC;
 class Weapon;
 
+//Create an AnimationHolder class, that stores and retrieves Animations
+
 class Hero : public AnimatedEntity
 {
 public:
-
                                 Hero();
 
   void                          CreateAnimations(const ResourceHolder<sf::Texture, Textures::ID>& textures);
-
-  double                        speed;
   double                        strength;
 
   std::shared_ptr<Animation>    walkAnimation;
@@ -38,17 +36,17 @@ public:
 
   void                          collideWithEntity(const AnimatedEntity& a);
 
-  //void                          PrimaryAttack(std::vector< std::shared_ptr<NPC> >& npc_vec);
+  void                          PrimaryAttack();
   //void                          SecondaryAttack(std::vector< std::shared_ptr<NPC> >& npc_vec);
   void                          Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& vec_ptr_a);
   void                          Drop();
   void                          Throw();
-  Weapon                        getWeapon();
+  std::shared_ptr<Weapon>       getWeapon();
 
   std::shared_ptr<NPC>          grabbed_npc;     // used to hold grabbed NPCs
 
   std::shared_ptr<Weapon>       weapon;
-  std::unique_ptr<Weapon>       default_weapon;
+  std::shared_ptr<Weapon>       default_weapon;
 
 private:
                                 Hero(const Hero&);              // Disallow copy constructor
@@ -61,9 +59,6 @@ private:
   void                          PickupNPC(std::vector< std::shared_ptr<NPC> >& npc_vec);
   void                          DropNPC();
   void                          ThrowNPC();
-
-
-  double                        hp;
 
 };
 

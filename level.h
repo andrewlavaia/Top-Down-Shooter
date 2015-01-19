@@ -11,6 +11,7 @@
 #include "collidable.h"
 #include "projectile.h"
 #include "orientation.h"
+#include "animation.h"
 
 class Level
 {
@@ -23,9 +24,6 @@ public:
   void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
   void                                        MoveEntities();
-  //void                                        CheckCollision_NPCtoHero(std::vector<std::shared_ptr<NPC>>::iterator it);
-  //void                                        CheckCollision_NPCtoNPC(std::vector<std::shared_ptr<NPC>>::iterator it);
-  //void                                        CheckCollision_NPCtoCollidable(std::vector<std::shared_ptr<NPC>>::iterator it);
   void                                        DeleteEntities();
   bool                                        Victory();
   bool                                        GameOver();
@@ -58,8 +56,7 @@ private:
   sf::Clock                                   running_time;
   ResourceHolder<sf::Texture, Textures::ID>   textures;
   ResourceHolder<sf::Font, Fonts::ID>         fonts;
-
-
+  ResourceHolder<Animation, Animations::ID>   animations;
 
 };
 

@@ -1,14 +1,32 @@
 
 #include "weapon.h"
 
+
+/* ANIMATION TYPES
+Punch,        // default primary
+Kick,         // default secondary
+Bite,
+MeleeBash1H   // (hammer, pistol whip, etc)
+MeleeBash2H,  // (sledgehammer, rifle butt, etc)
+MeleePoke,    // (pitch fork)
+MeleeSlash,   // (swords, knives, etc)
+PistolShot,
+ShotgunShot,
+RifleShot,
+SMGShot,
+BowShot,
+Explosive,    // (rocket launcher, grenade, etc)
+Stun,         // (taser, etc)
+*/
+
 Weapon::Weapon(Type t, double x, double y)
-  : attack1(Attack::Push), // default initialization
-    attack2(Attack::Push)  // default initialization
+  : primaryAttackAnimation(nullptr), // default initialization
+    secondaryAttackAnimation(nullptr)  // default initialization
 {
   type = t;
 
   // Default Weapon Settings
-  attack_modifier = 1;
+  damage_modifier = 1;
   durability = 5;
   range = 2;
 
@@ -39,26 +57,28 @@ Weapon::Weapon(Type t, double x, double y)
   switch(type)
   {
     case Weapon::Hands :
-      attack_modifier = 1;
+      damage_modifier = 1;
       range = 2;
-      attack1.setType(Attack::Push);
-      attack2.setType(Attack::Kick);
+      primaryAttackAnimation = CreateAnimation(texture,10,10,1);
+      secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
+      //attack1(new Attack(Attack::Push));
+//      attack2.setType(Attack::Kick);
       break;
 
     case Weapon::Pole :
-      attack_modifier = 3;
+      damage_modifier = 3;
       range = 5;
-      attack1.setType(Attack::Push);
-      attack2.setType(Attack::Smash);
+//      attack1.setType(Attack::Push);
+//      attack2.setType(Attack::Smash);
       break;
 
 
     case Weapon::Lasso:
-      attack_modifier = 1;
+      damage_modifier = 1;
       range = 10;
 
-      attack1.setType(Attack::Push);
-      attack2.setType(Attack::Smash);
+//      attack1.setType(Attack::Push);
+//      attack2.setType(Attack::Smash);
 
       break;
 

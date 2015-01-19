@@ -10,7 +10,7 @@ Hero::Hero()
   position.x = 50;
   position.y = 50;
 
-  speed = 10;
+  setSpeed(10);
   strength = 1;
 
   // set up AnimatedSprite
@@ -66,6 +66,10 @@ void Hero::collideWithEntity(const AnimatedEntity& a)
 
   }
 
+}
+void Hero::PrimaryAttack()
+{
+  setCurrentAnimation(getWeapon()->primaryAttackAnimation);
 }
 
 /*
@@ -338,10 +342,10 @@ void Hero::ThrowNPC()
 }
 */
 
-Weapon Hero::getWeapon()
+std::shared_ptr<Weapon> Hero::getWeapon()
 {
   if (weapon == nullptr)
-    return *default_weapon;
+    return default_weapon;
   else
-    return *weapon;
+    return weapon;
 }
