@@ -12,6 +12,9 @@ void CGameEngine::Init()
 	timer.StartCounter();
 	tick_timer.StartCounter();
 
+	frameTime = sf::Time::Zero;
+	logicTime = sf::Time::Zero;
+
 	if(!font.loadFromFile("calibri.ttf"))
   {
     //throw exception...

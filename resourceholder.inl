@@ -28,16 +28,24 @@ void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string
 template <typename Resource, typename Identifier>
 void ResourceHolder<Resource, Identifier>::load(Identifier id, const sf::Texture& texture, unsigned width, unsigned height, unsigned sprite_count)
 {
-  // Create and load resource
-	std::unique_ptr<Resource> resource(new Resource());
-	resource->setSpriteSheet(texture);
-  for (unsigned i = 0; i < sprite_count; ++i)
+  assert(sprite_count > 0);
+  try
   {
-    resource->addFrame(sf::IntRect( i * width, 0, width, height));
-  }
+    // Create and load resource
+    std::unique_ptr<Resource> resource(new Resource());
+    resource->setSpriteSheet(texture);
+    for (unsigned i = 0; i < sprite_count; ++i)
+    {
+      resource->addFrame(sf::IntRect( i * width, 0, width, height));
+    }
 
-  // If loading successful, insert resource to map
-	insertResource(id, std::move(resource));
+    // If loading successful, insert resource to map
+    insertResource(id, std::move(resource));
+  }
+  catch(std::exception& e)
+  {
+    //assert(e.what());
+  }
 
 }
 

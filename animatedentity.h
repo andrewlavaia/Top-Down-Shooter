@@ -10,6 +10,7 @@
 #include "resourceholder.h"
 #include "collision.h"
 #include "orientation.h" // MoveOppo()
+#include <iostream>
 
 
 class AnimatedEntity
@@ -23,12 +24,22 @@ class AnimatedEntity
     std::shared_ptr<Animation>              moveAnimation;
     std::shared_ptr<Animation>              deathAnimation;
 
+    enum Status {
+      Idle,
+      Moving,
+      Attacking,
+      Thrown,
+      Dead
+    };
+
     void                                    Move();
+    void                                    MoveOneUnit(Orientation::Type o, double speed);
     void                                    MoveAnimatedSprite(double interpolation);
     void                                    AddDirection(Orientation::Type orientation_type, double distance, double speed, bool rpt = false);
     void                                    AddDirectionOppo(double d);
 
-    virtual void                            collideWithEntity(const AnimatedEntity& a) = 0;
+
+    virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt) = 0;
 
     void                                    setOrientation(Orientation::Type t) { orientation.setType(t); }
     Orientation                             getOrientation() const { return orientation; }
@@ -40,13 +51,23 @@ class AnimatedEntity
     std::shared_ptr<Animation>              getCurrentAnimation() const { return currentAnimation; }
     void                                    setCurrentAnimation(std::shared_ptr<Animation> a) { currentAnimation = a; }
     double                                  getHP() const { return hitpoints; }
-    double                                  getSpeed() const { return speed;}
+    double                                  getSpeed() const { return speed; }
+    double                                  getPower() const { return power; }
+    bool                                    canAttack();
+
+    void                                    reduceCoolDowns(sf::Time dt);
+    Status                                  getStatus() const { return status; }
+    void                                    setStatus(Status s) { status = s; }
 
   protected:
     std::shared_ptr<Animation>              CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count);
     void                                    Destroy();
     void                                    TakeDamage(double damage);
+    void                                    TakeDamageOverTime(double damage, sf::Time dt);
     void                                    setSpeed(double s) { speed = s; }
+    void                                    setPower(double p) { power = p; }
+    //void                                    setHitbox(unsigned width, unsigned height);
+
 
   private:
     Orientation                             orientation;
@@ -56,11 +77,14 @@ class AnimatedEntity
     double                                  distance_travelled;
     std::shared_ptr<Animation>              currentAnimation;
     double                                  hitpoints;
-    double                                  speed;
+    double                                  speed; // affects movement speed and attack speed
+    double                                  power;
+    double                                  attack_speed;
+    sf::Time                                attack_cooldown;
+    Status                                  status;
 
 
-    // AI Status (idle, passive, aggressive, defensive)
-    // AI status 2 (idle, attacking, walking, running, grabbed,
+    // AI demeanor (idle, passive, aggressive, defensive)
 };
 
 #endif

@@ -39,15 +39,15 @@ public:
     explicit AnimatedSprite(sf::Time frameTime = sf::seconds(0.08f), bool paused = false, bool looped = false);
 
     void update(sf::Time deltaTime);
-    void setAnimation(const Animation& animation);
+    void setAnimation(const Animation& animation); // replace with shared_ptr
     void setFrameTime(sf::Time time);
     void play();
-    void play(const Animation& animation);
+    void play(const Animation& animation); // replace with shared_ptr
     void pause();
     void stop();
     void setLooped(bool looped);
     void setColor(const sf::Color& color);
-    const Animation* getAnimation() const;
+    const Animation* getAnimation() const; //replace with shared_ptr
     sf::FloatRect getLocalBounds() const;
     sf::FloatRect getGlobalBounds() const;
     bool isLooped() const;
@@ -57,9 +57,10 @@ public:
 
     // every animated sprite should have an invisible sf::sprite behind it that will serve as a hitbox for collision tests
     sf::Sprite hitbox;
+    void setHitbox(unsigned width, unsigned height);
 
 private:
-    const Animation* m_animation;
+    const Animation* m_animation; // replace with shared_ptr
     sf::Time m_frameTime;
     sf::Time m_currentTime;
     std::size_t m_currentFrame;

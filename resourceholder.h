@@ -37,7 +37,10 @@ namespace Fonts {
 
 namespace Animations {
   enum ID {
-    Hero_Punch
+    Hero_Run,
+    Hero_Grab,
+    Hero_Punch,
+    Hero_Kick
   };
 
 }

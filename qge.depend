@@ -341,11 +341,11 @@
 1404877641 c:\c++\qge\collision.h
 	"animatedsprite.h"
 
-1415280069 source:c:\c++\qge\gameengine.cpp
+1421882890 source:c:\c++\qge\gameengine.cpp
 	"gameengine.h"
 	"gamestate.h"
 
-1415279956 c:\c++\qge\gameengine.h
+1421883033 c:\c++\qge\gameengine.h
 	<SFML/Graphics.hpp>
 	<SFML/Audio.hpp>
 	<SFML/OpenGL.hpp>
@@ -451,7 +451,7 @@
 	"gamestate.h"
 	"level.h"
 
-1421635621 c:\c++\qge\level.h
+1423089430 c:\c++\qge\level.h
 	<vector>
 	<memory>
 	"mapmanager.h"
@@ -477,7 +477,7 @@
 1398050345 c:\c++\qge\tile.h
 	<SFML/Graphics.hpp>
 
-1421633873 c:\c++\qge\hero.h
+1423089915 c:\c++\qge\hero.h
 	<SFML/Graphics.hpp>
 	<SFML/System/Time.hpp>
 	"animatedentity.h"
@@ -489,7 +489,7 @@
 	"collision.h"
 	"orientation.h"
 
-1421635839 c:\c++\qge\npc.h
+1423057197 c:\c++\qge\npc.h
 	<SFML/Graphics.hpp>
 	"animatedentity.h"
 	"animation.h"
@@ -500,7 +500,7 @@
 	"projectile.h"
 	"collidable.h"
 
-1420593337 source:c:\c++\qge\main.cpp
+1421965522 source:c:\c++\qge\main.cpp
 	"gameengine.h"
 	"menustate.h"
 	"timer.h"
@@ -517,12 +517,12 @@
 	"highscorestate.h"
 	<iostream>
 
-1421636419 source:c:\c++\qge\npc.cpp
+1422920268 source:c:\c++\qge\npc.cpp
 	<iostream>
 	"npc.h"
 	"direction.h"
 
-1421633390 source:c:\c++\qge\playstate.cpp
+1423100529 source:c:\c++\qge\playstate.cpp
 	"playstate.h"
 	"mapmanager.h"
 	"hero.h"
@@ -532,11 +532,11 @@
 	<math.h>
 	"helpers.h"
 
-1421632859 source:c:\c++\qge\hero.cpp
+1422971377 source:c:\c++\qge\hero.cpp
 	"hero.h"
 	<iostream>
 
-1421635970 source:c:\c++\qge\level.cpp
+1423100603 source:c:\c++\qge\level.cpp
 	"level.h"
 	<math.h>
 
@@ -547,10 +547,10 @@
 1421458619 source:c:\c++\qge\texturemanager.cpp
 	"texturemanager.h"
 
-1406340356 source:c:\c++\qge\animatedsprite.cpp
+1422919528 source:c:\c++\qge\animatedsprite.cpp
 	"animatedsprite.h"
 
-1420592792 c:\c++\qge\animatedsprite.h
+1422888209 c:\c++\qge\animatedsprite.h
 	<SFML/Graphics.hpp>
 	<SFML/Graphics/RenderTarget.hpp>
 	<SFML/System/Time.hpp>
@@ -570,15 +570,14 @@
 1421290848 c:\c++\qge\direction.h
 	"orientation.h"
 
-1421631478 c:\c++\qge\weapon.h
+1423100467 c:\c++\qge\weapon.h
 	<SFML/Graphics.hpp>
 	"animatedentity.h"
 	"direction.h"
 	"npc.h"
-	"projectile.h"
 	"collidable.h"
 
-1421632006 source:c:\c++\qge\weapon.cpp
+1423098626 source:c:\c++\qge\weapon.cpp
 	"weapon.h"
 
 1421625830 c:\c++\qge\attack.h
@@ -594,7 +593,7 @@
 1412081262 source:c:\c++\qge\orientation.cpp
 	"orientation.h"
 
-1421327989 c:\c++\qge\collidable.h
+1423090026 c:\c++\qge\collidable.h
 	<SFML/Graphics.hpp>
 	"animatedentity.h"
 	"collidable.h"
@@ -603,10 +602,10 @@
 	"weapon.h"
 	"projectile.h"
 
-1421363390 source:c:\c++\qge\collidable.cpp
+1422919281 source:c:\c++\qge\collidable.cpp
 	"collidable.h"
 
-1421596277 c:\c++\qge\animatedentity.h
+1422920178 c:\c++\qge\animatedentity.h
 	<typeinfo>
 	<SFML/Graphics.hpp>
 	"animatedsprite.h"
@@ -615,25 +614,26 @@
 	"resourceholder.h"
 	"collision.h"
 	"orientation.h"
+	<iostream>
 
-1421621943 source:c:\c++\qge\animatedentity.cpp
+1422920149 source:c:\c++\qge\animatedentity.cpp
 	"animatedentity.h"
 
 1415366529 c:\c++\qge\helpers.h
 	<sstream>
 
-1421327984 c:\c++\qge\projectile.h
+1423097909 c:\c++\qge\projectile.h
 	"animatedentity.h"
 	"orientation.h"
 	"hero.h"
 	"npc.h"
-	"weapon.h"
 	"collidable.h"
+	"weapon.h"
 
-1421365787 source:c:\c++\qge\projectile.cpp
+1423093345 source:c:\c++\qge\projectile.cpp
 	"projectile.h"
 
-1421635467 c:\c++\qge\resourceholder.h
+1422659973 c:\c++\qge\resourceholder.h
 	<map>
 	<string>
 	<memory>
@@ -645,5 +645,5 @@
 1421462574 source:c:\c++\qge\resourceholder.cpp
 	"resourceholder.h"
 
-1421636508 c:\c++\qge\resourceholder.inl
+1422659987 c:\c++\qge\resourceholder.inl
 

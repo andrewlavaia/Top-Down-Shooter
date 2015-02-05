@@ -11,7 +11,7 @@ int main()
   window.create(sf::VideoMode(1024, 768), "Subway", sf::Style::Default);
 
   // Set window settings
-  window.setFramerateLimit(200);
+  //window.setFramerateLimit(200); // inaccurate, avoid if possible
 
   // Create the game engine with window (stores a reference)
   CGameEngine game(window);
@@ -38,6 +38,7 @@ int main()
       game.Update();
       //std::cout << "Game Logic Updated in: " << game.tick_timer.GetCounter() - next_game_tick << std::endl;
       next_game_tick += TIME_PER_TICK;
+      game.logicTime = game.logicClock.restart();
     }
 
     interpolation = (game.tick_timer.GetCounter() - next_game_tick + TIME_PER_TICK ) / TIME_PER_TICK;

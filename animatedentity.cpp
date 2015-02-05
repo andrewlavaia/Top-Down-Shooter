@@ -5,16 +5,21 @@
 AnimatedEntity::AnimatedEntity()
   : destroy_flag(false),
     distance_travelled(0),
-    hitpoints(10),
-    speed(1)
+    hitpoints(10.0),
+    speed(1.0),
+    power(1.0),
+    attack_speed(0.5),
+    status(AnimatedEntity::Idle)
 {
-    sf::Texture texture;
-    texture.create(1,1);
-    moveAnimation = CreateAnimation(texture,0,0,1); // hidden
-    deathAnimation = CreateAnimation(texture,10,10,1); // hidden
-    directions.clear();
-    directions_it = directions.begin();
-    setOrientation(Orientation::S);
+  attack_cooldown = sf::Time::Zero;
+
+  sf::Texture texture;
+  texture.create(1,1);
+  moveAnimation = CreateAnimation(texture,0,0,1); // hidden
+  deathAnimation = CreateAnimation(texture,10,10,10); // hidden
+  directions.clear();
+  directions_it = directions.begin();
+  setOrientation(Orientation::S);
 }
 
 std::shared_ptr<Animation> AnimatedEntity::CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count)
@@ -53,13 +58,21 @@ void AnimatedEntity::Move()
 {
   //random number generator : rand()%(max-min+1) + min
   //std::cout<<obj.position.x << std::endl;
-  if(directions.empty() == true) { return; }
+  if(directions.empty() == true)
+  {
+      setStatus(AnimatedEntity::Idle);
+      return;
+  }
+
+  setStatus(AnimatedEntity::Moving);
 
   // Check if object has travelled further than distance set in current Direction object
   if(distance_travelled > directions_it->getDistance())
   {
     // If distance exceeded, reset distance counter and have iterator point to next Direction object
     distance_travelled = 0;
+    setStatus(AnimatedEntity::Moving);
+    setCurrentAnimation(moveAnimation);
 
     if(directions_it->isRepeat())
     {
@@ -75,63 +88,9 @@ void AnimatedEntity::Move()
     {
       directions_it = directions.begin();
     }
-
   }
 
-  // update orientation
-  setOrientation(directions_it->getType());
-
-  // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
-  double hypotenuse = sqrt(directions_it->getSpeed() * directions_it->getSpeed() + directions_it->getSpeed() * directions_it->getSpeed());
-
-  // check direction and move object accordingly
-  switch(directions_it->getType())
-  {
-    case Orientation::N :
-      position.y -= directions_it->getSpeed();
-      animatedSprite.setRotation(0);
-      break;
-
-    case Orientation::S :
-      position.y += directions_it->getSpeed();
-      animatedSprite.setRotation(180);
-      break;
-
-    case Orientation::E :
-      position.x += directions_it->getSpeed();
-      animatedSprite.setRotation(90);
-      break;
-
-    case Orientation::W :
-      position.x -= directions_it->getSpeed();
-      animatedSprite.setRotation(270);
-      break;
-
-    case Orientation::NW :
-      position.x -= hypotenuse/2;
-      position.y -= hypotenuse/2;
-      animatedSprite.setRotation(315);
-      break;
-
-    case Orientation::NE :
-      position.x += hypotenuse/2;
-      position.y -= hypotenuse/2;
-      animatedSprite.setRotation(45);
-      break;
-
-    case Orientation::SW :
-      position.x -= hypotenuse/2;
-      position.y += hypotenuse/2;
-      animatedSprite.setRotation(225);
-      break;
-
-    case Orientation::SE :
-      position.x += hypotenuse/2;
-      position.y += hypotenuse/2;
-      animatedSprite.setRotation(135);
-      break;
-
-  }
+  MoveOneUnit(directions_it->getType(), directions_it->getSpeed());
 
   // update distance travelled
   if ( directions_it->getType() == Orientation::NW ||
@@ -139,6 +98,8 @@ void AnimatedEntity::Move()
        directions_it->getType() == Orientation::SW ||
        directions_it->getType() == Orientation::SE)
   {
+    // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
+    double hypotenuse = sqrt(directions_it->getSpeed() * directions_it->getSpeed() + directions_it->getSpeed() * directions_it->getSpeed());
     distance_travelled += hypotenuse;
   }
   else
@@ -148,9 +109,62 @@ void AnimatedEntity::Move()
 
 }
 
+
+void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd)
+{
+  setOrientation(o);
+  animatedSprite.setRotation(getOrientation().getRotation());
+
+  // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
+  double hypotenuse = sqrt((spd * spd) + (spd * spd));
+
+  // check orientation and move accordingly
+  switch(getOrientation().getType())
+  {
+    case Orientation::N :
+      position.y -= spd;
+      break;
+
+    case Orientation::S :
+      position.y += spd;
+      break;
+
+    case Orientation::E :
+      position.x += spd;
+      break;
+
+    case Orientation::W :
+      position.x -= spd;
+      break;
+
+    case Orientation::NW :
+      position.x -= hypotenuse/2;
+      position.y -= hypotenuse/2;
+      break;
+
+    case Orientation::NE :
+      position.x += hypotenuse/2;
+      position.y -= hypotenuse/2;
+      break;
+
+    case Orientation::SW :
+      position.x -= hypotenuse/2;
+      position.y += hypotenuse/2;
+      break;
+
+    case Orientation::SE :
+      position.x += hypotenuse/2;
+      position.y += hypotenuse/2;
+      break;
+
+  }
+
+}
+
+
 bool AnimatedEntity::checkCollision(const AnimatedEntity& a) const
 {
-  if(Collision::BoundingBoxTest(animatedSprite.hitbox, a.animatedSprite.hitbox) && !a.isDestroyed())
+  if(!this->isDestroyed() && !a.isDestroyed() && Collision::BoundingBoxTest(animatedSprite.hitbox, a.animatedSprite.hitbox))
     return true;
   else
     return false;
@@ -213,9 +227,14 @@ bool AnimatedEntity::checkDistance(double distance, const AnimatedEntity& entity
 
 void AnimatedEntity::Destroy()
 {
-   setCurrentAnimation(deathAnimation);
-   animatedSprite.setLooped(false);
-   destroy_flag = true;
+  if(destroy_flag == true)
+    return;
+
+  destroy_flag = true;
+  directions.clear();
+  setCurrentAnimation(deathAnimation);
+  animatedSprite.setLooped(false);
+
 }
 
 void AnimatedEntity::TakeDamage(double damage)
@@ -224,3 +243,30 @@ void AnimatedEntity::TakeDamage(double damage)
   if(hitpoints <= 0)
     Destroy();
 }
+
+void AnimatedEntity::TakeDamageOverTime(double damage, sf::Time dt)
+{
+  hitpoints = hitpoints - (damage * 10 * dt.asSeconds());
+  if(hitpoints <= 0)
+    Destroy();
+}
+
+bool AnimatedEntity::canAttack()
+{
+  //std::cout<<attack_cooldown.asSeconds()<<std::endl;
+  if(attack_cooldown > sf::Time::Zero)
+  {
+    return false;
+  }
+  else
+  {
+    attack_cooldown = sf::seconds(attack_speed);
+    return true;
+  }
+}
+
+void AnimatedEntity::reduceCoolDowns(sf::Time dt)
+{
+  attack_cooldown -= dt;
+}
+

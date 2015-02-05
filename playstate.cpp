@@ -59,137 +59,104 @@ void CPlayState::HandleEvents(CGameEngine* game)
   // Keyboard Events
   // -----------------
 
-/*
-  UP_KEY = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
-  DOWN_KEY = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
-  LEFT_KEY = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-  RIGHT_KEY = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
-*/
-
-  // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
-  double hypotenuse = sqrt((this->level.hero.getSpeed() * this->level.hero.getSpeed()) + (this->level.hero.getSpeed() * this->level.hero.getSpeed()));
-
-  if ( sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A) )
+  // Movement
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
-    this->level.hero.setOrientation(Orientation::NW);
-    this->level.hero.position.x -= hypotenuse/2;
-    this->level.hero.position.y -= hypotenuse/2;
-    this->level.hero.animatedSprite.setRotation(315);
-    //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
+    this->level.hero.MoveOneUnit(Orientation::NW, this->level.hero.getSpeed());
     noKeyPressed = false;
   }
   else
-  if ( sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::D) )
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
-    this->level.hero.setOrientation(Orientation::NE);
-    this->level.hero.position.x += hypotenuse/2;
-    this->level.hero.position.y -= hypotenuse/2;
-    this->level.hero.animatedSprite.setRotation(45);
-    //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
+    this->level.hero.MoveOneUnit(Orientation::NE, this->level.hero.getSpeed());
     noKeyPressed = false;
   }
   else
-  if ( sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::A) )
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
-    this->level.hero.setOrientation(Orientation::SW);
-    this->level.hero.position.x -= hypotenuse/2;
-    this->level.hero.position.y += hypotenuse/2;
-    this->level.hero.animatedSprite.setRotation(235);
-    //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
+    this->level.hero.MoveOneUnit(Orientation::SW, this->level.hero.getSpeed());
     noKeyPressed = false;
   }
   else
-  if ( sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::D) )
+  if( sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
-    this->level.hero.setOrientation(Orientation::SE);
-    this->level.hero.position.x += hypotenuse/2;
-    this->level.hero.position.y += hypotenuse/2;
-    this->level.hero.animatedSprite.setRotation(135);
-    //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
+    this->level.hero.MoveOneUnit(Orientation::SE, this->level.hero.getSpeed());
     noKeyPressed = false;
   }
   else
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
-    this->level.hero.setOrientation(Orientation::W);
-    this->level.hero.position.x -= this->level.hero.getSpeed();
-    this->level.hero.animatedSprite.setRotation(270);
-    //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
+    this->level.hero.MoveOneUnit(Orientation::W, this->level.hero.getSpeed());
     noKeyPressed = false;
   }
   else
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
-    this->level.hero.setOrientation(Orientation::E);
-    this->level.hero.position.x += this->level.hero.getSpeed();
-    this->level.hero.animatedSprite.setRotation(90);
-    //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
+    this->level.hero.MoveOneUnit(Orientation::E, this->level.hero.getSpeed());
     noKeyPressed = false;
   }
   else
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
   {
-    this->level.hero.setOrientation(Orientation::N);
-    this->level.hero.position.y -= this->level.hero.getSpeed();
-    this->level.hero.animatedSprite.setRotation(0);
-    //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
+    this->level.hero.MoveOneUnit(Orientation::N, this->level.hero.getSpeed());
     noKeyPressed = false;
   }
   else
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
   {
-    this->level.hero.setOrientation(Orientation::S);
-    this->level.hero.position.y += this->level.hero.getSpeed();
-    this->level.hero.animatedSprite.setRotation(180);
-    //this->level.hero.animatedSprite.play(*this->level.hero.moveAnimation);
+    this->level.hero.MoveOneUnit(Orientation::S, this->level.hero.getSpeed());
     noKeyPressed = false;
   }
 
   // Pickup NPC or Weapon
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::O))
   {
     this->level.hero.Pickup(this->level.entities);
-    //this->level.hero.animatedSprite.play(*this->level.hero.getCurrentAnimation());
   }
 
-  // Release NPC / Drop Weapon
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::SemiColon))
+  // Drop NPC or Weapon
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::SemiColon))
   {
     this->level.hero.Drop();
   }
 
   // Primary Attack
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::K) && this->level.hero.canAttack())
   {
     this->level.hero.PrimaryAttack();
-    //this->level.hero.setCurrentAnimation(this->level.hero.punchAnimation);
-    //this->level.hero.animatedSprite.play(*this->level.hero.getCurrentAnimation());
+
+    if(this->level.hero.getWeapon()->getPrimaryAttackType() == Weapon::AttackType::Shoot)
+    {
+      this->level.CreateProjectile( this->level.hero.getWeapon()->ammoType->getType(),
+                                    this->level.hero.position.x,
+                                    this->level.hero.position.y,
+                                    this->level.hero.getOrientation().getType());
+    }
   }
 
   // Secondary Attack
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::L))
   {
-    //this->level.hero.SecondaryAttack(this->level.npc);
-    //this->level.hero.animatedSprite.play(*this->level.hero.getCurrentAnimation());
+    this->level.hero.SecondaryAttack();
   }
 
   // Throw
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
     this->level.hero.Throw();
   }
 
-
-  // Spawning Controls
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
+  // Spawning Controls (administrative only)
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
   {
     this->level.CreateNPC(NPC::Chumba);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
   {
     this->level.CreateNPC(NPC::Goomba);
   }
 
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) // Fire Projectile
+  // Shoot Projectile
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
   {
     this->level.CreateProjectile( Projectile::Bullet,
                                   this->level.hero.position.x,
@@ -198,11 +165,12 @@ void CPlayState::HandleEvents(CGameEngine* game)
   }
 
   // Load next level
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
     this->level.Load(2);
   }
 
 }
+
 
 void CPlayState::Update(CGameEngine* game)
 {
@@ -210,10 +178,10 @@ void CPlayState::Update(CGameEngine* game)
   // ---------------
   // Collision Tests
   // ---------------
-
   for (std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = this->level.entities.begin(); it != this->level.entities.end(); ++it)
   {
-    if( typeid(**it) == typeid(NPC) &&
+    // Set NPC Aggro
+    if(typeid(**it) == typeid(NPC) &&
         (*it)->checkDistance(200, this->level.hero) &&
         (*it)->getCurrentAnimation() == (*it)->moveAnimation
       )
@@ -221,38 +189,40 @@ void CPlayState::Update(CGameEngine* game)
       (*it)->AddDirection((*it)->getRelativeOrientation(this->level.hero), .25, (*it)->getSpeed());
     }
 
-    this->level.hero.collideWithEntity(**it);
+    // Test collision with hero
+    this->level.hero.collideWithEntity(**it, game->logicTime);
 
-    for (std::vector< std::shared_ptr<AnimatedEntity> >::iterator jt = this->level.entities.begin(); jt != this->level.entities.end(); ++jt)
+    // Test collision with all other entities
+    for(std::vector< std::shared_ptr<AnimatedEntity> >::iterator jt = this->level.entities.begin(); jt != this->level.entities.end(); ++jt)
     {
-      (*it)->collideWithEntity(**jt);
+      (*it)->collideWithEntity(**jt, game->logicTime);
     }
   }
 
-  // Delete destroyed entities
-    this->level.DeleteEntities();
-
+  // -------------------
+  // Reduce Cool Downs
+  // -------------------
+  this->level.hero.reduceCoolDowns(game->logicTime);
+  for(auto it = this->level.entities.begin(); it != this->level.entities.end(); ++it)
+  {
+    (*it)->reduceCoolDowns(game->logicTime);
+  }
 
   // -------------------
   // NPC AI and Movement
   // -------------------
-
   this->level.MoveEntities();
-
 
   // -------------------
   // Victory Conditions
   // -------------------
-
-  if (this->level.Victory())
+  if(this->level.Victory())
   {
-    std::cout<<"Victory"<<std::endl;
     //push state to victory state
   }
 
-  if (this->level.GameOver())
+  if(this->level.GameOver())
   {
-    std::cout << "Game Over" <<std::endl;
     // push state to game over state
   }
 
@@ -264,29 +234,32 @@ void CPlayState::Update(CGameEngine* game)
   //update active_weapon image
 
 
-  // -------------------
-  // Hero Animation Rules
-  // -------------------
-
-  if(this->noKeyPressed && this->level.hero.getCurrentAnimation() == this->level.hero.moveAnimation)
-    this->level.hero.animatedSprite.stop();
-
-  if(!this->level.hero.animatedSprite.isPlaying() && this->level.hero.getCurrentAnimation() != this->level.hero.moveAnimation)
-    this->level.hero.setCurrentAnimation(this->level.hero.moveAnimation);
-
-
-} // end CPlayState::Update
-
-
+} // end CState::Update
 
 
 void CPlayState::Draw(CGameEngine* game, double interpolation)
 {
+  /// Below code must be in render section, because it depends on current animation state
+
+    // Delete destroyed entities
+    this->level.DeleteEntities();
+
+    // -------------------
+    // Hero Animation Rules
+    // -------------------
+    if(this->noKeyPressed && this->level.hero.getCurrentAnimation() == this->level.hero.moveAnimation)
+      this->level.hero.animatedSprite.stop();
+
+    if(!this->level.hero.animatedSprite.isPlaying()) //&& this->level.hero.getCurrentAnimation() != this->level.hero.moveAnimation)
+    {
+      this->level.hero.restoreDefaultState();
+    }
+
+  /// End
 
   // ------------------------
   // Initialize Render Window
   // ------------------------
-
   sf::RenderWindow& window = game->window;
   window.clear(sf::Color(255, 255, 255));
 
@@ -305,11 +278,9 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     }
   }
 
-
   // --------------------
   // Draw HUD
   // --------------------
-
   window.draw(this->level.text_timer);
   window.draw(this->level.text_npc_count);
   // draw active weapon image
@@ -324,11 +295,9 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   window.draw(this->level.hero.animatedSprite);
   window.draw(this->level.hero.animatedSprite.hitbox); // DEBUG only
 
-
   // ---------------------
   // Draw Entities
   // ---------------------
-
   for(std::vector< std::shared_ptr<AnimatedEntity> >::const_iterator it = this->level.entities.begin(); it != this->level.entities.end(); ++it)
   {
     (*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
@@ -342,6 +311,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // Update Window
   // ---------------
   window.display();
+
 
 }
 

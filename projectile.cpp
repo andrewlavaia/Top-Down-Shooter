@@ -9,9 +9,8 @@ Projectile::Projectile(Type t, double x, double y, Orientation::Type o)
   orientation = o;
 
   // Default Weapon Settings
-  speed = 20;
+  setSpeed(20);
   range = 500;
-  damage = 1;
 
   position.x = x;
   position.y = y;
@@ -29,20 +28,23 @@ Projectile::Projectile(Type t, double x, double y, Orientation::Type o)
   animatedSprite.setColor(sf::Color(255,255,0));
   animatedSprite.setPosition(position.x, position.y);
 
+  animatedSprite.setHitbox(5,5);
 
-  sf::Texture hitbox_texture;
-  hitbox_texture.create(5,5);
-  animatedSprite.hitbox.setTexture(hitbox_texture); // assign empty texture
-  animatedSprite.hitbox.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
-  animatedSprite.hitbox.setOrigin(2.5, 2.5);
-  animatedSprite.hitbox.setPosition(position.x, position.y);
+  AddDirection(orientation, range, getSpeed(), false);
 
-  AddDirection(orientation, range, speed, false);
+  switch(type)
+  {
+    case Projectile::Bullet :
+      break;
 
-  //directions_it = directions.begin();
+    case Projectile::Rocket :
+      setPower(5);
+      break;
+  }
+
 }
 
-void Projectile::collideWithEntity(const AnimatedEntity& a)
+void Projectile::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 {
   if (checkCollision(a) == false)
     return;

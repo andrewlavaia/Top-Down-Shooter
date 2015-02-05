@@ -21,11 +21,7 @@ Collidable::Collidable(Type t, int x, int y, int width, int height)
   animatedSprite.setOrigin(width/2, height/2);
 
   // set hitbox for collision testing
-  sf::Texture hitbox_texture;
-  hitbox_texture.create(width,height);
-  animatedSprite.hitbox.setTexture(hitbox_texture); // assign empty texture 20x20 pixels
-  animatedSprite.hitbox.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
-  animatedSprite.hitbox.setOrigin(width/2, height/2);
+  animatedSprite.setHitbox(width, height);
 
   switch(type)
   {
@@ -48,7 +44,7 @@ Collidable::Collidable(Type t, int x, int y, int width, int height)
 
 }
 
-void Collidable::collideWithEntity(const AnimatedEntity& a)
+void Collidable::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 {
   if (checkCollision(a) == false)
     return;

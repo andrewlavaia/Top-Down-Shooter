@@ -6,10 +6,11 @@
 #include "animatedentity.h"
 #include "direction.h"
 #include "npc.h"
-#include "projectile.h"
+//#include "projectile.h"
 #include "collidable.h"
 
 class Hero;
+class Projectile;
 
 class Weapon : public AnimatedEntity
 {
@@ -18,6 +19,8 @@ class Weapon : public AnimatedEntity
       Hands,
       Pole,
       Lasso,
+      Pistol,
+      RocketLauncher,
 
       /*
       Hands,
@@ -32,8 +35,12 @@ class Weapon : public AnimatedEntity
       SMG(s),
       RocketLauncher,
       Grenade(s)
-
       */
+    };
+
+    enum AttackType {
+      Standard,
+      Shoot
     };
 
     Weapon(Type t, double x, double y);
@@ -41,19 +48,27 @@ class Weapon : public AnimatedEntity
     std::shared_ptr<Animation> primaryAttackAnimation;
     std::shared_ptr<Animation> secondaryAttackAnimation;
 
-    Type      getType()                { return type; }
-    double    getDamageModifier()      { return damage_modifier; }
-    double    getRange()               { return range; }
-    int       getDurability()          { return durability; }
-    void      reduceDurability()       { durability--; }
+    Type        getType()                 { return type; }
+    AttackType  getPrimaryAttackType()    { return primaryAttackType; }
+    AttackType  getSecondaryAttackType()  { return secondaryAttackType; }
+    int         getRange()                { return range; }
+    std::unique_ptr<Projectile> ammoType;
+    //int       getDurability()          { return durability; }
+    //void      reduceDurability()       { durability--; }
 
-    virtual void collideWithEntity(const AnimatedEntity& a);
+    virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
 
   private:
     Type type;
-    int durability;
-    double damage_modifier;
-    double range;
+    AttackType primaryAttackType;
+    AttackType secondaryAttackType;
+    int range;
+
+
+
+    //int durability; // can use weapons hitpoints instead
+
+
 
 
 };

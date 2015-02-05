@@ -15,7 +15,12 @@ Level::Level()
 
   fonts.load(Fonts::Calibri, "calibri.ttf");
 
+  animations.load(Animations::Hero_Run, textures.get(Textures::Hero_Run), 391, 319, 12);
+  animations.load(Animations::Hero_Grab, textures.get(Textures::Hero_Grab), 388, 319, 6);
   animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
+  animations.load(Animations::Hero_Kick, textures.get(Textures::Hero_Kick), 385, 371, 6);
+
+  hero.SetAnimations(animations);
 
   text_timer.setFont(fonts.get(Fonts::Calibri));
   text_timer.setCharacterSize(40);
@@ -49,7 +54,7 @@ void Level::Load(int id)
       CreateCollidable(Collidable::SubwayPlatform,      30,    0,  50,   800);
       CreateCollidable(Collidable::ImmovableObject,     500, 500, 100,    10);
 
-      hero.CreateAnimations(textures);
+      hero.SetAnimations(animations);
 
       CreateNPC(NPC::Goomba);
       CreateNPC(NPC::Chumba);
@@ -57,14 +62,15 @@ void Level::Load(int id)
       CreateWeapon(Weapon::Lasso, 20, 50);
       CreateWeapon(Weapon::Pole, 400, 400);
       CreateWeapon(Weapon::Pole, 200, 200);
-      CreateWeapon(Weapon::Lasso, 700,700);
+      CreateWeapon(Weapon::Pistol, 700,700);
+      CreateWeapon(Weapon::RocketLauncher, 500,500);
 
       break;
 
     case 2:
       mp.Load("map_L2.txt");
 
-      hero.CreateAnimations(textures);
+      hero.SetAnimations(animations);
 
       CreateNPC(NPC::Goomba);
       CreateNPC(NPC::Chumba);
@@ -115,11 +121,10 @@ void Level::MoveEntities()
     hero.grabbed_npc->position.y = hero.position.y - 30;
     // set currentAnimation to "grabbed"
   }
-  if (hero.weapon != nullptr)
-  {
-    hero.weapon->position = hero.position;
-    hero.weapon->animatedSprite.hitbox.setRotation(hero.getOrientation().getRotation());
-  }
+
+    hero.getWeapon()->position = hero.position;
+    hero.getWeapon()->animatedSprite.hitbox.setRotation(hero.getOrientation().getRotation());
+
 
   for (auto it = entities.begin(); it != entities.end();)
   {
@@ -133,11 +138,13 @@ void Level::MoveEntities()
 
 }
 
+
+
 void Level::DeleteEntities()
 {
   for (auto it = entities.begin(); it != entities.end(); )
   {
-    if((*it)->isDestroyed() && !(*it)->animatedSprite.isPlaying())
+    if((*it)->isDestroyed() && (*it)->getCurrentAnimation() == (*it)->deathAnimation && !(*it)->animatedSprite.isPlaying())
       DestroyObject(entities, it);
     else
       ++it;

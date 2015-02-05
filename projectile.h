@@ -7,8 +7,8 @@
 
 #include "hero.h"
 #include "npc.h"
-#include "weapon.h"
 #include "collidable.h"
+#include "weapon.h"
 
 class Projectile : public AnimatedEntity
 {
@@ -22,25 +22,18 @@ public:
     Knife,
   };
 
-  Projectile(Type t, double x, double y, Orientation::Type o);
+  Projectile(Type t, double x = 0, double y = 0, Orientation::Type o = Orientation::N);
 
   Type getType() { return type; }
-  double getSpeed() { return speed; }
   double getRange() { return range; }
-  double getDamage() { return damage; }
 
-  //virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
-  //virtual Animation* getCurrentAnimation() { return currentAnimation; }
-  //virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
-  virtual void collideWithEntity(const AnimatedEntity& a);
+  virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
 
 private:
   Type type;
   Orientation::Type orientation;
 
-  double speed;
-  double range;
-  double damage;
+  int range;
 };
 
 #endif

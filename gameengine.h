@@ -36,6 +36,8 @@ public:
 
   sf::Clock frameClock;
   sf::Time frameTime;
+  sf::Clock logicClock;
+  sf::Time logicTime;
   sf::Font font;
 
   // Window as a reference because it may have a longer lifetime than game engine for crash reporting

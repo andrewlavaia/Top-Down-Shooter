@@ -191,3 +191,13 @@ void AnimatedSprite::draw(sf::RenderTarget& target, sf::RenderStates states) con
 }
 
 
+void AnimatedSprite::setHitbox(unsigned width, unsigned height)
+{
+  // set hitbox for collision testing
+  sf::Texture hitbox_texture;
+  hitbox_texture.create(width, height);
+  hitbox.setTexture(hitbox_texture);
+  hitbox.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
+  hitbox.setOrigin(width/2, height/2);
+  hitbox.setPosition(getPosition());
+}

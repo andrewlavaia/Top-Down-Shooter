@@ -35,7 +35,7 @@ public:
   //virtual Animation* getCurrentAnimation() { return currentAnimation; }
   //virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
   //virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
-  virtual void                            collideWithEntity(const AnimatedEntity& a);
+  virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt);
 
   double                                  getWeight() { return weight; }
 

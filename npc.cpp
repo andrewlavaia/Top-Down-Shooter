@@ -7,18 +7,18 @@ NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
   : type(type)
 {
 
-  moveAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
+  moveAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Run));
   attackedAnimation = moveAnimation;
   grabbedAnimation = moveAnimation;
-  thrownAnimation = moveAnimation;
-  //thrownAnimation = CreateAnimation(texture.get(Textures::Hero_Run), 391, 319, 10);
+  thrownAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
+  deathAnimation =  std::make_shared<Animation>(animations.get(Animations::Hero_Kick));
 
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);
 
   setCurrentAnimation(moveAnimation);
   animatedSprite.play(*getCurrentAnimation());
-  animatedSprite.setLooped(true);
+  animatedSprite.setLooped(false);
   animatedSprite.setFrameTime(sf::seconds(0.16));
   sf::Color color(100,100,255);
   animatedSprite.setColor(color);
@@ -31,10 +31,10 @@ NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
       setSpeed(4);
       weight = 1;
 
-      AddDirection(Orientation::S, 100, getSpeed(), true);
-      AddDirection(Orientation::NW, 100, getSpeed(), true);
-      AddDirection(Orientation::NE, 50, getSpeed(), true);
-      AddDirection(Orientation::SW, 50, getSpeed(), true);
+      AddDirection(Orientation::S, 100, getSpeed(), false);
+      //AddDirection(Orientation::NW, 100, getSpeed(), true);
+      //AddDirection(Orientation::NE, 50, getSpeed(), true);
+      //AddDirection(Orientation::SW, 50, getSpeed(), true);
 
       break;
 
@@ -43,10 +43,10 @@ NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
       position.y = 300;
       setSpeed(2);
       weight = 1;
-      AddDirection(Orientation::S, 100, getSpeed(), true);
+      AddDirection(Orientation::S,  100, getSpeed(), true);
+      AddDirection(Orientation::E,  100, getSpeed(), true);
       AddDirection(Orientation::NW, 100, getSpeed(), true);
-      AddDirection(Orientation::NE, 50, getSpeed(), true);
-      AddDirection(Orientation::SW, 50, getSpeed(), true);
+      //AddDirection(Orientation::SW, 50, getSpeed(), true);
       break;
   }
 
@@ -57,16 +57,12 @@ NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
 
 
   // set hitbox for collision testing
-  sf::Texture hitbox_texture;
-  hitbox_texture.create(20,20);
-  animatedSprite.hitbox.setTexture(hitbox_texture); // assign empty texture 20x20 pixels
-  animatedSprite.hitbox.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
-  animatedSprite.hitbox.setOrigin(10, 10);
-  animatedSprite.hitbox.setPosition(position.x,position.y);
+  animatedSprite.setHitbox(20,20);
+  //animatedSprite.hitbox.setPosition(position.x,position.y);
 
 }
 
-void NPC::collideWithEntity(const AnimatedEntity& a)
+void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 {
   if (checkCollision(a) == false)
     return;
@@ -79,13 +75,15 @@ void NPC::collideWithEntity(const AnimatedEntity& a)
   {
     // adjust position
   }
-  else if(typeid(a) == typeid(Weapon))
+  else if(typeid(a) == typeid(Weapon) && a.getStatus() != AnimatedEntity::Idle)
   {
-    // take damage
+    TakeDamage(a.getPower());
+    std::cout<<getHP()<<std::endl;
   }
   else if(typeid(a) == typeid(Projectile))
   {
-    // take damage
+    TakeDamage(a.getPower());
+    std::cout<<getHP()<<std::endl;
   }
   else if(typeid(a) == typeid(Collidable))
   {
