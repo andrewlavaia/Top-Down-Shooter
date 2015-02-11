@@ -8,10 +8,10 @@ AnimatedEntity::AnimatedEntity()
     hitpoints(10.0),
     speed(1.0),
     power(1.0),
-    attack_speed(0.5),
+    //attack_speed(0.5),
     status(AnimatedEntity::Idle)
 {
-  attack_cooldown = sf::Time::Zero;
+  //attack_cooldown = sf::Time::Zero;
 
   sf::Texture texture;
   texture.create(1,1);
@@ -251,22 +251,18 @@ void AnimatedEntity::TakeDamageOverTime(double damage, sf::Time dt)
     Destroy();
 }
 
+/*
+
 bool AnimatedEntity::canAttack()
 {
-  //std::cout<<attack_cooldown.asSeconds()<<std::endl;
   if(attack_cooldown > sf::Time::Zero)
-  {
     return false;
-  }
   else
-  {
-    attack_cooldown = sf::seconds(attack_speed);
     return true;
-  }
 }
 
 void AnimatedEntity::reduceCoolDowns(sf::Time dt)
 {
   attack_cooldown -= dt;
 }
-
+*/

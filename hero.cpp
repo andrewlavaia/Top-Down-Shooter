@@ -61,32 +61,66 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
   }
 
 }
-void Hero::PrimaryAttack()
+void Hero::PrimaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
 {
-  if(!canAttack())
+  if(!getWeapon()->primaryAttack->canAttack())
     return;
 
   setCurrentAnimation(getWeapon()->primaryAttackAnimation);
-  getWeapon()->animatedSprite.hitbox.setScale(1, getWeapon()->getRange());
-  getWeapon()->animatedSprite.hitbox.setRotation(this->getOrientation().getRotation());
-  getWeapon()->setStatus(AnimatedEntity::Attacking);
+  AttackNow(getWeapon()->primaryAttack, entities);
 }
 
-void Hero::SecondaryAttack()
+void Hero::SecondaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
 {
-  if(!canAttack())
+  if(!getWeapon()->secondaryAttack->canAttack())
     return;
 
   setCurrentAnimation(getWeapon()->secondaryAttackAnimation);
-  getWeapon()->animatedSprite.hitbox.setScale(1, getWeapon()->getRange());
-  getWeapon()->animatedSprite.hitbox.setRotation(this->getOrientation().getRotation());
-  getWeapon()->setStatus(AnimatedEntity::Attacking);
+  AttackNow(getWeapon()->secondaryAttack, entities);
 }
 
-void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& vec_ptr_a)
+void Hero::AttackNow(std::unique_ptr<Attack>& attack, std::vector<std::shared_ptr<AnimatedEntity>>& entities)
 {
 
-  for(auto it = vec_ptr_a.begin(); it != vec_ptr_a.end(); ++it)
+  switch(attack->getType())
+  {
+    case Attack::Standard :
+      getWeapon()->animatedSprite.hitbox.setScale(1, getWeapon()->getRange());
+      getWeapon()->animatedSprite.hitbox.setRotation(this->getOrientation().getRotation());
+      getWeapon()->setStatus(AnimatedEntity::Attacking);
+      break;
+
+    case Attack::Shoot :
+      auto p1 = std::make_shared<Projectile>( getWeapon()->ammoType->getType(),
+                                              position.x,
+                                              position.y,
+                                              getOrientation().getType());
+      entities.push_back(p1);
+
+      if(getWeapon()->ammoType->getType() == Projectile::BuckShot)
+      {
+        // works very well for north and south shots, but does not translate for other directions
+          auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), position.x-15, position.y-3, getOrientation().getType());
+          auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), position.x-10, position.y+3, getOrientation().getType());
+          auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), position.x+15, position.y-3, getOrientation().getType());
+          auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), position.x+10, position.y+3, getOrientation().getType());
+
+          entities.push_back(p2);
+          entities.push_back(p3);
+          entities.push_back(p4);
+          entities.push_back(p5);
+      }
+      break;
+  }
+
+  attack->resetCooldown();
+
+}
+
+void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
+{
+
+  for(auto it = entities.begin(); it != entities.end(); ++it)
   {
     if(typeid(**it) == typeid(NPC) && checkCollision(**it) == true)
     {
@@ -155,3 +189,4 @@ void Hero::restoreDefaultState()
     getWeapon()->animatedSprite.hitbox.setScale(1, 1);
     setStatus(AnimatedEntity::Idle);
 }
+

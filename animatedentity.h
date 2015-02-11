@@ -53,9 +53,11 @@ class AnimatedEntity
     double                                  getHP() const { return hitpoints; }
     double                                  getSpeed() const { return speed; }
     double                                  getPower() const { return power; }
-    bool                                    canAttack();
 
-    void                                    reduceCoolDowns(sf::Time dt);
+    //bool                                    canAttack();
+    //void                                    reduceCoolDowns(sf::Time dt);
+    //void                                    resetAttackCoolDown() { attack_cooldown = sf::seconds(attack_speed); }
+
     Status                                  getStatus() const { return status; }
     void                                    setStatus(Status s) { status = s; }
 
@@ -66,7 +68,9 @@ class AnimatedEntity
     void                                    TakeDamageOverTime(double damage, sf::Time dt);
     void                                    setSpeed(double s) { speed = s; }
     void                                    setPower(double p) { power = p; }
-    //void                                    setHitbox(unsigned width, unsigned height);
+
+    //void                                    setAttackSpeed(double as) { attack_speed = as;}
+
 
 
   private:
@@ -79,8 +83,10 @@ class AnimatedEntity
     double                                  hitpoints;
     double                                  speed; // affects movement speed and attack speed
     double                                  power;
-    double                                  attack_speed;
-    sf::Time                                attack_cooldown;
+
+    //double                                  attack_speed;
+    //sf::Time                                attack_cooldown;
+
     Status                                  status;
 
 

@@ -59,9 +59,10 @@ void Level::Load(int id)
       CreateNPC(NPC::Goomba);
       CreateNPC(NPC::Chumba);
 
-      CreateWeapon(Weapon::Lasso, 20, 50);
+      CreateWeapon(Weapon::SMG, 20, 50);
       CreateWeapon(Weapon::Pole, 400, 400);
       CreateWeapon(Weapon::Pole, 200, 200);
+      CreateWeapon(Weapon::Shotgun, 100, 100);
       CreateWeapon(Weapon::Pistol, 700,700);
       CreateWeapon(Weapon::RocketLauncher, 500,500);
 
@@ -94,21 +95,32 @@ void Level::CreateNPC(NPC::Type type)
 // Dynamically creates a new Weapon object and returns a smart pointer to it
 void Level::CreateWeapon(Weapon::Type type, double x, double y)
 {
-  //std::shared_ptr<Weapon> w(new Weapon(type, x, y));
   auto p = std::make_shared<Weapon>(type, x, y);
   entities.push_back(p);
 }
 
 void Level::CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o)
 {
-  //std::shared_ptr<Projectile> p(new Projectile(type, x, y, o));
   auto p = std::make_shared<Projectile>(type, x, y, o);
   entities.push_back(p);
+
+  if(type == Projectile::BuckShot)
+  {
+    // works very well for north and south shots, but does not translate for other directions
+      auto p2 = std::make_shared<Projectile>(type, x-15, y-3, o);
+      auto p3 = std::make_shared<Projectile>(type, x-10, y+3, o);
+      auto p4 = std::make_shared<Projectile>(type, x+15, y-3, o);
+      auto p5 = std::make_shared<Projectile>(type, x+10, y+3, o);
+
+      entities.push_back(p2);
+      entities.push_back(p3);
+      entities.push_back(p4);
+      entities.push_back(p5);
+  }
 }
 
 void Level::CreateCollidable(Collidable::Type type, int x, int y, int width, int height)
 {
-  //std::shared_ptr<Collidable> p(new Collidable(type, x, y, width, height));
   auto p = std::make_shared<Collidable>(type, x, y, width, height);
   entities.push_back(p);
 }

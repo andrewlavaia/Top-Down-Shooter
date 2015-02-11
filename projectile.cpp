@@ -30,17 +30,27 @@ Projectile::Projectile(Type t, double x, double y, Orientation::Type o)
 
   animatedSprite.setHitbox(5,5);
 
-  AddDirection(orientation, range, getSpeed(), false);
 
   switch(type)
   {
     case Projectile::Bullet :
       break;
 
+    case Projectile::BuckShot :
+      setPower(0.5);
+      animatedSprite.setHitbox(2,2);
+      moveAnimation = CreateAnimation(texture,2,2,1);
+      setCurrentAnimation(moveAnimation);
+      animatedSprite.play(*getCurrentAnimation());
+      break;
+
     case Projectile::Rocket :
       setPower(5);
+      setSpeed(10);
       break;
   }
+
+  AddDirection(orientation, range, getSpeed(), false);
 
 }
 

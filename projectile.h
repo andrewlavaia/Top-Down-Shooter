@@ -16,10 +16,10 @@ public:
 
   enum Type{
     Bullet,
+    BuckShot,
     Rocket,
-    Arrow,
-    Grenade,
-    Knife,
+    //Arrow,
+    //Grenade,
   };
 
   Projectile(Type t, double x = 0, double y = 0, Orientation::Type o = Orientation::N);

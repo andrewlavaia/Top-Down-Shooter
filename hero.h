@@ -12,6 +12,7 @@
 #include "projectile.h"
 #include "collision.h"
 #include "orientation.h"
+#include "attack.h"
 
 class NPC;
 class Weapon;
@@ -32,9 +33,9 @@ public:
 
   void                          collideWithEntity(const AnimatedEntity& a, sf::Time dt);
 
-  void                          PrimaryAttack();
-  void                          SecondaryAttack();
-  void                          Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& vec_ptr_a);
+  void                          PrimaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities);
+  void                          SecondaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities);
+  void                          Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& entities);
   void                          Drop();
   void                          Throw();
   std::shared_ptr<Weapon>       getWeapon();
@@ -46,6 +47,7 @@ private:
                                 Hero(const Hero&);              // Disallow copy constructor
                                 Hero& operator=(const Hero&);   // Disallow assignment
 
+  void                          AttackNow(std::unique_ptr<Attack>& attack, std::vector<std::shared_ptr<AnimatedEntity>>& entities);
   void                          PickupWeapon(std::vector< std::shared_ptr<Weapon> >& weap_vec);
   void                          DropWeapon();
   void                          ThrowWeapon();

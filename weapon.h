@@ -8,6 +8,7 @@
 #include "npc.h"
 //#include "projectile.h"
 #include "collidable.h"
+#include "attack.h"
 
 class Hero;
 class Projectile;
@@ -18,35 +19,29 @@ class Weapon : public AnimatedEntity
     enum Type {
       Hands,
       Pole,
-      Lasso,
-      Pistol,
-      RocketLauncher,
-
-      /*
-      Hands,
       Sword,
-      SledgeHammer,
       Axe,
-      Pitchfork,
-      Knife,
-      Pistol(s),
-      Shotgun(s),
-      Rifle(s),
-      SMG(s),
+      SledgeHamemr,
+      Pistol,
+      Shotgun,
+      Rifle,
+      SMG,
       RocketLauncher,
-      Grenade(s)
-      */
+      //Grenade
     };
 
     enum AttackType {
       Standard,
-      Shoot
+      Shoot,
     };
 
     Weapon(Type t, double x, double y);
 
     std::shared_ptr<Animation> primaryAttackAnimation;
     std::shared_ptr<Animation> secondaryAttackAnimation;
+
+    std::unique_ptr<Attack> primaryAttack;
+    std::unique_ptr<Attack> secondaryAttack;
 
     Type        getType()                 { return type; }
     AttackType  getPrimaryAttackType()    { return primaryAttackType; }

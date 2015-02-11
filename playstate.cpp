@@ -121,23 +121,15 @@ void CPlayState::HandleEvents(CGameEngine* game)
   }
 
   // Primary Attack
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::K) && this->level.hero.canAttack())
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::K) && this->level.hero.getWeapon()->primaryAttack->canAttack())
   {
-    this->level.hero.PrimaryAttack();
-
-    if(this->level.hero.getWeapon()->getPrimaryAttackType() == Weapon::AttackType::Shoot)
-    {
-      this->level.CreateProjectile( this->level.hero.getWeapon()->ammoType->getType(),
-                                    this->level.hero.position.x,
-                                    this->level.hero.position.y,
-                                    this->level.hero.getOrientation().getType());
-    }
+    this->level.hero.PrimaryAttack(this->level.entities);
   }
 
   // Secondary Attack
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::L) && this->level.hero.getWeapon()->secondaryAttack->canAttack())
   {
-    this->level.hero.SecondaryAttack();
+    this->level.hero.SecondaryAttack(this->level.entities);
   }
 
   // Throw
@@ -202,11 +194,21 @@ void CPlayState::Update(CGameEngine* game)
   // -------------------
   // Reduce Cool Downs
   // -------------------
+
+  this->level.hero.getWeapon()->primaryAttack->reduceCooldown(game->logicTime);
+  this->level.hero.getWeapon()->secondaryAttack->reduceCooldown(game->logicTime);
+
+  // obsolete
+  /*
   this->level.hero.reduceCoolDowns(game->logicTime);
+  if(this->level.hero.getWeapon()->getType() == Weapon::Hands)
+    this->level.hero.getWeapon()->reduceCoolDowns(game->logicTime);
+
   for(auto it = this->level.entities.begin(); it != this->level.entities.end(); ++it)
   {
     (*it)->reduceCoolDowns(game->logicTime);
   }
+  */
 
   // -------------------
   // NPC AI and Movement
