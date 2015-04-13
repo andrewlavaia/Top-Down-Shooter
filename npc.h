@@ -32,17 +32,11 @@ public:
   std::shared_ptr<Animation>              grabbedAnimation;
   std::shared_ptr<Animation>              thrownAnimation;
 
-  //virtual Animation* getCurrentAnimation() { return currentAnimation; }
-  //virtual void setCurrentAnimation(Animation& a) { currentAnimation = &a; }
-  //virtual void restoreDefaultAnimation() { setCurrentAnimation(defaultAnimation); }
   virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt);
-
-  double                                  getWeight() { return weight; }
 
 
 private:
   Type                                    type;
-  double                                  weight;
 
 };
 

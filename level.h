@@ -16,7 +16,8 @@
 class Level
 {
 public:
-                                              Level();
+
+  Level(int id, std::shared_ptr<Hero> h);
 
   void                                        Load(int id);
   void                                        CreateNPC(NPC::Type type);
@@ -25,11 +26,13 @@ public:
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
   void                                        MoveEntities();
   void                                        DeleteEntities();
+
   bool                                        Victory();
   bool                                        GameOver();
+
   float                                       getRunningTime();
   float                                       getGameOverTime();
-  unsigned                                    getNPCSuccessCount() { return npc_success_count; };
+  unsigned                                    getNPCSuccessCount() const { return npc_success_count; };
 
   // HUD Elements
   sf::Text                                    text_timer;
@@ -37,9 +40,8 @@ public:
 
   MapManager                                  mp;
 
-
-  Hero                                        hero;
   std::vector<std::shared_ptr<AnimatedEntity>> entities;
+  std::vector<std::shared_ptr<AnimatedEntity>> exits;
 
 
 private:
@@ -49,6 +51,8 @@ private:
   template <typename T1, typename T2>
     void DestroyObject(T1& vec, T2& it);
 
+  int                                         level_id;
+  std::shared_ptr<Hero>                       hero;                 // needs a copy of pointer for collision tests
   unsigned                                    victory_requirement;
   unsigned                                    npc_success_count;
   unsigned                                    npc_death_count;
@@ -57,7 +61,10 @@ private:
   ResourceHolder<sf::Texture, Textures::ID>   textures;
   ResourceHolder<sf::Font, Fonts::ID>         fonts;
   ResourceHolder<Animation, Animations::ID>   animations;
+  bool                                        next_level_flag;
+  bool                                        next_room_flag;
 
 };
+
 
 #endif // LEVEL_H

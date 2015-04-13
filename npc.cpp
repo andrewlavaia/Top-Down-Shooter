@@ -7,21 +7,21 @@ NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
   : type(type)
 {
 
-  moveAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Run));
+  moveAnimation = std::make_shared<Animation>(animations.get(Animations::NPC_Run));
   attackedAnimation = moveAnimation;
   grabbedAnimation = moveAnimation;
   thrownAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
   deathAnimation =  std::make_shared<Animation>(animations.get(Animations::Hero_Kick));
 
-  double scale_factor = 0.10;
+  double scale_factor = 1;
   animatedSprite.setScale(scale_factor,scale_factor);
 
   setCurrentAnimation(moveAnimation);
   animatedSprite.play(*getCurrentAnimation());
   animatedSprite.setLooped(false);
   animatedSprite.setFrameTime(sf::seconds(0.16));
-  sf::Color color(100,100,255);
-  animatedSprite.setColor(color);
+  //sf::Color color(100,100,255);
+  //animatedSprite.setColor(color);
 
   switch(type)
   {
@@ -29,7 +29,6 @@ NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
       position.x = 200;
       position.y = 200;
       setSpeed(4);
-      weight = 1;
 
       AddDirection(Orientation::S, 100, getSpeed(), false);
       //AddDirection(Orientation::NW, 100, getSpeed(), true);
@@ -42,7 +41,6 @@ NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
       position.x = 300;
       position.y = 300;
       setSpeed(2);
-      weight = 1;
       AddDirection(Orientation::S,  100, getSpeed(), true);
       AddDirection(Orientation::E,  100, getSpeed(), true);
       AddDirection(Orientation::NW, 100, getSpeed(), true);
@@ -50,11 +48,9 @@ NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
       break;
   }
 
-
   // set up AnimatedSprite
   animatedSprite.setOrigin(16,16);
   animatedSprite.setPosition(position.x,position.y);
-
 
   // set hitbox for collision testing
   animatedSprite.setHitbox(20,20);
@@ -64,12 +60,12 @@ NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
 
 void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 {
-  if (checkCollision(a) == false)
+  if(checkCollision(a) == false)
     return;
 
   if(typeid(a) == typeid(Hero))
   {
-    //  adjust position
+    //MoveOneUnit(a.getOrientation().getType(), 100.0, false); // This does not seem to override AI
   }
   else if(typeid(a) == typeid(NPC))
   {

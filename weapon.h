@@ -6,7 +6,6 @@
 #include "animatedentity.h"
 #include "direction.h"
 #include "npc.h"
-//#include "projectile.h"
 #include "collidable.h"
 #include "attack.h"
 
@@ -30,24 +29,17 @@ class Weapon : public AnimatedEntity
       //Grenade
     };
 
-    enum AttackType {
-      Standard,
-      Shoot,
-    };
-
-    Weapon(Type t, double x, double y);
+    Weapon(Type t, double x, double y, ResourceHolder<Animation, Animations::ID>& animations);
 
     std::shared_ptr<Animation> primaryAttackAnimation;
     std::shared_ptr<Animation> secondaryAttackAnimation;
 
     std::unique_ptr<Attack> primaryAttack;
     std::unique_ptr<Attack> secondaryAttack;
+    std::unique_ptr<Projectile> ammoType;
 
     Type        getType()                 { return type; }
-    AttackType  getPrimaryAttackType()    { return primaryAttackType; }
-    AttackType  getSecondaryAttackType()  { return secondaryAttackType; }
     int         getRange()                { return range; }
-    std::unique_ptr<Projectile> ammoType;
     //int       getDurability()          { return durability; }
     //void      reduceDurability()       { durability--; }
 
@@ -55,8 +47,6 @@ class Weapon : public AnimatedEntity
 
   private:
     Type type;
-    AttackType primaryAttackType;
-    AttackType secondaryAttackType;
     int range;
 
 

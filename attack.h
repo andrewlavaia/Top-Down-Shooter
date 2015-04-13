@@ -25,7 +25,7 @@ public:
   void resetCooldown() { cooldown = sf::seconds(attackSpeed); }
 
   Type getType() const { return type; }
-  double getSpeed() const { return attackSpeed; }
+  double getAttackSpeed() const { return attackSpeed; }
 
 
 private:

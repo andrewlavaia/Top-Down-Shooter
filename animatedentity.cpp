@@ -8,7 +8,6 @@ AnimatedEntity::AnimatedEntity()
     hitpoints(10.0),
     speed(1.0),
     power(1.0),
-    //attack_speed(0.5),
     status(AnimatedEntity::Idle)
 {
   //attack_cooldown = sf::Time::Zero;
@@ -110,10 +109,12 @@ void AnimatedEntity::Move()
 }
 
 
-void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd)
+void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 {
   setOrientation(o);
-  animatedSprite.setRotation(getOrientation().getRotation());
+
+  if(rotation)
+    animatedSprite.setRotation(getOrientation().getRotation());
 
   // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
   double hypotenuse = sqrt((spd * spd) + (spd * spd));
@@ -251,18 +252,3 @@ void AnimatedEntity::TakeDamageOverTime(double damage, sf::Time dt)
     Destroy();
 }
 
-/*
-
-bool AnimatedEntity::canAttack()
-{
-  if(attack_cooldown > sf::Time::Zero)
-    return false;
-  else
-    return true;
-}
-
-void AnimatedEntity::reduceCoolDowns(sf::Time dt)
-{
-  attack_cooldown -= dt;
-}
-*/

@@ -5,7 +5,7 @@
 Hero::Hero()
   : grabbed_npc(nullptr),
     weapon(nullptr),
-    default_weapon(new Weapon(Weapon::Hands, 50, 50))
+    default_weapon(new Weapon(Weapon::Hands, 50, 50, animations))
 {
   position.x = 50;
   position.y = 50;
@@ -92,6 +92,7 @@ void Hero::AttackNow(std::unique_ptr<Attack>& attack, std::vector<std::shared_pt
 
     case Attack::Shoot :
       auto p1 = std::make_shared<Projectile>( getWeapon()->ammoType->getType(),
+                                              animations,
                                               position.x,
                                               position.y,
                                               getOrientation().getType());
@@ -100,10 +101,10 @@ void Hero::AttackNow(std::unique_ptr<Attack>& attack, std::vector<std::shared_pt
       if(getWeapon()->ammoType->getType() == Projectile::BuckShot)
       {
         // works very well for north and south shots, but does not translate for other directions
-          auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), position.x-15, position.y-3, getOrientation().getType());
-          auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), position.x-10, position.y+3, getOrientation().getType());
-          auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), position.x+15, position.y-3, getOrientation().getType());
-          auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), position.x+10, position.y+3, getOrientation().getType());
+          auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, position.x-15, position.y-3, getOrientation().getType());
+          auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, position.x-10, position.y+3, getOrientation().getType());
+          auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, position.x+15, position.y-3, getOrientation().getType());
+          auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, position.x+10, position.y+3, getOrientation().getType());
 
           entities.push_back(p2);
           entities.push_back(p3);

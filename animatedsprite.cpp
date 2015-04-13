@@ -27,7 +27,14 @@
 AnimatedSprite::AnimatedSprite(sf::Time frameTime, bool paused, bool looped) :
     m_animation(NULL), m_frameTime(frameTime), m_currentFrame(0), m_isPaused(paused), m_isLooped(looped), m_texture(NULL)
 {
-
+/*
+  // set hitbox for collision testing
+  sf::Texture hitbox_texture;
+  hitbox_texture.create(1, 1);
+  hitbox.setTexture(hitbox_texture);
+  hitbox.setColor(sf::Color(255,0,0,100)); // semi-transparent red hitbox
+  hitbox.setOrigin(0, 0);
+*/
 }
 
 void AnimatedSprite::setAnimation(const Animation& animation)
@@ -191,8 +198,9 @@ void AnimatedSprite::draw(sf::RenderTarget& target, sf::RenderStates states) con
 }
 
 
-void AnimatedSprite::setHitbox(unsigned width, unsigned height)
+void AnimatedSprite::setHitbox(float width, float height)
 {
+
   // set hitbox for collision testing
   sf::Texture hitbox_texture;
   hitbox_texture.create(width, height);

@@ -57,7 +57,7 @@ public:
 
     // every animated sprite should have an invisible sf::sprite behind it that will serve as a hitbox for collision tests
     sf::Sprite hitbox;
-    void setHitbox(unsigned width, unsigned height);
+    void setHitbox(float width, float  height);
 
 private:
     const Animation* m_animation; // replace with shared_ptr

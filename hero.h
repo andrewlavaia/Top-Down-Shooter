@@ -55,6 +55,8 @@ private:
   void                          DropNPC();
   void                          ThrowNPC();
 
+  ResourceHolder<Animation, Animations::ID>   animations;
+
   std::shared_ptr<Weapon>       weapon;
   std::shared_ptr<Weapon>       default_weapon;
 };

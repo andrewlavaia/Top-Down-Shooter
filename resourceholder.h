@@ -40,7 +40,8 @@ namespace Animations {
     Hero_Run,
     Hero_Grab,
     Hero_Punch,
-    Hero_Kick
+    Hero_Kick,
+    NPC_Run
   };
 
 }

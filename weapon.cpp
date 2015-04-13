@@ -19,7 +19,7 @@ Explosive,    // (rocket launcher, grenade, etc)
 Stun,         // (taser, etc)
 */
 
-Weapon::Weapon(Type t, double x, double y)
+Weapon::Weapon(Type t, double x, double y, ResourceHolder<Animation, Animations::ID>& animations)
   : primaryAttackAnimation(nullptr),
     secondaryAttackAnimation(nullptr),
     primaryAttack(std::unique_ptr<Attack>(new Attack(Attack::Standard))),
@@ -29,10 +29,6 @@ Weapon::Weapon(Type t, double x, double y)
   type = t;
 
   // Default Weapon Settings
-  //primaryAttack = std::move(std::unique_ptr<Attack>(new Attack(Attack::Standard, 0.5)));
-  //secondaryAttack = std::move(std::unique_ptr<Attack>(new Attack(Attack::Standard, 0.5)));
-  primaryAttackType = AttackType::Standard;
-  secondaryAttackType = AttackType::Standard;
   range = 2;
   // durability = 5;
 
@@ -71,34 +67,28 @@ Weapon::Weapon(Type t, double x, double y)
 
     case Weapon::Pistol :
       primaryAttack = std::move(std::unique_ptr<Attack>(new Attack(Attack::Shoot, 0.25)));
-      primaryAttackType = AttackType::Shoot;
-      ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::Bullet)));
-      //setAttackSpeed(0.25);
+      ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::Bullet, animations)));
       primaryAttackAnimation = CreateAnimation(texture,10,10,1);
       secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;
 
     case Weapon::Shotgun :
       primaryAttack = std::move(std::unique_ptr<Attack>(new Attack(Attack::Shoot, 0.5)));
-      primaryAttackType = AttackType::Shoot;
-      ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::BuckShot)));
+      ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::BuckShot, animations)));
       primaryAttackAnimation = CreateAnimation(texture,10,10,1);
       secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;
 
     case Weapon::SMG :
       primaryAttack = std::move(std::unique_ptr<Attack>(new Attack(Attack::Shoot, 0.10)));
-      primaryAttackType = AttackType::Shoot;
-      ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::Bullet)));
-      //setAttackSpeed(0.05);
+      ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::Bullet, animations)));
       primaryAttackAnimation = CreateAnimation(texture,10,10,1);
       secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;
 
     case Weapon::RocketLauncher :
       primaryAttack = std::move(std::unique_ptr<Attack>(new Attack(Attack::Shoot, 1.0)));
-      primaryAttackType = AttackType::Shoot;
-      ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::Rocket)));
+      ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::Rocket, animations)));
       primaryAttackAnimation = CreateAnimation(texture,10,10,1);
       secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;

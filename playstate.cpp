@@ -14,7 +14,7 @@ CPlayState CPlayState::PlayState;
 void CPlayState::Init()
 {
   std::cout << "Play State started." << std::endl;
-  this->level.Load(1);
+  //this->level->Load(1);
   std::cout << "Level 1 Loaded." << std::endl;
 }
 
@@ -62,103 +62,103 @@ void CPlayState::HandleEvents(CGameEngine* game)
   // Movement
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
-    this->level.hero.MoveOneUnit(Orientation::NW, this->level.hero.getSpeed());
+    hero->MoveOneUnit(Orientation::NW, hero->getSpeed());
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
-    this->level.hero.MoveOneUnit(Orientation::NE, this->level.hero.getSpeed());
+    hero->MoveOneUnit(Orientation::NE, hero->getSpeed());
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
-    this->level.hero.MoveOneUnit(Orientation::SW, this->level.hero.getSpeed());
+    hero->MoveOneUnit(Orientation::SW, hero->getSpeed());
     noKeyPressed = false;
   }
   else
   if( sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
-    this->level.hero.MoveOneUnit(Orientation::SE, this->level.hero.getSpeed());
+    hero->MoveOneUnit(Orientation::SE, hero->getSpeed());
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
-    this->level.hero.MoveOneUnit(Orientation::W, this->level.hero.getSpeed());
+    hero->MoveOneUnit(Orientation::W, hero->getSpeed());
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
-    this->level.hero.MoveOneUnit(Orientation::E, this->level.hero.getSpeed());
+    hero->MoveOneUnit(Orientation::E, hero->getSpeed());
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
   {
-    this->level.hero.MoveOneUnit(Orientation::N, this->level.hero.getSpeed());
+    hero->MoveOneUnit(Orientation::N, hero->getSpeed());
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
   {
-    this->level.hero.MoveOneUnit(Orientation::S, this->level.hero.getSpeed());
+    hero->MoveOneUnit(Orientation::S, hero->getSpeed());
     noKeyPressed = false;
   }
 
   // Pickup NPC or Weapon
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::O))
   {
-    this->level.hero.Pickup(this->level.entities);
+    hero->Pickup(this->level->entities);
   }
 
   // Drop NPC or Weapon
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::SemiColon))
   {
-    this->level.hero.Drop();
+    hero->Drop();
   }
 
   // Primary Attack
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::K) && this->level.hero.getWeapon()->primaryAttack->canAttack())
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::K))
   {
-    this->level.hero.PrimaryAttack(this->level.entities);
+    hero->PrimaryAttack(this->level->entities);
   }
 
   // Secondary Attack
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::L) && this->level.hero.getWeapon()->secondaryAttack->canAttack())
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::L))
   {
-    this->level.hero.SecondaryAttack(this->level.entities);
+    hero->SecondaryAttack(this->level->entities);
   }
 
   // Throw
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-    this->level.hero.Throw();
+    hero->Throw();
   }
 
   // Spawning Controls (administrative only)
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
   {
-    this->level.CreateNPC(NPC::Chumba);
+    this->level->CreateNPC(NPC::Chumba);
   }
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
   {
-    this->level.CreateNPC(NPC::Goomba);
+    this->level->CreateNPC(NPC::Goomba);
   }
 
   // Shoot Projectile
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
   {
-    this->level.CreateProjectile( Projectile::Bullet,
-                                  this->level.hero.position.x,
-                                  this->level.hero.position.y,
-                                  this->level.hero.getOrientation().getType());
+    this->level->CreateProjectile( Projectile::Bullet,
+                                  hero->position.x,
+                                  hero->position.y,
+                                  hero->getOrientation().getType());
   }
 
   // Load next level
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
-    this->level.Load(2);
+    //this->level->Load(2);
   }
 
 }
@@ -170,41 +170,55 @@ void CPlayState::Update(CGameEngine* game)
   // ---------------
   // Collision Tests
   // ---------------
-  for (std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = this->level.entities.begin(); it != this->level.entities.end(); ++it)
+
+  // Rest if hero reached exit
+  for(auto it = this->level->exits.begin(); it != this->level->exits.end(); ++it)
+  {
+    if(hero->checkCollision(**it))
+    {
+      std::cout<<"Exit Condition - Push Stack"<<std::endl;
+    }
+
+  }
+
+  // Test all other collisions
+  for(std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
   {
     // Set NPC Aggro
     if(typeid(**it) == typeid(NPC) &&
-        (*it)->checkDistance(200, this->level.hero) &&
+        (*it)->checkDistance(200, *hero) &&
         (*it)->getCurrentAnimation() == (*it)->moveAnimation
       )
     {
-      (*it)->AddDirection((*it)->getRelativeOrientation(this->level.hero), .25, (*it)->getSpeed());
+      (*it)->AddDirection((*it)->getRelativeOrientation(*hero), 0.01, (*it)->getSpeed());
     }
 
     // Test collision with hero
-    this->level.hero.collideWithEntity(**it, game->logicTime);
+    hero->collideWithEntity(**it, game->logicTime);
 
     // Test collision with all other entities
-    for(std::vector< std::shared_ptr<AnimatedEntity> >::iterator jt = this->level.entities.begin(); jt != this->level.entities.end(); ++jt)
+    for(std::vector< std::shared_ptr<AnimatedEntity> >::iterator jt = this->level->entities.begin(); jt != this->level->entities.end(); ++jt)
     {
       (*it)->collideWithEntity(**jt, game->logicTime);
     }
   }
 
+
+
   // -------------------
   // Reduce Cool Downs
   // -------------------
 
-  this->level.hero.getWeapon()->primaryAttack->reduceCooldown(game->logicTime);
-  this->level.hero.getWeapon()->secondaryAttack->reduceCooldown(game->logicTime);
+  hero->getWeapon()->primaryAttack->reduceCooldown(game->logicTime);
+  hero->getWeapon()->secondaryAttack->reduceCooldown(game->logicTime);
 
   // obsolete
   /*
-  this->level.hero.reduceCoolDowns(game->logicTime);
-  if(this->level.hero.getWeapon()->getType() == Weapon::Hands)
-    this->level.hero.getWeapon()->reduceCoolDowns(game->logicTime);
+  hero->reduceCoolDowns(game->logicTime);
+  if(hero->getWeapon()->getType() == Weapon::Hands)
+    hero->getWeapon()->reduceCoolDowns(game->logicTime);
 
-  for(auto it = this->level.entities.begin(); it != this->level.entities.end(); ++it)
+  for(auto it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
   {
     (*it)->reduceCoolDowns(game->logicTime);
   }
@@ -213,17 +227,17 @@ void CPlayState::Update(CGameEngine* game)
   // -------------------
   // NPC AI and Movement
   // -------------------
-  this->level.MoveEntities();
+  this->level->MoveEntities();
 
   // -------------------
   // Victory Conditions
   // -------------------
-  if(this->level.Victory())
+  if(this->level->Victory())
   {
     //push state to victory state
   }
 
-  if(this->level.GameOver())
+  if(this->level->GameOver())
   {
     // push state to game over state
   }
@@ -231,8 +245,8 @@ void CPlayState::Update(CGameEngine* game)
   // -------------------
   // Update HUD
   // -------------------
-  this->level.text_timer.setString(to_string(this->level.getGameOverTime() - this->level.getRunningTime()));
-  this->level.text_npc_count.setString(to_string(this->level.getNPCSuccessCount()));
+  this->level->text_timer.setString(to_string(this->level->getGameOverTime() - this->level->getRunningTime()));
+  this->level->text_npc_count.setString(to_string(this->level->getNPCSuccessCount()));
   //update active_weapon image
 
 
@@ -241,23 +255,23 @@ void CPlayState::Update(CGameEngine* game)
 
 void CPlayState::Draw(CGameEngine* game, double interpolation)
 {
-  /// Below code must be in render section, because it depends on current animation state
+  // --------------------------------------------
+  // Game logic dependent on current render state
+  // ---------------------------------------------
 
-    // Delete destroyed entities
-    this->level.DeleteEntities();
+  // Below code must be in render section, because it depends on current animation state
 
-    // -------------------
-    // Hero Animation Rules
-    // -------------------
-    if(this->noKeyPressed && this->level.hero.getCurrentAnimation() == this->level.hero.moveAnimation)
-      this->level.hero.animatedSprite.stop();
+  // Delete destroyed entities
+  this->level->DeleteEntities();
 
-    if(!this->level.hero.animatedSprite.isPlaying()) //&& this->level.hero.getCurrentAnimation() != this->level.hero.moveAnimation)
-    {
-      this->level.hero.restoreDefaultState();
-    }
+  // Hero Animation Rules
+  if(this->noKeyPressed && hero->getCurrentAnimation() == hero->moveAnimation)
+    hero->animatedSprite.stop();
 
-  /// End
+  if(!hero->animatedSprite.isPlaying()) //&& hero->getCurrentAnimation() != hero->moveAnimation)
+  {
+    hero->restoreDefaultState();
+  }
 
   // ------------------------
   // Initialize Render Window
@@ -271,7 +285,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // --------------------
 
   // note: copying the tilemap initially is much quicker than using the member function calls in loop
-  std::vector<std::vector<Tile>> tilemap = this->level.mp.GetTiles();
+  std::vector<std::vector<Tile>> tilemap = this->level->mp.GetTiles();
   for(unsigned i = 0; i < tilemap.size(); i++)
   {
     for(unsigned j = 0; j < tilemap[i].size(); j++)
@@ -283,31 +297,44 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // --------------------
   // Draw HUD
   // --------------------
-  window.draw(this->level.text_timer);
-  window.draw(this->level.text_npc_count);
+  window.draw(this->level->text_timer);
+  window.draw(this->level->text_npc_count);
   // draw active weapon image
 
 
   // -------------
   // Draw Hero
   // -------------
-  this->level.hero.animatedSprite.play(*this->level.hero.getCurrentAnimation());
-  this->level.hero.animatedSprite.update(game->frameTime);
-  this->level.hero.MoveAnimatedSprite(interpolation);
-  window.draw(this->level.hero.animatedSprite);
-  window.draw(this->level.hero.animatedSprite.hitbox); // DEBUG only
+  hero->animatedSprite.play(*hero->getCurrentAnimation());
+  hero->animatedSprite.update(game->frameTime);
+  hero->MoveAnimatedSprite(interpolation);
+  window.draw(hero->animatedSprite);
+  //window.draw(hero->animatedSprite.hitbox); // DEBUG only
 
   // ---------------------
   // Draw Entities
   // ---------------------
-  for(std::vector< std::shared_ptr<AnimatedEntity> >::const_iterator it = this->level.entities.begin(); it != this->level.entities.end(); ++it)
+  for(std::vector< std::shared_ptr<AnimatedEntity> >::const_iterator it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
   {
     (*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
-    window.draw((*it)->animatedSprite.hitbox); // DEBUG only
+    //window.draw((*it)->animatedSprite.hitbox); // DEBUG only
   }
+
+  // ---------------------
+  // Draw Exits - DEBUG ONLY
+  // ---------------------
+  for(auto it = this->level->exits.begin(); it != this->level->exits.end(); ++it)
+  {
+    (*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
+    (*it)->animatedSprite.update(game->frameTime);
+    (*it)->MoveAnimatedSprite(interpolation);
+    window.draw((*it)->animatedSprite);
+    //window.draw((*it)->animatedSprite.hitbox);
+  }
+
 
   // ---------------
   // Update Window

@@ -4,6 +4,7 @@
 
 #include "gamestate.h"
 #include "level.h"
+#include "hero.h"
 
 class CPlayState : public CGameState
 {
@@ -25,11 +26,17 @@ public:
   bool noKeyPressed;
 
 protected:
-	CPlayState() { }
+	CPlayState()
+	{
+	  hero = std::make_shared<Hero>();
+	  level = std::make_shared<Level>(1, hero);
+  }
 
 private:
 	static CPlayState PlayState;
-	Level level;
+
+  std::shared_ptr<Hero> hero;
+	std::shared_ptr<Level> level;
 
 };
 

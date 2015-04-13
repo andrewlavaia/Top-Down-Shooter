@@ -2,8 +2,10 @@
 #include "level.h"
 #include <math.h> // sqrt
 
-Level::Level()
-  : victory_requirement(5),
+Level::Level(int id, std::shared_ptr<Hero> h)
+  : level_id(id),
+    hero(h),
+    victory_requirement(5),
     npc_success_count(0),
     gameover_time(sf::seconds(30.0f))
 {
@@ -11,7 +13,7 @@ Level::Level()
   textures.load(Textures::Hero_Grab, "hero_grab.png");
   textures.load(Textures::Hero_Punch, "hero_punch.png");
   textures.load(Textures::Hero_Kick, "hero_kick.png");
-  textures.load(Textures::NPC_Texture, "spritesheet.png");
+  textures.load(Textures::NPC_Texture, "zombie.png");
 
   fonts.load(Fonts::Calibri, "calibri.ttf");
 
@@ -19,8 +21,9 @@ Level::Level()
   animations.load(Animations::Hero_Grab, textures.get(Textures::Hero_Grab), 388, 319, 6);
   animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
   animations.load(Animations::Hero_Kick, textures.get(Textures::Hero_Kick), 385, 371, 6);
+  animations.load(Animations::NPC_Run, textures.get(Textures::NPC_Texture), 49, 50, 8);
 
-  hero.SetAnimations(animations);
+  hero->SetAnimations(animations);
 
   text_timer.setFont(fonts.get(Fonts::Calibri));
   text_timer.setCharacterSize(40);
@@ -31,30 +34,32 @@ Level::Level()
   text_npc_count.setCharacterSize(40);
   text_npc_count.setColor(sf::Color::Black);
   text_npc_count.setPosition(700,20);
-}
 
-void Level::Load(int id)
-{
+
   running_time.restart();
 
-  // clear vector and deallocate memory
+  // clear vectors and deallocate memory
   entities.clear();
+  exits.clear();
 
   // Load Level
-  switch (id)
+  switch (level_id)
   {
     case 1:
       mp.Load("map2.txt");
                                                    //  x     y   width  height
-      CreateCollidable(Collidable::SubwayDoor,          0,   300,  30,   200);
-      CreateCollidable(Collidable::SubwayRail,          0,     0,  30,   268);
-      CreateCollidable(Collidable::SubwayRail,          0,   500,  30,   300);
-      CreateCollidable(Collidable::ImmovableObject,     0,   269,  30,    30);
-      CreateCollidable(Collidable::ImmovableObject,     0,   469,  30,    30);
-      CreateCollidable(Collidable::SubwayPlatform,      30,    0,  50,   800);
-      CreateCollidable(Collidable::ImmovableObject,     500, 500, 100,    10);
+      CreateCollidable(Collidable::Indestructible,     0,   300,   30,   200);
+      CreateCollidable(Collidable::Indestructible,     0,     0,   30,   268);
+      CreateCollidable(Collidable::Indestructible,     0,   500,   30,   300);
+      CreateCollidable(Collidable::Indestructible,     0,   269,   30,    30);
+      CreateCollidable(Collidable::Indestructible,     0,   469,   30,    30);
+      CreateCollidable(Collidable::Indestructible,    30,     0,   50,   800);
+      CreateCollidable(Collidable::Indestructible,   500,   500,  100,    10);
 
-      hero.SetAnimations(animations);
+      CreateCollidable(Collidable::Exit,             700,   700,  200,   200);
+      CreateCollidable(Collidable::Exit,             700,   400,  100,   100);
+
+      hero->SetAnimations(animations);
 
       CreateNPC(NPC::Goomba);
       CreateNPC(NPC::Chumba);
@@ -71,7 +76,61 @@ void Level::Load(int id)
     case 2:
       mp.Load("map_L2.txt");
 
-      hero.SetAnimations(animations);
+      hero->SetAnimations(animations);
+
+      CreateNPC(NPC::Goomba);
+      CreateNPC(NPC::Chumba);
+
+      break;
+
+  }
+
+}
+
+/*
+void Level::Load(int id)
+{
+  running_time.restart();
+
+  // clear vectors and deallocate memory
+  entities.clear();
+  exits.clear();
+
+  // Load Level
+  switch (id)
+  {
+    case 1:
+      mp.Load("map2.txt");
+                                                   //  x     y   width  height
+      CreateCollidable(Collidable::Indestructible,     0,   300,   30,   200);
+      CreateCollidable(Collidable::Indestructible,     0,     0,   30,   268);
+      CreateCollidable(Collidable::Indestructible,     0,   500,   30,   300);
+      CreateCollidable(Collidable::Indestructible,     0,   269,   30,    30);
+      CreateCollidable(Collidable::Indestructible,     0,   469,   30,    30);
+      CreateCollidable(Collidable::Indestructible,    30,     0,   50,   800);
+      CreateCollidable(Collidable::Indestructible,   500,   500,  100,    10);
+
+      CreateCollidable(Collidable::Exit,             700,   700,  200,   200);
+      CreateCollidable(Collidable::Exit,             700,   400,  100,   100);
+
+      hero->SetAnimations(animations);
+
+      CreateNPC(NPC::Goomba);
+      CreateNPC(NPC::Chumba);
+
+      CreateWeapon(Weapon::SMG, 20, 50);
+      CreateWeapon(Weapon::Pole, 400, 400);
+      CreateWeapon(Weapon::Pole, 200, 200);
+      CreateWeapon(Weapon::Shotgun, 100, 100);
+      CreateWeapon(Weapon::Pistol, 700,700);
+      CreateWeapon(Weapon::RocketLauncher, 500,500);
+
+      break;
+
+    case 2:
+      mp.Load("map_L2.txt");
+
+      hero->SetAnimations(animations);
 
       CreateNPC(NPC::Goomba);
       CreateNPC(NPC::Chumba);
@@ -84,6 +143,7 @@ void Level::Load(int id)
       break;
   }
 }
+*/
 
 // Dynamically creates a new NPC object and returns a smart pointer to it
 void Level::CreateNPC(NPC::Type type)
@@ -95,22 +155,22 @@ void Level::CreateNPC(NPC::Type type)
 // Dynamically creates a new Weapon object and returns a smart pointer to it
 void Level::CreateWeapon(Weapon::Type type, double x, double y)
 {
-  auto p = std::make_shared<Weapon>(type, x, y);
+  auto p = std::make_shared<Weapon>(type, x, y, animations);
   entities.push_back(p);
 }
 
 void Level::CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o)
 {
-  auto p = std::make_shared<Projectile>(type, x, y, o);
+  auto p = std::make_shared<Projectile>(type, animations, x, y, o);
   entities.push_back(p);
 
   if(type == Projectile::BuckShot)
   {
     // works very well for north and south shots, but does not translate for other directions
-      auto p2 = std::make_shared<Projectile>(type, x-15, y-3, o);
-      auto p3 = std::make_shared<Projectile>(type, x-10, y+3, o);
-      auto p4 = std::make_shared<Projectile>(type, x+15, y-3, o);
-      auto p5 = std::make_shared<Projectile>(type, x+10, y+3, o);
+      auto p2 = std::make_shared<Projectile>(type, animations, x-15, y-3, o);
+      auto p3 = std::make_shared<Projectile>(type, animations, x-10, y+3, o);
+      auto p4 = std::make_shared<Projectile>(type, animations, x+15, y-3, o);
+      auto p5 = std::make_shared<Projectile>(type, animations, x+10, y+3, o);
 
       entities.push_back(p2);
       entities.push_back(p3);
@@ -121,21 +181,33 @@ void Level::CreateProjectile(Projectile::Type type, double x, double y, Orientat
 
 void Level::CreateCollidable(Collidable::Type type, int x, int y, int width, int height)
 {
-  auto p = std::make_shared<Collidable>(type, x, y, width, height);
-  entities.push_back(p);
+  auto p = std::make_shared<Collidable>(type, x, y, width, height, animations);
+
+  if(type == Collidable::Exit)
+    exits.push_back(p);
+  else
+    entities.push_back(p);
 }
+
+/*
+void Level::CreateExit(int x, int y, int width, int height)
+{
+  std::unique_ptr<Collidable> p(new Collidable(Collidable::Exit, x, y, width, height));
+  exits.push_back(std::move(p));
+}
+*/
 
 void Level::MoveEntities()
 {
-  if(hero.grabbed_npc != nullptr)
+  if(hero->grabbed_npc != nullptr)
   {
-    hero.grabbed_npc->position.x = hero.position.x;
-    hero.grabbed_npc->position.y = hero.position.y - 30;
+    hero->grabbed_npc->position.x = hero->position.x;
+    hero->grabbed_npc->position.y = hero->position.y - 30;
     // set currentAnimation to "grabbed"
   }
 
-    hero.getWeapon()->position = hero.position;
-    hero.getWeapon()->animatedSprite.hitbox.setRotation(hero.getOrientation().getRotation());
+    hero->getWeapon()->position = hero->position;
+    hero->getWeapon()->animatedSprite.hitbox.setRotation(hero->getOrientation().getRotation());
 
 
   for (auto it = entities.begin(); it != entities.end();)
@@ -179,14 +251,14 @@ void Level::DestroyObject(T1& vec, T2& it)
 void Level::CheckCollision_NPCtoHero(std::vector<std::shared_ptr<NPC>>::iterator it)
 {
   // if hero hits any npc, npc bumped back (based on hero strength and npc weight)
-  if(Collision::BoundingBoxTest(hero.animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
+  if(Collision::BoundingBoxTest(hero->animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
   {
-    //(*it)->position.x += (hero.position.x - (*it)->position.x) * 10;
-    //(*it)->position.y += (hero.position.y - (*it)->position.y) * 10;
-    //(*it)->position += hero.position - (*it)->position; // allows player to stick to npcs by touching them
-    //(*it)->Move(hero.getOrientation().getOppo(),hero.strength/(*it)->getWeight(),15);
-    (*it)->position.x += (hero.strength/(*it)->getWeight()) * ((*it)->position.x - hero.position.x)/4;
-    (*it)->position.y += (hero.strength/(*it)->getWeight()) * ((*it)->position.y - hero.position.y)/4;
+    //(*it)->position.x += (hero->position.x - (*it)->position.x) * 10;
+    //(*it)->position.y += (hero->position.y - (*it)->position.y) * 10;
+    //(*it)->position += hero->position - (*it)->position; // allows player to stick to npcs by touching them
+    //(*it)->Move(hero->getOrientation().getOppo(),hero->strength/(*it)->getWeight(),15);
+    (*it)->position.x += (hero->strength/(*it)->getWeight()) * ((*it)->position.x - hero->position.x)/4;
+    (*it)->position.y += (hero->strength/(*it)->getWeight()) * ((*it)->position.y - hero->position.y)/4;
   }
 }
 
@@ -316,4 +388,5 @@ float Level::getGameOverTime()
 {
   return gameover_time.asSeconds();
 }
+
 
