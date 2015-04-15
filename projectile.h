@@ -22,7 +22,7 @@ public:
     //Grenade,
   };
 
-  Projectile(Type t, ResourceHolder<Animation, Animations::ID>& animations, double x = 0, double y = 0, Orientation::Type o = Orientation::N);
+  Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, double x = 0, double y = 0, Orientation::Type o = Orientation::N);
 
   Type getType() { return type; }
   double getRange() { return range; }

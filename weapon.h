@@ -29,7 +29,7 @@ class Weapon : public AnimatedEntity
       //Grenade
     };
 
-    Weapon(Type t, double x, double y, ResourceHolder<Animation, Animations::ID>& animations);
+    Weapon(Type t, double x, double y, const ResourceHolder<Animation, Animations::ID>& animations);
 
     std::shared_ptr<Animation> primaryAttackAnimation;
     std::shared_ptr<Animation> secondaryAttackAnimation;

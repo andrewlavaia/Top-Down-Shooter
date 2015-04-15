@@ -14,8 +14,8 @@ AnimatedEntity::AnimatedEntity()
 
   sf::Texture texture;
   texture.create(1,1);
-  moveAnimation = CreateAnimation(texture,0,0,1); // hidden
-  deathAnimation = CreateAnimation(texture,10,10,10); // hidden
+  moveAnimation = CreateAnimation(texture,0,0,1); // hidden         // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
+  destroyAnimation = CreateAnimation(texture,10,10,10); // hidden   // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
   directions.clear();
   directions_it = directions.begin();
   setOrientation(Orientation::S);
@@ -71,7 +71,7 @@ void AnimatedEntity::Move()
     // If distance exceeded, reset distance counter and have iterator point to next Direction object
     distance_travelled = 0;
     setStatus(AnimatedEntity::Moving);
-    setCurrentAnimation(moveAnimation);
+    setCurrentAnimation(moveAnimation); // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
 
     if(directions_it->isRepeat())
     {
@@ -233,7 +233,8 @@ void AnimatedEntity::Destroy()
 
   destroy_flag = true;
   directions.clear();
-  setCurrentAnimation(deathAnimation);
+  setStatus(AnimatedEntity::Destroyed);
+  setCurrentAnimation(destroyAnimation);  // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
   animatedSprite.setLooped(false);
 
 }

@@ -200,7 +200,6 @@ void AnimatedSprite::draw(sf::RenderTarget& target, sf::RenderStates states) con
 
 void AnimatedSprite::setHitbox(float width, float height)
 {
-
   // set hitbox for collision testing
   sf::Texture hitbox_texture;
   hitbox_texture.create(width, height);

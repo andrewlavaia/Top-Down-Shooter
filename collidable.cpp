@@ -1,7 +1,7 @@
 #include "collidable.h"
 
 
-Collidable::Collidable(Type t, int x, int y, int width, int height, ResourceHolder<Animation, Animations::ID>& animations)
+Collidable::Collidable(Type t, int x, int y, int width, int height, const ResourceHolder<Animation, Animations::ID>& animations)
 {
   type = t;
 

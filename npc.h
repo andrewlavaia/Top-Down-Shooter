@@ -26,7 +26,7 @@ public:
     */
   };
 
-  explicit                                NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations);
+  explicit                                NPC(Type type, const ResourceHolder<Animation, Animations::ID>& animations);
 
   std::shared_ptr<Animation>              attackedAnimation;
   std::shared_ptr<Animation>              grabbedAnimation;

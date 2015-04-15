@@ -3,7 +3,7 @@
 #include "npc.h"
 #include "direction.h"
 
-NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
+NPC::NPC(Type type, const ResourceHolder<Animation, Animations::ID>& animations)
   : type(type)
 {
 
@@ -11,7 +11,7 @@ NPC::NPC(Type type, ResourceHolder<Animation, Animations::ID>& animations)
   attackedAnimation = moveAnimation;
   grabbedAnimation = moveAnimation;
   thrownAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
-  deathAnimation =  std::make_shared<Animation>(animations.get(Animations::Hero_Kick));
+  destroyAnimation =  std::make_shared<Animation>(animations.get(Animations::Hero_Kick));
 
   double scale_factor = 1;
   animatedSprite.setScale(scale_factor,scale_factor);

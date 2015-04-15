@@ -6,7 +6,6 @@
 #include "mapmanager.h"
 #include "resourceholder.h"
 #include "animatedentity.h"
-#include "hero.h"
 #include "npc.h"
 #include "collidable.h"
 #include "projectile.h"
@@ -17,29 +16,17 @@ class Level
 {
 public:
 
-  Level(int id, std::shared_ptr<Hero> h);
+  Level(int id, const ResourceHolder<Animation, Animations::ID>& animations);
 
-  void                                        Load(int id);
-  void                                        CreateNPC(NPC::Type type);
-  void                                        CreateWeapon(Weapon::Type type, double x, double y);
-  void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
-  void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
+
   void                                        MoveEntities();
   void                                        DeleteEntities();
 
-  bool                                        Victory();
-  bool                                        GameOver();
-
   float                                       getRunningTime();
   float                                       getGameOverTime();
-  unsigned                                    getNPCSuccessCount() const { return npc_success_count; };
+  unsigned                                    getNPCDeathCount() const { return npc_death_count; };
 
-  // HUD Elements
-  sf::Text                                    text_timer;
-  sf::Text                                    text_npc_count;
-
-  MapManager                                  mp;
-
+  MapManager                                   mp;
   std::vector<std::shared_ptr<AnimatedEntity>> entities;
   std::vector<std::shared_ptr<AnimatedEntity>> exits;
 
@@ -51,18 +38,20 @@ private:
   template <typename T1, typename T2>
     void DestroyObject(T1& vec, T2& it);
 
+  void                                        CreateNPC(NPC::Type type);
+  void                                        CreateWeapon(Weapon::Type type, double x, double y);
+  void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
+  void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
+
   int                                         level_id;
-  std::shared_ptr<Hero>                       hero;                 // needs a copy of pointer for collision tests
-  unsigned                                    victory_requirement;
-  unsigned                                    npc_success_count;
-  unsigned                                    npc_death_count;
-  sf::Time                                    gameover_time;
+  const ResourceHolder<Animation, Animations::ID>&  animations;
   sf::Clock                                   running_time;
-  ResourceHolder<sf::Texture, Textures::ID>   textures;
-  ResourceHolder<sf::Font, Fonts::ID>         fonts;
-  ResourceHolder<Animation, Animations::ID>   animations;
-  bool                                        next_level_flag;
-  bool                                        next_room_flag;
+  sf::Time                                    gameover_time;
+  unsigned                                    npc_death_count;
+
+
+
+
 
 };
 

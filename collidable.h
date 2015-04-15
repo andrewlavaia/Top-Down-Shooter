@@ -21,7 +21,7 @@ class Collidable : public AnimatedEntity
       Destructible          // replace with specific sub-types
     };
 
-    Collidable(Type t, int x, int y, int width, int height, ResourceHolder<Animation, Animations::ID>& animations);
+    Collidable(Type t, int x, int y, int width, int height, const ResourceHolder<Animation, Animations::ID>& animations);
 
     virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
 

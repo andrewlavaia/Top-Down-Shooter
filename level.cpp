@@ -2,39 +2,12 @@
 #include "level.h"
 #include <math.h> // sqrt
 
-Level::Level(int id, std::shared_ptr<Hero> h)
+Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations)
   : level_id(id),
-    hero(h),
-    victory_requirement(5),
-    npc_success_count(0),
-    gameover_time(sf::seconds(30.0f))
+    animations(animations),
+    gameover_time(sf::seconds(30.0f)),
+    npc_death_count(0)
 {
-  textures.load(Textures::Hero_Run, "hero_run.png");
-  textures.load(Textures::Hero_Grab, "hero_grab.png");
-  textures.load(Textures::Hero_Punch, "hero_punch.png");
-  textures.load(Textures::Hero_Kick, "hero_kick.png");
-  textures.load(Textures::NPC_Texture, "zombie.png");
-
-  fonts.load(Fonts::Calibri, "calibri.ttf");
-
-  animations.load(Animations::Hero_Run, textures.get(Textures::Hero_Run), 391, 319, 12);
-  animations.load(Animations::Hero_Grab, textures.get(Textures::Hero_Grab), 388, 319, 6);
-  animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
-  animations.load(Animations::Hero_Kick, textures.get(Textures::Hero_Kick), 385, 371, 6);
-  animations.load(Animations::NPC_Run, textures.get(Textures::NPC_Texture), 49, 50, 8);
-
-  hero->SetAnimations(animations);
-
-  text_timer.setFont(fonts.get(Fonts::Calibri));
-  text_timer.setCharacterSize(40);
-  text_timer.setColor(sf::Color::Black);
-  text_timer.setPosition(400,20);
-
-  text_npc_count.setFont(fonts.get(Fonts::Calibri));
-  text_npc_count.setCharacterSize(40);
-  text_npc_count.setColor(sf::Color::Black);
-  text_npc_count.setPosition(700,20);
-
 
   running_time.restart();
 
@@ -59,8 +32,6 @@ Level::Level(int id, std::shared_ptr<Hero> h)
       CreateCollidable(Collidable::Exit,             700,   700,  200,   200);
       CreateCollidable(Collidable::Exit,             700,   400,  100,   100);
 
-      hero->SetAnimations(animations);
-
       CreateNPC(NPC::Goomba);
       CreateNPC(NPC::Chumba);
 
@@ -76,8 +47,6 @@ Level::Level(int id, std::shared_ptr<Hero> h)
     case 2:
       mp.Load("map_L2.txt");
 
-      hero->SetAnimations(animations);
-
       CreateNPC(NPC::Goomba);
       CreateNPC(NPC::Chumba);
 
@@ -86,64 +55,6 @@ Level::Level(int id, std::shared_ptr<Hero> h)
   }
 
 }
-
-/*
-void Level::Load(int id)
-{
-  running_time.restart();
-
-  // clear vectors and deallocate memory
-  entities.clear();
-  exits.clear();
-
-  // Load Level
-  switch (id)
-  {
-    case 1:
-      mp.Load("map2.txt");
-                                                   //  x     y   width  height
-      CreateCollidable(Collidable::Indestructible,     0,   300,   30,   200);
-      CreateCollidable(Collidable::Indestructible,     0,     0,   30,   268);
-      CreateCollidable(Collidable::Indestructible,     0,   500,   30,   300);
-      CreateCollidable(Collidable::Indestructible,     0,   269,   30,    30);
-      CreateCollidable(Collidable::Indestructible,     0,   469,   30,    30);
-      CreateCollidable(Collidable::Indestructible,    30,     0,   50,   800);
-      CreateCollidable(Collidable::Indestructible,   500,   500,  100,    10);
-
-      CreateCollidable(Collidable::Exit,             700,   700,  200,   200);
-      CreateCollidable(Collidable::Exit,             700,   400,  100,   100);
-
-      hero->SetAnimations(animations);
-
-      CreateNPC(NPC::Goomba);
-      CreateNPC(NPC::Chumba);
-
-      CreateWeapon(Weapon::SMG, 20, 50);
-      CreateWeapon(Weapon::Pole, 400, 400);
-      CreateWeapon(Weapon::Pole, 200, 200);
-      CreateWeapon(Weapon::Shotgun, 100, 100);
-      CreateWeapon(Weapon::Pistol, 700,700);
-      CreateWeapon(Weapon::RocketLauncher, 500,500);
-
-      break;
-
-    case 2:
-      mp.Load("map_L2.txt");
-
-      hero->SetAnimations(animations);
-
-      CreateNPC(NPC::Goomba);
-      CreateNPC(NPC::Chumba);
-
-      break;
-
-    default:
-      std::cout << "Level failed to load... loading Level 1";
-      Level::Load(1);
-      break;
-  }
-}
-*/
 
 // Dynamically creates a new NPC object and returns a smart pointer to it
 void Level::CreateNPC(NPC::Type type)
@@ -189,27 +100,8 @@ void Level::CreateCollidable(Collidable::Type type, int x, int y, int width, int
     entities.push_back(p);
 }
 
-/*
-void Level::CreateExit(int x, int y, int width, int height)
-{
-  std::unique_ptr<Collidable> p(new Collidable(Collidable::Exit, x, y, width, height));
-  exits.push_back(std::move(p));
-}
-*/
-
 void Level::MoveEntities()
 {
-  if(hero->grabbed_npc != nullptr)
-  {
-    hero->grabbed_npc->position.x = hero->position.x;
-    hero->grabbed_npc->position.y = hero->position.y - 30;
-    // set currentAnimation to "grabbed"
-  }
-
-    hero->getWeapon()->position = hero->position;
-    hero->getWeapon()->animatedSprite.hitbox.setRotation(hero->getOrientation().getRotation());
-
-
   for (auto it = entities.begin(); it != entities.end();)
   {
     (*it)->Move();
@@ -219,16 +111,13 @@ void Level::MoveEntities()
     else
       ++it;
   }
-
 }
-
-
 
 void Level::DeleteEntities()
 {
   for (auto it = entities.begin(); it != entities.end(); )
   {
-    if((*it)->isDestroyed() && (*it)->getCurrentAnimation() == (*it)->deathAnimation && !(*it)->animatedSprite.isPlaying())
+    if((*it)->isDestroyed() && (*it)->getCurrentAnimation() == (*it)->destroyAnimation && !(*it)->animatedSprite.isPlaying())
       DestroyObject(entities, it);
     else
       ++it;
@@ -244,125 +133,7 @@ void Level::DestroyObject(T1& vec, T2& it)
             vec.end());
 
 }
-
 /*
-
-// Check if NPC has collided with the hero
-void Level::CheckCollision_NPCtoHero(std::vector<std::shared_ptr<NPC>>::iterator it)
-{
-  // if hero hits any npc, npc bumped back (based on hero strength and npc weight)
-  if(Collision::BoundingBoxTest(hero->animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
-  {
-    //(*it)->position.x += (hero->position.x - (*it)->position.x) * 10;
-    //(*it)->position.y += (hero->position.y - (*it)->position.y) * 10;
-    //(*it)->position += hero->position - (*it)->position; // allows player to stick to npcs by touching them
-    //(*it)->Move(hero->getOrientation().getOppo(),hero->strength/(*it)->getWeight(),15);
-    (*it)->position.x += (hero->strength/(*it)->getWeight()) * ((*it)->position.x - hero->position.x)/4;
-    (*it)->position.y += (hero->strength/(*it)->getWeight()) * ((*it)->position.y - hero->position.y)/4;
-  }
-}
-
-// Check if NPC has collided with any of the level's other NPCs
-void Level::CheckCollision_NPCtoNPC(std::vector<std::shared_ptr<NPC>>::iterator it)
-{
-
-  // if any npc runs into another npc, they each are bumped back (based on their weight)
-  for (std::vector< std::shared_ptr<NPC> >::iterator jt = npc.begin(); jt != npc.end(); ++jt)
-  {
-    if( it != jt && Collision::BoundingBoxTest( (*jt)->animatedSprite.hitbox, (*it)->animatedSprite.hitbox))
-    {
-      // check which npc has more force (mass * speed)
-      double i_force = (*it)->directions_it->getSpeed() * (*it)->getWeight();
-      double j_force = (*jt)->directions_it->getSpeed() * (*jt)->getWeight();
-
-      // initialize variables first so that each npc moves back the same distance
-      double ix = (*it)->position.x;
-      double iy = (*it)->position.y;
-      double jx = (*jt)->position.x;
-      double jy = (*jt)->position.y;
-
-      if(i_force > j_force) // npc *jt will be pushed back
-      {
-        //(*jt)->Move((*it)->directions_it->getType(),5,20);
-        (*jt)->position.x += (1/(*jt)->getWeight()) * (jx - ix)/4;
-        (*jt)->position.y += (1/(*jt)->getWeight()) * (jy - iy)/4;
-      }
-      else if(i_force < j_force) // npc *it will be pushed back
-      {
-        //(*it)->Move((*jt)->directions_it->getType(),5,20);
-        //(*it)->MoveOppo(10);
-        (*it)->position.x += (1/(*it)->getWeight()) * (ix - jx)/4;
-        (*it)->position.y += (1/(*it)->getWeight()) * (iy - jy)/4;
-      }
-      else if(i_force == j_force) // both pushed back
-      {
-        //(*jt)->Move((*it)->directions_it->getType(),5,20);
-        //(*it)->Move((*jt)->directions_it->getType(),5,10); //different distance so no infinite collision if in same direction
-        //(*jt)->MoveOppo(10);
-        //(*it)->MoveOppo(10);
-
-        (*jt)->position.x += (1/(*jt)->getWeight()) * (jx - ix)/8;
-        (*jt)->position.y += (1/(*jt)->getWeight()) * (jy - iy)/8;
-        (*it)->position.x += (1/(*it)->getWeight()) * (ix - jx)/8;
-        (*it)->position.y += (1/(*it)->getWeight()) * (iy - jy)/8;
-      }
-    }
-  }
-
-}
-
-// Check if NPC has collided with any of the level's Collidables
-void Level::CheckCollision_NPCtoCollidable(std::vector<std::shared_ptr<NPC>>::iterator it)
-{
-  for (std::vector< std::shared_ptr<Collidable> >::const_iterator kt = collidables.begin(); kt != collidables.end(); ++kt)
-  {
-    if(Collision::BoundingBoxTest( (*kt)->animatedSprite.hitbox, (*it)->animatedSprite.hitbox ))
-     {
-        switch( (*kt)->getType() )
-        {
-          case Collidable::SubwayDoor :
-            std::cout << "NPC has entered the subway" << std::endl;
-            npc_success_count++;
-            (*it)->directions.clear();
-            DestroyNPC(it);
-            if (it == npc.end()) { return; } // Necessary, otherwise there will be a crash on removing last item from vector
-            break;
-
-          case Collidable::SubwayRail :
-            std::cout << "NPC has perished" << std::endl;
-            DestroyNPC(it);
-            if(it == npc.end()) { return; } // Necessary, otherwise there will be a crash on removing last item from vector
-            break;
-
-          case Collidable::SubwayPlatform :
-            std::cout << "NPC shall not pass" << std::endl;
-            if((*it)->directions_it->getSpeed() < 10)
-            {
-              // npc should avoid subway platforms when walking
-              // check current animation, otherwise if thrown on platform npc would get stuck?
-              //(*it)->MoveOppo(1);
-            }
-            break;
-
-          case Collidable::ImmovableObject :
-            std::cout << "NPC hit immovable object" << std::endl;
-            if((*it)->directions_it->getSpeed() > 10)
-            {
-              std::cout << "NPC killed by immovable object" << std::endl;
-              DestroyNPC(it);
-              if (it == npc.end()) { return; }
-            }
-            else
-            {
-              (*it)->AddDirectionOppo(1);
-            }
-            break;
-        } //end switch
-     } //end collision test
-  } //end collidable loop
-}
-*/
-
 bool Level::Victory()
 {
   if(npc_success_count >= victory_requirement && running_time.getElapsedTime() < gameover_time)
@@ -378,6 +149,7 @@ bool Level::GameOver()
   else
     return false;
 }
+*/
 
 float Level::getRunningTime()
 {

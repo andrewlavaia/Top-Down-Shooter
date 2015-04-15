@@ -19,7 +19,7 @@ Explosive,    // (rocket launcher, grenade, etc)
 Stun,         // (taser, etc)
 */
 
-Weapon::Weapon(Type t, double x, double y, ResourceHolder<Animation, Animations::ID>& animations)
+Weapon::Weapon(Type t, double x, double y, const ResourceHolder<Animation, Animations::ID>& animations)
   : primaryAttackAnimation(nullptr),
     secondaryAttackAnimation(nullptr),
     primaryAttack(std::unique_ptr<Attack>(new Attack(Attack::Standard))),
@@ -54,7 +54,7 @@ Weapon::Weapon(Type t, double x, double y, ResourceHolder<Animation, Animations:
   {
     case Weapon::Hands :
       range = 2;
-      primaryAttackAnimation = CreateAnimation(texture,10,10,1);
+      primaryAttackAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
       secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;
 

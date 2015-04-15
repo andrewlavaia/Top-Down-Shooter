@@ -39,15 +39,15 @@ public:
     explicit AnimatedSprite(sf::Time frameTime = sf::seconds(0.08f), bool paused = false, bool looped = false);
 
     void update(sf::Time deltaTime);
-    void setAnimation(const Animation& animation); // replace with shared_ptr
+    void setAnimation(const Animation& animation);
     void setFrameTime(sf::Time time);
     void play();
-    void play(const Animation& animation); // replace with shared_ptr
+    void play(const Animation& animation);
     void pause();
     void stop();
     void setLooped(bool looped);
     void setColor(const sf::Color& color);
-    const Animation* getAnimation() const; //replace with shared_ptr
+    const Animation* getAnimation() const;
     sf::FloatRect getLocalBounds() const;
     sf::FloatRect getGlobalBounds() const;
     bool isLooped() const;

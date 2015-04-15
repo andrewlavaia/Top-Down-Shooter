@@ -20,12 +20,13 @@
 
 namespace Textures {
   enum ID {
+    Empty,
+    Hitbox,
     Hero_Run,
     Hero_Grab,
     Hero_Punch,
     Hero_Kick,
     NPC_Texture,
-    Hitbox
  };
 }
 
@@ -37,6 +38,7 @@ namespace Fonts {
 
 namespace Animations {
   enum ID {
+    Empty,
     Hero_Run,
     Hero_Grab,
     Hero_Punch,

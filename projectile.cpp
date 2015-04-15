@@ -1,7 +1,7 @@
 
 #include "projectile.h"
 
-Projectile::Projectile(Type t, ResourceHolder<Animation, Animations::ID>& animations, double x, double y, Orientation::Type o)
+Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, double x, double y, Orientation::Type o)
 
 
 {

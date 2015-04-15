@@ -137,7 +137,8 @@ void CPlayState::HandleEvents(CGameEngine* game)
     hero->Throw();
   }
 
-  // Spawning Controls (administrative only)
+/*
+  // Spawning Controls (administrative only), requires public member functions
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
   {
     this->level->CreateNPC(NPC::Chumba);
@@ -146,8 +147,6 @@ void CPlayState::HandleEvents(CGameEngine* game)
   {
     this->level->CreateNPC(NPC::Goomba);
   }
-
-  // Shoot Projectile
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
   {
     this->level->CreateProjectile( Projectile::Bullet,
@@ -155,6 +154,8 @@ void CPlayState::HandleEvents(CGameEngine* game)
                                   hero->position.y,
                                   hero->getOrientation().getType());
   }
+*/
+
 
   // Load next level
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
@@ -227,26 +228,29 @@ void CPlayState::Update(CGameEngine* game)
   // -------------------
   // NPC AI and Movement
   // -------------------
-  this->level->MoveEntities();
+  level->MoveEntities();
+  hero->MoveGrabbedEntities();
 
   // -------------------
   // Victory Conditions
   // -------------------
-  if(this->level->Victory())
+  /*
+  if(Victory())
   {
     //push state to victory state
   }
 
-  if(this->level->GameOver())
+  if(GameOver())
   {
     // push state to game over state
   }
+  */
 
   // -------------------
   // Update HUD
   // -------------------
-  this->level->text_timer.setString(to_string(this->level->getGameOverTime() - this->level->getRunningTime()));
-  this->level->text_npc_count.setString(to_string(this->level->getNPCSuccessCount()));
+  HUD_timer.setString(to_string(this->level->getGameOverTime() - this->level->getRunningTime()));
+  HUD_npc_count.setString(to_string(this->level->getNPCDeathCount()));
   //update active_weapon image
 
 
@@ -297,8 +301,8 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // --------------------
   // Draw HUD
   // --------------------
-  window.draw(this->level->text_timer);
-  window.draw(this->level->text_npc_count);
+  window.draw(HUD_timer);
+  window.draw(HUD_npc_count);
   // draw active weapon image
 
 

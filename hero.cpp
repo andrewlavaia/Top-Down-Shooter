@@ -2,8 +2,9 @@
 #include "hero.h"
 #include <iostream>
 
-Hero::Hero()
-  : grabbed_npc(nullptr),
+Hero::Hero(const ResourceHolder<Animation, Animations::ID>& animations)
+  : animations(animations),
+    grabbed_npc(nullptr),
     weapon(nullptr),
     default_weapon(new Weapon(Weapon::Hands, 50, 50, animations))
 {
@@ -20,10 +21,7 @@ Hero::Hero()
   animatedSprite.setHitbox(20,20);
   //animatedSprite.hitbox.setPosition(position.x,position.y);
 
-}
-
-void Hero::SetAnimations(const ResourceHolder<Animation, Animations::ID>& animations)
-{
+  // set Animations
   moveAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Run));
   grabAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Grab));
   punchAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
@@ -35,6 +33,7 @@ void Hero::SetAnimations(const ResourceHolder<Animation, Animations::ID>& animat
   setCurrentAnimation(moveAnimation);
   animatedSprite.setLooped(false);
   animatedSprite.play(*getCurrentAnimation());
+
 }
 
 void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
@@ -59,15 +58,28 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
   {
     // stop movement?
   }
-
 }
+
+void Hero::MoveGrabbedEntities()
+{
+  if(grabbed_npc != nullptr)
+  {
+    grabbed_npc->position.x = position.x;
+    grabbed_npc->position.y = position.y - 30;
+    // set currentAnimation to "grabbed"
+  }
+
+  getWeapon()->position = position;
+  getWeapon()->animatedSprite.hitbox.setRotation(getOrientation().getRotation());
+}
+
 void Hero::PrimaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
 {
   if(!getWeapon()->primaryAttack->canAttack())
     return;
 
   setCurrentAnimation(getWeapon()->primaryAttackAnimation);
-  AttackNow(getWeapon()->primaryAttack, entities);
+  pAttack(*getWeapon()->primaryAttack, entities);
 }
 
 void Hero::SecondaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
@@ -76,13 +88,13 @@ void Hero::SecondaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entitie
     return;
 
   setCurrentAnimation(getWeapon()->secondaryAttackAnimation);
-  AttackNow(getWeapon()->secondaryAttack, entities);
+  pAttack(*getWeapon()->secondaryAttack, entities);
 }
 
-void Hero::AttackNow(std::unique_ptr<Attack>& attack, std::vector<std::shared_ptr<AnimatedEntity>>& entities)
+void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>& entities)
 {
 
-  switch(attack->getType())
+  switch(attack.getType())
   {
     case Attack::Standard :
       getWeapon()->animatedSprite.hitbox.setScale(1, getWeapon()->getRange());
@@ -114,13 +126,13 @@ void Hero::AttackNow(std::unique_ptr<Attack>& attack, std::vector<std::shared_pt
       break;
   }
 
-  attack->resetCooldown();
+  attack.resetCooldown();
 
 }
 
 void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
 {
-
+  setCurrentAnimation(grabAnimation);
   for(auto it = entities.begin(); it != entities.end(); ++it)
   {
     if(typeid(**it) == typeid(NPC) && checkCollision(**it) == true)

@@ -22,14 +22,14 @@ class AnimatedEntity
     sf::Vector2f                            position;
     AnimatedSprite                          animatedSprite;
     std::shared_ptr<Animation>              moveAnimation;
-    std::shared_ptr<Animation>              deathAnimation;
+    std::shared_ptr<Animation>              destroyAnimation;
 
     enum Status {
       Idle,
       Moving,
+      Destroyed,
       Attacking,
       Thrown,
-      Dead
     };
 
     virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt) = 0;
@@ -66,7 +66,6 @@ class AnimatedEntity
     void                                    setHitPoints(double h) { hitpoints = h; }
     void                                    setSpeed(double s) { speed = s; }
     void                                    setPower(double p) { power = p; }
-
 
   private:
     Orientation                             orientation;
