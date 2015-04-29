@@ -17,22 +17,27 @@ class AnimatedEntity
 {
   public:
     AnimatedEntity();
+
     virtual ~AnimatedEntity() {}
 
     sf::Vector2f                            position;
     AnimatedSprite                          animatedSprite;
-    std::shared_ptr<Animation>              moveAnimation;
-    std::shared_ptr<Animation>              destroyAnimation;
 
     enum Status {
       Idle,
       Moving,
-      Destroyed,
+      Die,    // in process of becoming dead
+      Dead,
       Attacking,
-      Thrown,
+      Grabbing,
+      Throwing,
+      Attacked, // getting attacked
+      Grabbed, // getting grabbed
+      Thrown, // getting thrown
     };
 
     virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt) = 0;
+    virtual void                            playAnimation() = 0;
 
     void                                    Move();
     void                                    MoveOneUnit(Orientation::Type o, double speed, bool rotation = true);
@@ -41,15 +46,15 @@ class AnimatedEntity
     void                                    AddDirectionOppo(double d);
 
     void                                    setOrientation(Orientation::Type t) { orientation.setType(t); }
-    void                                    setCurrentAnimation(std::shared_ptr<Animation> a) { currentAnimation = a; }
+    //void                                    setCurrentAnimation(std::shared_ptr<Animation> a) { currentAnimation = a; }
     void                                    setStatus(Status s) { status = s; }
 
     bool                                    checkCollision(const AnimatedEntity& a) const;
     bool                                    checkDistance(double distance, const AnimatedEntity& entity) const;
-    bool                                    isDestroyed() const { return destroy_flag; }
+    bool                                    isDead() const { return (status == AnimatedEntity::Dead || status == AnimatedEntity::Die) ? true : false; }
     bool                                    isNotMoving() const { return directions.empty(); }
 
-    std::shared_ptr<Animation>              getCurrentAnimation() const { return currentAnimation; }
+    //std::shared_ptr<Animation>              getCurrentAnimation() const { return currentAnimation; }
     Orientation                             getOrientation() const { return orientation; }
     Orientation::Type                       getRelativeOrientation(const AnimatedEntity& entity) const;
     double                                  getHP() const { return hitpoints; }
@@ -69,11 +74,10 @@ class AnimatedEntity
 
   private:
     Orientation                             orientation;
-    bool                                    destroy_flag;
     std::vector<Direction>                  directions;
     std::vector<Direction>::iterator        directions_it;
     double                                  distance_travelled;
-    std::shared_ptr<Animation>              currentAnimation;
+    //std::shared_ptr<Animation>              currentAnimation;
     double                                  hitpoints; // ammo, weapon durability, collidable destructibility
     double                                  speed;
     double                                  power;

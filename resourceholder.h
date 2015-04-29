@@ -27,6 +27,9 @@ namespace Textures {
     Hero_Punch,
     Hero_Kick,
     NPC_Texture,
+    Pistol,
+    Bullet,
+    Grass,
  };
 }
 
@@ -43,7 +46,10 @@ namespace Animations {
     Hero_Grab,
     Hero_Punch,
     Hero_Kick,
-    NPC_Run
+    NPC_Run,
+    Pistol,
+    Bullet,
+    Grass,
   };
 
 }

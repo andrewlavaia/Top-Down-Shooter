@@ -23,13 +23,8 @@ public:
 
   Hero(const ResourceHolder<Animation, Animations::ID>& animations);
 
-  std::shared_ptr<Animation>    moveAnimation;
-  std::shared_ptr<Animation>    destroyAnimation;
-  std::shared_ptr<Animation>    grabAnimation;
-  std::shared_ptr<Animation>    punchAnimation;
-  std::shared_ptr<Animation>    kickAnimation;
-
   void                          collideWithEntity(const AnimatedEntity& a, sf::Time dt);
+  void                          playAnimation();
   void                          MoveGrabbedEntities();
   void                          PrimaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities);
   void                          SecondaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities);
@@ -39,10 +34,9 @@ public:
   std::shared_ptr<Weapon>       getWeapon();
   void                          restoreDefaultState();
 
-
 private:
-                                Hero(const Hero&);              // Disallow copy constructor
-                                Hero& operator=(const Hero&);   // Disallow assignment
+  Hero(const Hero&);              // Disallow copy constructor
+  Hero& operator=(const Hero&);   // Disallow assignment
 
   void                          pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>& entities);
 
@@ -50,6 +44,14 @@ private:
   std::shared_ptr<NPC>          grabbed_npc;
   std::shared_ptr<Weapon>       weapon;
   std::shared_ptr<Weapon>       default_weapon;
+
+  const Animation&              idleAnimation;
+  const Animation&              moveAnimation;
+  const Animation&              dieAnimation;
+  const Animation&              deadAnimation;
+  const Animation&              grabAnimation;
+  const Animation&              punchAnimation;
+  const Animation&              kickAnimation;
 };
 
 #endif // HERO_H

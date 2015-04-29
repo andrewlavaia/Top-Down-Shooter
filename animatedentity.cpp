@@ -3,8 +3,7 @@
 
 
 AnimatedEntity::AnimatedEntity()
-  : destroy_flag(false),
-    distance_travelled(0),
+  : distance_travelled(0),
     hitpoints(10.0),
     speed(1.0),
     power(1.0),
@@ -12,14 +11,15 @@ AnimatedEntity::AnimatedEntity()
 {
   //attack_cooldown = sf::Time::Zero;
 
-  sf::Texture texture;
-  texture.create(1,1);
-  moveAnimation = CreateAnimation(texture,0,0,1); // hidden         // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
-  destroyAnimation = CreateAnimation(texture,10,10,10); // hidden   // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
+ // sf::Texture texture;
+ // texture.create(1,1);
+ // moveAnimation = CreateAnimation(texture,0,0,1); // hidden         // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
+ // deadAnimation = CreateAnimation(texture,10,10,10); // hidden   // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
   directions.clear();
   directions_it = directions.begin();
   setOrientation(Orientation::S);
 }
+
 
 std::shared_ptr<Animation> AnimatedEntity::CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count)
 {
@@ -33,12 +33,13 @@ std::shared_ptr<Animation> AnimatedEntity::CreateAnimation(const sf::Texture& te
   return std::make_shared<Animation>(animation);
 }
 
+
 void AnimatedEntity::MoveAnimatedSprite(double interpolation)
 {
   animatedSprite.setOrigin(animatedSprite.getLocalBounds().width/2, animatedSprite.getLocalBounds().height/2);
-  sf::Vector2f distance = this->position - this->animatedSprite.getPosition();
-  this->animatedSprite.move(distance.x * interpolation, distance.y * interpolation);
-  this->animatedSprite.hitbox.setPosition(this->animatedSprite.getPosition().x, this->animatedSprite.getPosition().y);
+  sf::Vector2f distance = position - animatedSprite.getPosition();
+  animatedSprite.move(distance.x * interpolation, distance.y * interpolation);
+  animatedSprite.hitbox.setPosition(animatedSprite.getPosition().x, animatedSprite.getPosition().y);
 }
 
 void AnimatedEntity::AddDirection(Orientation::Type orientation_type, double distance, double speed, bool rpt)
@@ -63,15 +64,12 @@ void AnimatedEntity::Move()
       return;
   }
 
-  setStatus(AnimatedEntity::Moving);
-
   // Check if object has travelled further than distance set in current Direction object
   if(distance_travelled > directions_it->getDistance())
   {
     // If distance exceeded, reset distance counter and have iterator point to next Direction object
     distance_travelled = 0;
     setStatus(AnimatedEntity::Moving);
-    setCurrentAnimation(moveAnimation); // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
 
     if(directions_it->isRepeat())
     {
@@ -157,15 +155,13 @@ void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
       position.x += hypotenuse/2;
       position.y += hypotenuse/2;
       break;
-
   }
-
 }
 
 
 bool AnimatedEntity::checkCollision(const AnimatedEntity& a) const
 {
-  if(!this->isDestroyed() && !a.isDestroyed() && Collision::BoundingBoxTest(animatedSprite.hitbox, a.animatedSprite.hitbox))
+  if(!isDead() && !a.isDead() && Collision::BoundingBoxTest(animatedSprite.hitbox, a.animatedSprite.hitbox))
     return true;
   else
     return false;
@@ -228,14 +224,18 @@ bool AnimatedEntity::checkDistance(double distance, const AnimatedEntity& entity
 
 void AnimatedEntity::Destroy()
 {
-  if(destroy_flag == true)
+  if(status == AnimatedEntity::Dead)
     return;
 
-  destroy_flag = true;
+  if(status == AnimatedEntity::Die && !animatedSprite.isPlaying())
+  {
+    setStatus(AnimatedEntity::Dead);
+    animatedSprite.setLooped(true);
+    return;
+  }
+
+  setStatus(AnimatedEntity::Die);
   directions.clear();
-  setStatus(AnimatedEntity::Destroyed);
-  setCurrentAnimation(destroyAnimation);  // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
-  animatedSprite.setLooped(false);
 
 }
 

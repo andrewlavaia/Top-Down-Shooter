@@ -39,6 +39,9 @@ protected:
     textures.load(Textures::Hero_Punch, "hero_punch.png");
     textures.load(Textures::Hero_Kick, "hero_kick.png");
     textures.load(Textures::NPC_Texture, "zombie.png");
+    textures.load(Textures::Pistol, "pistol_texture2.png");
+    textures.load(Textures::Bullet, "bullet.png");
+    textures.load(Textures::Grass, "grass.jpg");
 
     animations.load(Animations::Empty, textures.get(Textures::Empty), 1, 1, 1);
     animations.load(Animations::Hero_Run, textures.get(Textures::Hero_Run), 391, 319, 12);
@@ -46,6 +49,10 @@ protected:
     animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
     animations.load(Animations::Hero_Kick, textures.get(Textures::Hero_Kick), 385, 371, 6);
     animations.load(Animations::NPC_Run, textures.get(Textures::NPC_Texture), 49, 50, 8);
+    animations.load(Animations::Pistol, textures.get(Textures::Pistol), 48, 48, 1);
+    animations.load(Animations::Bullet, textures.get(Textures::Bullet), 10, 10, 1);
+    animations.load(Animations::Grass, textures.get(Textures::Grass), 1024, 1024, 1);
+
 
     hero = std::make_shared<Hero>(animations);
 	  level = std::make_shared<Level>(1, animations);

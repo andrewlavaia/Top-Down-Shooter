@@ -63,48 +63,56 @@ void CPlayState::HandleEvents(CGameEngine* game)
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
     hero->MoveOneUnit(Orientation::NW, hero->getSpeed());
+    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
     hero->MoveOneUnit(Orientation::NE, hero->getSpeed());
+    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
     hero->MoveOneUnit(Orientation::SW, hero->getSpeed());
+    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
-  if( sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
     hero->MoveOneUnit(Orientation::SE, hero->getSpeed());
+    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
     hero->MoveOneUnit(Orientation::W, hero->getSpeed());
+    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
   {
     hero->MoveOneUnit(Orientation::E, hero->getSpeed());
+    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
   {
     hero->MoveOneUnit(Orientation::N, hero->getSpeed());
+    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
   {
     hero->MoveOneUnit(Orientation::S, hero->getSpeed());
+    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
 
@@ -187,8 +195,9 @@ void CPlayState::Update(CGameEngine* game)
   {
     // Set NPC Aggro
     if(typeid(**it) == typeid(NPC) &&
-        (*it)->checkDistance(200, *hero) &&
-        (*it)->getCurrentAnimation() == (*it)->moveAnimation
+       (*it)->checkDistance(200, *hero) &&
+       (*it)->animatedSprite.isPlaying() &&
+       (*it)->getStatus() == AnimatedEntity::Moving
       )
     {
       (*it)->AddDirection((*it)->getRelativeOrientation(*hero), 0.01, (*it)->getSpeed());
@@ -232,6 +241,23 @@ void CPlayState::Update(CGameEngine* game)
   hero->MoveGrabbedEntities();
 
   // -------------------
+  // Animation Logic
+  // -------------------
+
+/*
+  if(!hero->animatedSprite.isPlaying() && hero->getStatus() != AnimatedEntity::Dead)
+  {
+    hero->setStatus(AnimatedEntity::Idle);
+  }
+
+  for(auto it = level->entities.begin(); it != level->entities.end(); ++it)
+  {
+    if(!(*it)->animatedSprite.isPlaying() && (*it)->getStatus() != AnimatedEntity::Dead)
+      (*it)->setStatus(AnimatedEntity::Idle);
+  }
+*/
+
+  // -------------------
   // Victory Conditions
   // -------------------
   /*
@@ -265,12 +291,12 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
 
   // Below code must be in render section, because it depends on current animation state
 
-  // Delete destroyed entities
+  // Delete Dead entities
   this->level->DeleteEntities();
 
   // Hero Animation Rules
-  if(this->noKeyPressed && hero->getCurrentAnimation() == hero->moveAnimation)
-    hero->animatedSprite.stop();
+  if(this->noKeyPressed && hero->getStatus() == AnimatedEntity::Moving)
+    hero->setStatus(AnimatedEntity::Idle);
 
   if(!hero->animatedSprite.isPlaying()) //&& hero->getCurrentAnimation() != hero->moveAnimation)
   {
@@ -309,7 +335,8 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // -------------
   // Draw Hero
   // -------------
-  hero->animatedSprite.play(*hero->getCurrentAnimation());
+  //hero->animatedSprite.play(*hero->getCurrentAnimation());
+  hero->playAnimation();
   hero->animatedSprite.update(game->frameTime);
   hero->MoveAnimatedSprite(interpolation);
   window.draw(hero->animatedSprite);
@@ -320,7 +347,8 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // ---------------------
   for(std::vector< std::shared_ptr<AnimatedEntity> >::const_iterator it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
   {
-    (*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
+    //(*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
+    (*it)->playAnimation();
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
@@ -332,7 +360,8 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // ---------------------
   for(auto it = this->level->exits.begin(); it != this->level->exits.end(); ++it)
   {
-    (*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
+    //(*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
+    (*it)->playAnimation();
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);

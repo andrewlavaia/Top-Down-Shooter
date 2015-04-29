@@ -19,24 +19,29 @@ public:
   enum Type {
     Goomba,
     Chumba,
-
     /*
     Zombie,
     Human,
     */
+    TypeCount
   };
 
   explicit                                NPC(Type type, const ResourceHolder<Animation, Animations::ID>& animations);
 
-  std::shared_ptr<Animation>              attackedAnimation;
-  std::shared_ptr<Animation>              grabbedAnimation;
-  std::shared_ptr<Animation>              thrownAnimation;
-
   virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt);
+  virtual void                            playAnimation();
 
 
 private:
   Type                                    type;
+
+  const Animation&                        idleAnimation;
+  const Animation&                        moveAnimation;
+  const Animation&                        dieAnimation;
+  const Animation&                        deadAnimation;
+  const Animation&                        attackedAnimation;
+  const Animation&                        grabbedAnimation;
+  const Animation&                        thrownAnimation;
 
 };
 

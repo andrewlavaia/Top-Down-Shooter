@@ -1,5 +1,6 @@
 
 #include "weapon.h"
+#include "datatables.h"
 
 
 /* ANIMATION TYPES
@@ -19,9 +20,16 @@ Explosive,    // (rocket launcher, grenade, etc)
 Stun,         // (taser, etc)
 */
 
+namespace
+{
+  const std::vector<WeaponData> Table = initializeWeaponData();
+}
+
 Weapon::Weapon(Type t, double x, double y, const ResourceHolder<Animation, Animations::ID>& animations)
-  : primaryAttackAnimation(nullptr),
-    secondaryAttackAnimation(nullptr),
+  : idleAnimation(animations.get(Animations::Pistol)),
+    moveAnimation(animations.get(Animations::Pistol)),
+    primaryAttackAnimation(animations.get(Animations::Empty)),
+    secondaryAttackAnimation(animations.get(Animations::Empty)),
     primaryAttack(std::unique_ptr<Attack>(new Attack(Attack::Standard))),
     secondaryAttack(std::unique_ptr<Attack>(new Attack(Attack::Standard))),
     ammoType(nullptr)
@@ -38,59 +46,62 @@ Weapon::Weapon(Type t, double x, double y, const ResourceHolder<Animation, Anima
 
   sf::Texture texture;
   texture.create(10,10);
-  moveAnimation = CreateAnimation(texture,10,10,1);
-  setCurrentAnimation(moveAnimation);
-  animatedSprite.play(*getCurrentAnimation());
+  //moveAnimation = CreateAnimation(texture,10,10,1);
+  //setCurrentAnimation(moveAnimation);
+  animatedSprite.play(moveAnimation);
   animatedSprite.setLooped(true);
   //animatedSprite.setFrameTime(sf::seconds(0.16));
-  animatedSprite.setColor(sf::Color(255,150,0)); // orange box
+  //animatedSprite.setColor(sf::Color(255,150,0)); // orange box
   animatedSprite.setPosition(position.x, position.y);
 
   // set hitbox for collision testing
   animatedSprite.setHitbox(10,10);
   //animatedSprite.hitbox.setOrigin(animatedSprite.getLocalBounds().width/2,animatedSprite.getLocalBounds().height); // need to override default origin setting so that weapon gets scaled properly
 
+  double scale_factor = 0.50;
+  animatedSprite.setScale(scale_factor,scale_factor);
+
   switch(type)
   {
     case Weapon::Hands :
       range = 2;
-      primaryAttackAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
-      secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
+      //primaryAttackAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
+      //secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;
 
     case Weapon::Pole :
       setPower(3);
       range = 5;
-      primaryAttackAnimation = CreateAnimation(texture,10,10,1);
-      secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
+      //primaryAttackAnimation = CreateAnimation(texture,10,10,1);
+      //secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;
 
     case Weapon::Pistol :
       primaryAttack = std::move(std::unique_ptr<Attack>(new Attack(Attack::Shoot, 0.25)));
       ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::Bullet, animations)));
-      primaryAttackAnimation = CreateAnimation(texture,10,10,1);
-      secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
+      //primaryAttackAnimation = CreateAnimation(texture,10,10,1);
+      //secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;
 
     case Weapon::Shotgun :
       primaryAttack = std::move(std::unique_ptr<Attack>(new Attack(Attack::Shoot, 0.5)));
       ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::BuckShot, animations)));
-      primaryAttackAnimation = CreateAnimation(texture,10,10,1);
-      secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
+      //primaryAttackAnimation = CreateAnimation(texture,10,10,1);
+      //secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;
 
     case Weapon::SMG :
       primaryAttack = std::move(std::unique_ptr<Attack>(new Attack(Attack::Shoot, 0.10)));
       ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::Bullet, animations)));
-      primaryAttackAnimation = CreateAnimation(texture,10,10,1);
-      secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
+      //primaryAttackAnimation = CreateAnimation(texture,10,10,1);
+      //secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;
 
     case Weapon::RocketLauncher :
       primaryAttack = std::move(std::unique_ptr<Attack>(new Attack(Attack::Shoot, 1.0)));
       ammoType = std::move(std::unique_ptr<Projectile>(new Projectile(Projectile::Rocket, animations)));
-      primaryAttackAnimation = CreateAnimation(texture,10,10,1);
-      secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
+      //primaryAttackAnimation = CreateAnimation(texture,10,10,1);
+      //secondaryAttackAnimation = CreateAnimation(texture,50,50,1);
       break;
   }
 }
@@ -122,5 +133,20 @@ void Weapon::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
     // --durability;
   }
 
+}
+
+void Weapon::playAnimation()
+{
+  switch(getStatus())
+  {
+    case AnimatedEntity::Idle :
+      animatedSprite.play(idleAnimation);
+      //animatedSprite.pause(); // or animatedSprite.stop() to revert back to first frame
+      break;
+
+    case AnimatedEntity::Moving :
+      animatedSprite.play(moveAnimation);
+      break;
+  }
 }
 

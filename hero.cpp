@@ -3,7 +3,14 @@
 #include <iostream>
 
 Hero::Hero(const ResourceHolder<Animation, Animations::ID>& animations)
-  : animations(animations),
+  : idleAnimation(animations.get(Animations::Empty)),
+    moveAnimation(animations.get(Animations::Hero_Run)),
+    dieAnimation(animations.get(Animations::Hero_Run)),
+    deadAnimation(animations.get(Animations::Hero_Run)),
+    grabAnimation(animations.get(Animations::Hero_Grab)),
+    punchAnimation(animations.get(Animations::Hero_Punch)),
+    kickAnimation(animations.get(Animations::Hero_Kick)),
+    animations(animations),
     grabbed_npc(nullptr),
     weapon(nullptr),
     default_weapon(new Weapon(Weapon::Hands, 50, 50, animations))
@@ -21,18 +28,20 @@ Hero::Hero(const ResourceHolder<Animation, Animations::ID>& animations)
   animatedSprite.setHitbox(20,20);
   //animatedSprite.hitbox.setPosition(position.x,position.y);
 
+/*
   // set Animations
   moveAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Run));
   grabAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Grab));
   punchAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
   kickAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Kick));
+*/
 
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);
-
-  setCurrentAnimation(moveAnimation);
+  animatedSprite.setAnimation(moveAnimation);
   animatedSprite.setLooped(false);
-  animatedSprite.play(*getCurrentAnimation());
+
+  setStatus(AnimatedEntity::Moving);
 
 }
 
@@ -78,7 +87,8 @@ void Hero::PrimaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
   if(!getWeapon()->primaryAttack->canAttack())
     return;
 
-  setCurrentAnimation(getWeapon()->primaryAttackAnimation);
+  //setCurrentAnimation(getWeapon()->primaryAttackAnimation);
+  setStatus(AnimatedEntity::Attacking);
   pAttack(*getWeapon()->primaryAttack, entities);
 }
 
@@ -87,7 +97,8 @@ void Hero::SecondaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entitie
   if(!getWeapon()->secondaryAttack->canAttack())
     return;
 
-  setCurrentAnimation(getWeapon()->secondaryAttackAnimation);
+  //setCurrentAnimation(getWeapon()->secondaryAttackAnimation);
+  setStatus(AnimatedEntity::Attacking);
   pAttack(*getWeapon()->secondaryAttack, entities);
 }
 
@@ -132,14 +143,16 @@ void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>&
 
 void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
 {
-  setCurrentAnimation(grabAnimation);
+  //setCurrentAnimation(grabAnimation);
+  setStatus(AnimatedEntity::Grabbing);
   for(auto it = entities.begin(); it != entities.end(); ++it)
   {
     if(typeid(**it) == typeid(NPC) && checkCollision(**it) == true)
     {
       Drop();
       grabbed_npc = std::dynamic_pointer_cast<NPC>(*it);
-      grabbed_npc->setCurrentAnimation(grabbed_npc->grabbedAnimation);
+      grabbed_npc->setStatus(AnimatedEntity::Grabbed);
+      //grabbed_npc->setCurrentAnimation(grabbed_npc->grabbedAnimation);
     }
 
     if(typeid(**it) == typeid(Weapon) && checkCollision(**it) == true)
@@ -172,7 +185,7 @@ void Hero::Throw()
 
   if(grabbed_npc != nullptr)
   {
-    grabbed_npc->setCurrentAnimation(grabbed_npc->thrownAnimation);
+    //grabbed_npc->setCurrentAnimation(grabbed_npc->thrownAnimation);
     grabbed_npc->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
     grabbed_npc->setStatus(AnimatedEntity::Thrown);
     grabbed_npc = nullptr;
@@ -184,6 +197,7 @@ void Hero::Throw()
     weapon->animatedSprite.hitbox.setOrigin(weapon->animatedSprite.getLocalBounds().width/2,
                                             weapon->animatedSprite.getLocalBounds().height/2);
     weapon->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
+    weapon->setStatus(AnimatedEntity::Thrown);
     weapon = nullptr;
   }
 }
@@ -198,8 +212,21 @@ std::shared_ptr<Weapon> Hero::getWeapon()
 
 void Hero::restoreDefaultState()
 {
-    setCurrentAnimation(moveAnimation);
+    //setCurrentAnimation(moveAnimation); //delete this line
     getWeapon()->animatedSprite.hitbox.setScale(1, 1);
-    setStatus(AnimatedEntity::Idle);
+    //setStatus(AnimatedEntity::Moving);
 }
 
+void Hero::playAnimation()
+{
+  switch(getStatus())
+  {
+    case AnimatedEntity::Idle :
+      animatedSprite.pause(); // or animatedSprite.stop() to revert back to first frame
+      break;
+
+    case AnimatedEntity::Moving :
+      animatedSprite.play(moveAnimation);
+      break;
+  }
+}

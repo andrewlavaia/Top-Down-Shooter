@@ -117,7 +117,7 @@ void Level::DeleteEntities()
 {
   for (auto it = entities.begin(); it != entities.end(); )
   {
-    if((*it)->isDestroyed() && (*it)->getCurrentAnimation() == (*it)->destroyAnimation && !(*it)->animatedSprite.isPlaying())
+    if((*it)->isDead() && !(*it)->animatedSprite.isPlaying())
       DestroyObject(entities, it);
     else
       ++it;

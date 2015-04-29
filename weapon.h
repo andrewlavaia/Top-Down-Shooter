@@ -26,34 +26,30 @@ class Weapon : public AnimatedEntity
       Rifle,
       SMG,
       RocketLauncher,
-      //Grenade
+      //Grenade,
+      TypeCount
     };
 
     Weapon(Type t, double x, double y, const ResourceHolder<Animation, Animations::ID>& animations);
 
-    std::shared_ptr<Animation> primaryAttackAnimation;
-    std::shared_ptr<Animation> secondaryAttackAnimation;
+    virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
+    virtual void playAnimation();
 
     std::unique_ptr<Attack> primaryAttack;
     std::unique_ptr<Attack> secondaryAttack;
     std::unique_ptr<Projectile> ammoType;
 
-    Type        getType()                 { return type; }
-    int         getRange()                { return range; }
-    //int       getDurability()          { return durability; }
-    //void      reduceDurability()       { durability--; }
-
-    virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
+    Type getType() { return type; }
+    int getRange() { return range; }
 
   private:
     Type type;
     int range;
 
-
-
-    //int durability; // can use weapons hitpoints instead
-
-
+    const Animation& idleAnimation;
+    const Animation& moveAnimation;
+    const Animation& primaryAttackAnimation;
+    const Animation& secondaryAttackAnimation;
 
 
 };
