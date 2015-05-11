@@ -16,6 +16,7 @@
 #include <cassert>
 #include <SFML/Graphics.hpp>
 
+#include "animation.h"
 
 
 namespace Textures {
@@ -42,6 +43,7 @@ namespace Fonts {
 namespace Animations {
   enum ID {
     Empty,
+    Hitbox, //used only to grab hitbox texture so there is no need to pass around all textures to entities
     Hero_Run,
     Hero_Grab,
     Hero_Punch,

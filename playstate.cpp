@@ -1,13 +1,5 @@
 
 #include "playstate.h"
-#include "mapmanager.h"
-#include "hero.h"
-#include "npc.h"
-#include "timer.h"
-#include "collision.h"
-#include <math.h> // sqrt
-#include "helpers.h" // to_string
-
 
 CPlayState CPlayState::PlayState;
 
@@ -176,6 +168,9 @@ void CPlayState::HandleEvents(CGameEngine* game)
 void CPlayState::Update(CGameEngine* game)
 {
 
+
+
+
   // ---------------
   // Collision Tests
   // ---------------
@@ -196,7 +191,6 @@ void CPlayState::Update(CGameEngine* game)
     // Set NPC Aggro
     if(typeid(**it) == typeid(NPC) &&
        (*it)->checkDistance(200, *hero) &&
-       (*it)->animatedSprite.isPlaying() &&
        (*it)->getStatus() == AnimatedEntity::Moving
       )
     {
@@ -213,7 +207,35 @@ void CPlayState::Update(CGameEngine* game)
     }
   }
 
+  // -------------------
+  // Move Entities
+  // -------------------
+  level->MoveEntities(); // having this after collision detection helps delete dead entities quicker
+  hero->MoveGrabbedEntities();
 
+  // -------------------
+  // Cleanup Dead Entities
+  // -------------------
+
+  // Check if hero should be Dead
+  if(hero->getStatus() == AnimatedEntity::Die && !hero->animatedSprite.isPlaying()) // if dying with no active die animation, entity should be dead
+  {
+    hero->setStatus(AnimatedEntity::Dead);
+    hero->playAnimation();
+  }
+
+  // Check if entity should be Dead
+  for(auto it = level->entities.begin(); it != level->entities.end(); ++it)
+  {
+    if((*it)->getStatus() == AnimatedEntity::Die && !(*it)->animatedSprite.isPlaying()) // if dying with no active die animation, entity should be dead
+    {
+      (*it)->setStatus(AnimatedEntity::Dead);
+      (*it)->playAnimation();
+    }
+  }
+
+  // remove dead entities from level
+  level->DeleteEntities();
 
   // -------------------
   // Reduce Cool Downs
@@ -222,40 +244,23 @@ void CPlayState::Update(CGameEngine* game)
   hero->getWeapon()->primaryAttack->reduceCooldown(game->logicTime);
   hero->getWeapon()->secondaryAttack->reduceCooldown(game->logicTime);
 
-  // obsolete
-  /*
-  hero->reduceCoolDowns(game->logicTime);
-  if(hero->getWeapon()->getType() == Weapon::Hands)
-    hero->getWeapon()->reduceCoolDowns(game->logicTime);
 
-  for(auto it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
-  {
-    (*it)->reduceCoolDowns(game->logicTime);
-  }
-  */
-
-  // -------------------
-  // NPC AI and Movement
-  // -------------------
-  level->MoveEntities();
-  hero->MoveGrabbedEntities();
 
   // -------------------
   // Animation Logic
   // -------------------
 
 /*
-  if(!hero->animatedSprite.isPlaying() && hero->getStatus() != AnimatedEntity::Dead)
-  {
-    hero->setStatus(AnimatedEntity::Idle);
-  }
-
   for(auto it = level->entities.begin(); it != level->entities.end(); ++it)
   {
-    if(!(*it)->animatedSprite.isPlaying() && (*it)->getStatus() != AnimatedEntity::Dead)
-      (*it)->setStatus(AnimatedEntity::Idle);
+    if((*it)->getStatus() == AnimatedEntity::Attacking && !(*it)->animatedSprite.isPlaying()) // if dying with no active die animation, entity should be dead
+    {
+      (*it)->setStatus(AnimatedEntity::Grabbed);
+      (*it)->hitbox.setScale(1,1);
+    }
   }
 */
+
 
   // -------------------
   // Victory Conditions
@@ -285,23 +290,20 @@ void CPlayState::Update(CGameEngine* game)
 
 void CPlayState::Draw(CGameEngine* game, double interpolation)
 {
-  // --------------------------------------------
-  // Game logic dependent on current render state
-  // ---------------------------------------------
-
-  // Below code must be in render section, because it depends on current animation state
-
-  // Delete Dead entities
-  this->level->DeleteEntities();
 
   // Hero Animation Rules
   if(this->noKeyPressed && hero->getStatus() == AnimatedEntity::Moving)
+  {
     hero->setStatus(AnimatedEntity::Idle);
+    hero->playAnimation();
+  }
 
+/*
   if(!hero->animatedSprite.isPlaying()) //&& hero->getCurrentAnimation() != hero->moveAnimation)
   {
     hero->restoreDefaultState();
   }
+*/
 
   // ------------------------
   // Initialize Render Window
@@ -336,11 +338,11 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // Draw Hero
   // -------------
   //hero->animatedSprite.play(*hero->getCurrentAnimation());
-  hero->playAnimation();
+  //hero->playAnimation();
   hero->animatedSprite.update(game->frameTime);
   hero->MoveAnimatedSprite(interpolation);
   window.draw(hero->animatedSprite);
-  //window.draw(hero->animatedSprite.hitbox); // DEBUG only
+  window.draw(hero->hitbox); // DEBUG only
 
   // ---------------------
   // Draw Entities
@@ -348,11 +350,11 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   for(std::vector< std::shared_ptr<AnimatedEntity> >::const_iterator it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
   {
     //(*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
-    (*it)->playAnimation();
+    //(*it)->playAnimation();
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
-    //window.draw((*it)->animatedSprite.hitbox); // DEBUG only
+    window.draw((*it)->hitbox); // DEBUG only
   }
 
   // ---------------------
@@ -361,11 +363,11 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   for(auto it = this->level->exits.begin(); it != this->level->exits.end(); ++it)
   {
     //(*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
-    (*it)->playAnimation();
+    //(*it)->playAnimation();
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
-    //window.draw((*it)->animatedSprite.hitbox);
+    window.draw((*it)->hitbox);
   }
 
 

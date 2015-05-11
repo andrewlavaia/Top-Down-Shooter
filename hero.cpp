@@ -1,19 +1,23 @@
 
 #include "hero.h"
-#include <iostream>
+#include "npc.h"
+#include "weapon.h"
 
-Hero::Hero(const ResourceHolder<Animation, Animations::ID>& animations)
-  : idleAnimation(animations.get(Animations::Empty)),
+
+Hero::Hero(const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data)
+  : AnimatedEntity(AnimatedEntity::HeroType),
+    animations(animations),
+    data(data),
+    idleAnimation(animations.get(Animations::Hero_Run)),
     moveAnimation(animations.get(Animations::Hero_Run)),
     dieAnimation(animations.get(Animations::Hero_Run)),
     deadAnimation(animations.get(Animations::Hero_Run)),
     grabAnimation(animations.get(Animations::Hero_Grab)),
     punchAnimation(animations.get(Animations::Hero_Punch)),
     kickAnimation(animations.get(Animations::Hero_Kick)),
-    animations(animations),
     grabbed_npc(nullptr),
     weapon(nullptr),
-    default_weapon(new Weapon(Weapon::Hands, 50, 50, animations))
+    default_weapon(new Weapon(Weapon::Hands, animations, data, 50, 50))
 {
   position.x = 50;
   position.y = 50;
@@ -25,23 +29,15 @@ Hero::Hero(const ResourceHolder<Animation, Animations::ID>& animations)
   animatedSprite.setPosition(position.x,position.y);
 
   // set hitbox for collision testing
-  animatedSprite.setHitbox(20,20);
-  //animatedSprite.hitbox.setPosition(position.x,position.y);
-
-/*
-  // set Animations
-  moveAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Run));
-  grabAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Grab));
-  punchAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Punch));
-  kickAnimation = std::make_shared<Animation>(animations.get(Animations::Hero_Kick));
-*/
+  setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(), 20, 20);
 
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);
   animatedSprite.setAnimation(moveAnimation);
   animatedSprite.setLooped(false);
 
-  setStatus(AnimatedEntity::Moving);
+  setStatus(AnimatedEntity::Idle);
+  playAnimation();
 
 }
 
@@ -51,11 +47,30 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
     return;
   //std::cout <<"collision with " << typeid(a).name() <<std::endl;
 
-  if(typeid(a) == typeid(NPC))
+  switch(a.getParentType())
+  {
+    case AnimatedEntity::HeroType :
+      break;
+
+    case AnimatedEntity::NPCType :
+      break;
+
+    case AnimatedEntity::WeaponType :
+      break;
+
+    case AnimatedEntity::ProjectileType :
+      break;
+
+    case AnimatedEntity::CollidableType :
+      break;
+
+  }
+/*
+  if(a.getParentType() == AnimatedEntity::NPCType))
   {
     // adjust position?
   }
-  else if(typeid(a) == typeid(Weapon))
+  else if(a.getParentType() == AnimatedEntity::WeaponType)
   {
     // take damage
   }
@@ -67,6 +82,7 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
   {
     // stop movement?
   }
+*/
 }
 
 void Hero::MoveGrabbedEntities()
@@ -79,7 +95,8 @@ void Hero::MoveGrabbedEntities()
   }
 
   getWeapon()->position = position;
-  getWeapon()->animatedSprite.hitbox.setRotation(getOrientation().getRotation());
+  getWeapon()->animatedSprite.setRotation(getOrientation().getRotation());
+  getWeapon()->hitbox.setRotation(getOrientation().getRotation());
 }
 
 void Hero::PrimaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
@@ -108,14 +125,15 @@ void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>&
   switch(attack.getType())
   {
     case Attack::Standard :
-      getWeapon()->animatedSprite.hitbox.setScale(1, getWeapon()->getRange());
-      getWeapon()->animatedSprite.hitbox.setRotation(this->getOrientation().getRotation());
+      getWeapon()->hitbox.setScale(1, getWeapon()->getRange());
+      getWeapon()->hitbox.setRotation(this->getOrientation().getRotation());
       getWeapon()->setStatus(AnimatedEntity::Attacking);
       break;
 
     case Attack::Shoot :
       auto p1 = std::make_shared<Projectile>( getWeapon()->ammoType->getType(),
                                               animations,
+                                              data,
                                               position.x,
                                               position.y,
                                               getOrientation().getType());
@@ -124,10 +142,10 @@ void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>&
       if(getWeapon()->ammoType->getType() == Projectile::BuckShot)
       {
         // works very well for north and south shots, but does not translate for other directions
-          auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, position.x-15, position.y-3, getOrientation().getType());
-          auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, position.x-10, position.y+3, getOrientation().getType());
-          auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, position.x+15, position.y-3, getOrientation().getType());
-          auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, position.x+10, position.y+3, getOrientation().getType());
+          auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x-15, position.y-3, getOrientation().getType());
+          auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x-10, position.y+3, getOrientation().getType());
+          auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x+15, position.y-3, getOrientation().getType());
+          auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x+10, position.y+3, getOrientation().getType());
 
           entities.push_back(p2);
           entities.push_back(p3);
@@ -154,13 +172,13 @@ void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
       grabbed_npc->setStatus(AnimatedEntity::Grabbed);
       //grabbed_npc->setCurrentAnimation(grabbed_npc->grabbedAnimation);
     }
-
-    if(typeid(**it) == typeid(Weapon) && checkCollision(**it) == true)
+    else if(typeid(**it) == typeid(Weapon) && checkCollision(**it) == true)
     {
       Drop();
       weapon = std::dynamic_pointer_cast<Weapon>(*it);
-      weapon->animatedSprite.hitbox.setOrigin(weapon->animatedSprite.getLocalBounds().width/2,
-                                              weapon->animatedSprite.getLocalBounds().height);
+      getWeapon()->hitbox.setScale(1, getWeapon()->getRange());
+      getWeapon()->hitbox.setRotation(this->getOrientation().getRotation());
+      //weapon->hitbox.setOrigin(weapon->animatedSprite.getLocalBounds().width/2, weapon->animatedSprite.getLocalBounds().height);
     }
   }
 }
@@ -171,9 +189,8 @@ void Hero::Drop()
     grabbed_npc = nullptr;
   else if(weapon != nullptr)
   {
-    weapon->animatedSprite.hitbox.setScale(1,1);
-    weapon->animatedSprite.hitbox.setOrigin(weapon->animatedSprite.getLocalBounds().width/2,
-                                            weapon->animatedSprite.getLocalBounds().height/2);
+    weapon->hitbox.setScale(1,1);
+    //weapon->hitbox.setOrigin(weapon->animatedSprite.getLocalBounds().width/2, weapon->animatedSprite.getLocalBounds().height/2);
     weapon = nullptr;
   }
 }
@@ -193,9 +210,8 @@ void Hero::Throw()
 
   if(weapon != nullptr)
   {
-    weapon->animatedSprite.hitbox.setScale(1,1);
-    weapon->animatedSprite.hitbox.setOrigin(weapon->animatedSprite.getLocalBounds().width/2,
-                                            weapon->animatedSprite.getLocalBounds().height/2);
+    weapon->hitbox.setScale(1,1);
+    //weapon->hitbox.setOrigin(weapon->animatedSprite.getLocalBounds().width/2, weapon->animatedSprite.getLocalBounds().height/2);
     weapon->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
     weapon->setStatus(AnimatedEntity::Thrown);
     weapon = nullptr;
@@ -204,7 +220,7 @@ void Hero::Throw()
 
 std::shared_ptr<Weapon> Hero::getWeapon()
 {
-  if (weapon == nullptr)
+  if(weapon == nullptr)
     return default_weapon;
   else
     return weapon;
@@ -213,7 +229,7 @@ std::shared_ptr<Weapon> Hero::getWeapon()
 void Hero::restoreDefaultState()
 {
     //setCurrentAnimation(moveAnimation); //delete this line
-    getWeapon()->animatedSprite.hitbox.setScale(1, 1);
+    getWeapon()->hitbox.setScale(1, 1);
     //setStatus(AnimatedEntity::Moving);
 }
 

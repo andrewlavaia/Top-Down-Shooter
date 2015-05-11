@@ -1,43 +1,49 @@
 
-#include <iostream>
 #include "npc.h"
-#include "direction.h"
 #include "datatables.h"
 
 namespace
 {
-  const std::vector<NPCData> Table = initializeNPCData();
+  //const std::vector<NPCData> Table = initializeNPCData();
 }
 
-NPC::NPC(Type type, const ResourceHolder<Animation, Animations::ID>& animations)
-  : type(type),
-    idleAnimation(animations.get(Animations::Empty)),
+NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y)
+  : AnimatedEntity(AnimatedEntity::NPCType),
+    type(t),
+    idleAnimation(animations.get(Animations::NPC_Run)),
     moveAnimation(animations.get(Animations::NPC_Run)),
     dieAnimation(animations.get(Animations::NPC_Run)),
     deadAnimation(animations.get(Animations::NPC_Run)),
     attackedAnimation(animations.get(Animations::NPC_Run)),
     grabbedAnimation(animations.get(Animations::NPC_Run)),
-    thrownAnimation(animations.get(Animations::Hero_Punch))
+    thrownAnimation(animations.get(Animations::NPC_Run))
 {
+  position.x = x;
+  position.y = y;
 
-  double scale_factor = 1;
-  animatedSprite.setScale(scale_factor,scale_factor);
+  //std::cout<<Table[t].hitpoints<<std::endl;
 
-  animatedSprite.setAnimation(moveAnimation);
   setStatus(AnimatedEntity::Moving);
+  playAnimation();
+  animatedSprite.setFrameTime(sf::seconds(0.16));
+  animatedSprite.setScale(1,1);
 
+  //double scale_factor = 1;
+
+
+  //animatedSprite.setAnimation(moveAnimation);
+  //animatedSprite.play(moveAnimation);
   //setCurrentAnimation(moveAnimation);
   //animatedSprite.play(*getCurrentAnimation());
-  animatedSprite.setLooped(false);
-  animatedSprite.setFrameTime(sf::seconds(0.16));
+  //animatedSprite.setLooped(true);
+
   //sf::Color color(100,100,255);
   //animatedSprite.setColor(color);
 
   switch(type)
   {
     case NPC::Goomba :
-      position.x = 200;
-      position.y = 200;
+
       setSpeed(4);
 
       AddDirection(Orientation::S, 100, getSpeed(), false);
@@ -55,7 +61,7 @@ NPC::NPC(Type type, const ResourceHolder<Animation, Animations::ID>& animations)
       AddDirection(Orientation::E,  100, getSpeed(), true);
       AddDirection(Orientation::NW, 100, getSpeed(), true);
       animatedSprite.setColor(sf::Color::Red);
-      animatedSprite.setColor(sf::Color::White);
+      //animatedSprite.setColor(sf::Color::White);
       //AddDirection(Orientation::SW, 50, getSpeed(), true);
       break;
   }
@@ -65,16 +71,44 @@ NPC::NPC(Type type, const ResourceHolder<Animation, Animations::ID>& animations)
   animatedSprite.setPosition(position.x,position.y);
 
   // set hitbox for collision testing
-  animatedSprite.setHitbox(20,20);
-  //animatedSprite.hitbox.setPosition(position.x,position.y);
+  setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(), 20, 20);
+  //hitbox.setPosition(position.x,position.y);
+
 
 }
 
 void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 {
-  if(checkCollision(a) == false)
+  if(!checkCollision(a))
     return;
 
+
+  switch(a.getParentType())
+  {
+    case AnimatedEntity::HeroType :
+      break;
+
+    case AnimatedEntity::NPCType :
+      break;
+
+    case AnimatedEntity::WeaponType :
+      if(a.getStatus() == AnimatedEntity::Attacking)
+      {
+        TakeDamage(a.getPower());
+        std::cout<<getHP()<<std::endl;
+      }
+      break;
+
+    case AnimatedEntity::ProjectileType :
+      TakeDamage(a.getPower());
+      std::cout<<getHP()<<std::endl;
+      break;
+
+    case AnimatedEntity::CollidableType :
+      break;
+  }
+
+/*
   if(typeid(a) == typeid(Hero))
   {
     //MoveOneUnit(a.getOrientation().getType(), 100.0, false); // This does not seem to override AI
@@ -91,21 +125,25 @@ void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
   else if(typeid(a) == typeid(Projectile))
   {
     TakeDamage(a.getPower());
+    std::cout<<checkCollision(a)<<std::endl;
     std::cout<<getHP()<<std::endl;
   }
   else if(typeid(a) == typeid(Collidable))
   {
     // adjust position, possibly take damage
-
   }
+
+
+*/
 }
 
 void NPC::playAnimation()
 {
+
   switch(getStatus())
   {
     case AnimatedEntity::Idle :
-      animatedSprite.pause(); // or animatedSprite.stop() to revert back to first frame
+      animatedSprite.play(idleAnimation); // or animatedSprite.stop() to revert back to first frame
       break;
 
     case AnimatedEntity::Moving :
@@ -122,6 +160,16 @@ void NPC::playAnimation()
 
     case AnimatedEntity::Thrown :
       animatedSprite.play(thrownAnimation);
+      break;
+
+    case AnimatedEntity::Die :
+      animatedSprite.play(dieAnimation);
+      animatedSprite.setLooped(false);
+      break;
+
+    case AnimatedEntity::Dead :
+      animatedSprite.pause();
+      //animatedSprite.play(deadAnimation);
       break;
   }
 }

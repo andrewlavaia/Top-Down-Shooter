@@ -16,12 +16,13 @@
 class AnimatedEntity
 {
   public:
-    AnimatedEntity();
-
-    virtual ~AnimatedEntity() {}
-
-    sf::Vector2f                            position;
-    AnimatedSprite                          animatedSprite;
+    enum ParentType {
+      HeroType,
+      NPCType,
+      WeaponType,
+      CollidableType,
+      ProjectileType
+    };
 
     enum Status {
       Idle,
@@ -36,6 +37,12 @@ class AnimatedEntity
       Thrown, // getting thrown
     };
 
+    AnimatedEntity(ParentType pType);
+    virtual ~AnimatedEntity() {}
+
+    sf::Vector2f                            position;
+    AnimatedSprite                          animatedSprite;
+
     virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt) = 0;
     virtual void                            playAnimation() = 0;
 
@@ -46,21 +53,24 @@ class AnimatedEntity
     void                                    AddDirectionOppo(double d);
 
     void                                    setOrientation(Orientation::Type t) { orientation.setType(t); }
-    //void                                    setCurrentAnimation(std::shared_ptr<Animation> a) { currentAnimation = a; }
     void                                    setStatus(Status s) { status = s; }
 
     bool                                    checkCollision(const AnimatedEntity& a) const;
     bool                                    checkDistance(double distance, const AnimatedEntity& entity) const;
-    bool                                    isDead() const { return (status == AnimatedEntity::Dead || status == AnimatedEntity::Die) ? true : false; }
-    bool                                    isNotMoving() const { return directions.empty(); }
+    bool                                    isDead() const;
+    bool                                    isMoving() const { return !directions.empty(); }
 
-    //std::shared_ptr<Animation>              getCurrentAnimation() const { return currentAnimation; }
     Orientation                             getOrientation() const { return orientation; }
     Orientation::Type                       getRelativeOrientation(const AnimatedEntity& entity) const;
     double                                  getHP() const { return hitpoints; }
     double                                  getSpeed() const { return speed; }
     double                                  getPower() const { return power; }
     Status                                  getStatus() const { return status; }
+    ParentType                              getParentType() const { return parentType; }
+
+    // every animated entity should have an invisible sf::sprite behind it that will serve as a hitbox for collision tests
+    sf::Sprite hitbox;
+    void setHitbox(const sf::Texture& texture, int width, int  height);
 
 
   protected:
@@ -73,15 +83,16 @@ class AnimatedEntity
     void                                    setPower(double p) { power = p; }
 
   private:
+    ParentType                              parentType;
     Orientation                             orientation;
     std::vector<Direction>                  directions;
     std::vector<Direction>::iterator        directions_it;
     double                                  distance_travelled;
-    //std::shared_ptr<Animation>              currentAnimation;
     double                                  hitpoints; // ammo, weapon durability, collidable destructibility
     double                                  speed;
     double                                  power;
     Status                                  status;
+
 
     // AI demeanor (idle, passive, aggressive, defensive)
 };

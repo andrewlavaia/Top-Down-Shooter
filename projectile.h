@@ -5,10 +5,7 @@
 #include "animatedentity.h"
 #include "orientation.h"
 
-#include "hero.h"
-#include "npc.h"
-#include "collidable.h"
-#include "weapon.h"
+class DataTable;
 
 class Projectile : public AnimatedEntity
 {
@@ -24,7 +21,7 @@ public:
     TypeCount
   };
 
-  Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, double x = 0, double y = 0, Orientation::Type o = Orientation::N);
+  explicit Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x = 0, double y = 0, Orientation::Type o = Orientation::N);
 
   Type getType() { return type; }
   double getRange() { return range; }

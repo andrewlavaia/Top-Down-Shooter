@@ -3,10 +3,31 @@
 #define PLAYSTATE_H
 
 #include "gamestate.h"
-#include "level.h"
-#include "hero.h"
-#include "resourceholder.h"
+#include <vector>
+#include <memory>
+#include <SFML/Graphics.hpp>
+#include <SFML/System/Time.hpp>
+#include "timer.h"
+#include <math.h> // sqrt
+#include "helpers.h" // to_string
+
+#include "animatedsprite.h"
 #include "animation.h"
+#include "animatedentity.h"
+
+#include "collision.h"
+#include "orientation.h"
+#include "attack.h"
+
+#include "resourceholder.h"
+#include "datatables.h"
+#include "hero.h"
+#include "npc.h"
+#include "collidable.h"
+#include "projectile.h"
+#include "weapon.h"
+#include "mapmanager.h"
+#include "level.h"
 
 class CPlayState : public CGameState
 {
@@ -44,6 +65,7 @@ protected:
     textures.load(Textures::Grass, "grass.jpg");
 
     animations.load(Animations::Empty, textures.get(Textures::Empty), 1, 1, 1);
+    animations.load(Animations::Hitbox, textures.get(Textures::Hitbox), 1, 1, 1);
     animations.load(Animations::Hero_Run, textures.get(Textures::Hero_Run), 391, 319, 12);
     animations.load(Animations::Hero_Grab, textures.get(Textures::Hero_Grab), 388, 319, 6);
     animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
@@ -53,9 +75,8 @@ protected:
     animations.load(Animations::Bullet, textures.get(Textures::Bullet), 10, 10, 1);
     animations.load(Animations::Grass, textures.get(Textures::Grass), 1024, 1024, 1);
 
-
-    hero = std::make_shared<Hero>(animations);
-	  level = std::make_shared<Level>(1, animations);
+    hero = std::make_shared<Hero>(animations, data);
+	  level = std::make_shared<Level>(1, animations, data);
 
     HUD_timer.setFont(fonts.get(Fonts::Calibri));
     HUD_timer.setCharacterSize(40);
@@ -75,12 +96,13 @@ private:
   ResourceHolder<sf::Texture, Textures::ID> textures;
   ResourceHolder<Animation, Animations::ID> animations;
 
+  DataTable data;
+
   std::shared_ptr<Hero> hero;
 	std::shared_ptr<Level> level;
 
 	sf::Text HUD_timer;
 	sf::Text HUD_npc_count;
-
 
 };
 

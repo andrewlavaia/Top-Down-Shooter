@@ -4,23 +4,26 @@
 
 namespace
 {
-  const std::vector<ProjectileData> Table = initializeProjectileData();
+  //const std::vector<ProjectileData> Table = initializeProjectileData();
 }
 
-Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, double x, double y, Orientation::Type o)
-  : moveAnimation(animations.get(Animations::Bullet)),
-    dieAnimation(animations.get(Animations::Empty))
+Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y, Orientation::Type o)
+  : AnimatedEntity(AnimatedEntity::ProjectileType),
+    type(t),
+    moveAnimation(animations.get(data.ProjectileTable[t].moveAnimationID)),
+    dieAnimation(animations.get(data.ProjectileTable[t].dieAnimationID))
 {
-  type = t;
   orientation = o;
 
   // Default Weapon Settings
   setSpeed(20);
   range = 500;
 
+
+  //std::cout<<Table[type].speed<<std::endl;
+
   position.x = x;
   position.y = y;
-
 
   //change texture based on type
   //sf::Texture texture;
@@ -31,14 +34,14 @@ Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& 
   //animatedSprite.play(*getCurrentAnimation());
 
   setStatus(AnimatedEntity::Moving);
-  //animatedSprite.play(moveAnimation);
+  animatedSprite.play(moveAnimation);
   animatedSprite.setLooped(true);
   //animatedSprite.setFrameTime(sf::seconds(0.16));
   //animatedSprite.setColor(sf::Color(255,255,0));
   animatedSprite.setPosition(position.x, position.y);
 
-  animatedSprite.setHitbox(5,5);
 
+  setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(), 5, 5);
 
   switch(type)
   {
@@ -65,9 +68,31 @@ Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& 
 
 void Projectile::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 {
-  if (checkCollision(a) == false)
+  if(!checkCollision(a))
     return;
 
+  switch(a.getParentType())
+  {
+    case AnimatedEntity::HeroType :
+      Destroy();
+      break;
+
+    case AnimatedEntity::NPCType :
+      Destroy();
+      break;
+
+    case AnimatedEntity::WeaponType :
+      break;
+
+    case AnimatedEntity::ProjectileType :
+      break;
+
+    case AnimatedEntity::CollidableType :
+      Destroy();
+      break;
+  }
+
+/*
   if(typeid(a) == typeid(Hero))
   {
     Destroy();
@@ -88,14 +113,17 @@ void Projectile::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
   {
     Destroy();
   }
-
+*/
 }
 
 void Projectile::playAnimation()
 {
-
   switch(getStatus())
   {
+    case AnimatedEntity::Idle :
+      animatedSprite.pause();
+      break;
+
     case AnimatedEntity::Moving :
       animatedSprite.play(moveAnimation);
       break;
@@ -104,7 +132,7 @@ void Projectile::playAnimation()
       animatedSprite.play(dieAnimation);
       break;
 
-    default :
+    case AnimatedEntity::Dead :
       animatedSprite.pause();
       break;
   }

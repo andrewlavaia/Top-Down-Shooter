@@ -8,6 +8,7 @@
 #include "npc.h"
 #include "collidable.h"
 #include "attack.h"
+#include "datatables.h"
 
 class Hero;
 class Projectile;
@@ -30,7 +31,7 @@ class Weapon : public AnimatedEntity
       TypeCount
     };
 
-    Weapon(Type t, double x, double y, const ResourceHolder<Animation, Animations::ID>& animations);
+    Weapon(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y);
 
     virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
     virtual void playAnimation();

@@ -2,21 +2,22 @@
 #include "animatedentity.h"
 
 
-AnimatedEntity::AnimatedEntity()
-  : distance_travelled(0),
+AnimatedEntity::AnimatedEntity(ParentType pType)
+  : parentType(pType),
+    distance_travelled(0),
     hitpoints(10.0),
     speed(1.0),
     power(1.0),
     status(AnimatedEntity::Idle)
 {
   //attack_cooldown = sf::Time::Zero;
-
  // sf::Texture texture;
  // texture.create(1,1);
  // moveAnimation = CreateAnimation(texture,0,0,1); // hidden         // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
  // deadAnimation = CreateAnimation(texture,10,10,10); // hidden   // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
   directions.clear();
   directions_it = directions.begin();
+  animatedSprite.setLooped(false);
   setOrientation(Orientation::S);
 }
 
@@ -39,7 +40,7 @@ void AnimatedEntity::MoveAnimatedSprite(double interpolation)
   animatedSprite.setOrigin(animatedSprite.getLocalBounds().width/2, animatedSprite.getLocalBounds().height/2);
   sf::Vector2f distance = position - animatedSprite.getPosition();
   animatedSprite.move(distance.x * interpolation, distance.y * interpolation);
-  animatedSprite.hitbox.setPosition(animatedSprite.getPosition().x, animatedSprite.getPosition().y);
+  hitbox.setPosition(animatedSprite.getPosition().x, animatedSprite.getPosition().y);
 }
 
 void AnimatedEntity::AddDirection(Orientation::Type orientation_type, double distance, double speed, bool rpt)
@@ -58,9 +59,10 @@ void AnimatedEntity::Move()
 {
   //random number generator : rand()%(max-min+1) + min
   //std::cout<<obj.position.x << std::endl;
-  if(directions.empty() == true)
+  if(directions.empty())
   {
-      setStatus(AnimatedEntity::Idle);
+      if(!isDead())
+        setStatus(AnimatedEntity::Idle);
       return;
   }
 
@@ -69,7 +71,7 @@ void AnimatedEntity::Move()
   {
     // If distance exceeded, reset distance counter and have iterator point to next Direction object
     distance_travelled = 0;
-    setStatus(AnimatedEntity::Moving);
+    setStatus(AnimatedEntity::Moving); // since next direction object exists, the object must be moving
 
     if(directions_it->isRepeat())
     {
@@ -109,6 +111,7 @@ void AnimatedEntity::Move()
 
 void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 {
+  playAnimation();
   setOrientation(o);
 
   if(rotation)
@@ -161,7 +164,15 @@ void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 
 bool AnimatedEntity::checkCollision(const AnimatedEntity& a) const
 {
-  if(!isDead() && !a.isDead() && Collision::BoundingBoxTest(animatedSprite.hitbox, a.animatedSprite.hitbox))
+  if(!isDead() && !a.isDead() && Collision::BoundingBoxTest(hitbox, a.hitbox))
+    return true;
+  else
+    return false;
+}
+
+bool AnimatedEntity::isDead() const
+{
+  if(getStatus() == AnimatedEntity::Dead || getStatus() == AnimatedEntity::Die)
     return true;
   else
     return false;
@@ -224,18 +235,15 @@ bool AnimatedEntity::checkDistance(double distance, const AnimatedEntity& entity
 
 void AnimatedEntity::Destroy()
 {
-  if(status == AnimatedEntity::Dead)
+  if(isDead())
     return;
 
-  if(status == AnimatedEntity::Die && !animatedSprite.isPlaying())
-  {
-    setStatus(AnimatedEntity::Dead);
-    animatedSprite.setLooped(true);
-    return;
-  }
+  directions.clear();
+  directions_it = directions.begin();
 
   setStatus(AnimatedEntity::Die);
-  directions.clear();
+  animatedSprite.setLooped(false);
+  playAnimation();
 
 }
 
@@ -251,5 +259,17 @@ void AnimatedEntity::TakeDamageOverTime(double damage, sf::Time dt)
   hitpoints = hitpoints - (damage * 10 * dt.asSeconds());
   if(hitpoints <= 0)
     Destroy();
+}
+
+
+void AnimatedEntity::setHitbox(const sf::Texture& texture, int width, int height)
+{
+  // set hitbox for collision testing
+  hitbox.setTexture(texture);
+  hitbox.setTextureRect(sf::IntRect(0, 0, width, height));
+  hitbox.setOrigin(width/2, height/2);
+  hitbox.setPosition(animatedSprite.getPosition());
+
+  assert(width <= 1000 && height <= 1000); // maximum texture size, this can be increased by making a bigger Texture
 }
 

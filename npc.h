@@ -2,31 +2,26 @@
 #ifndef NPC_H
 #define NPC_H
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "animatedentity.h"
 #include "animation.h"
 #include "animatedsprite.h"
 #include "direction.h"
 
-#include "hero.h"
-#include "weapon.h"
-#include "projectile.h"
-#include "collidable.h"
+
+class DataTable;
 
 class NPC : public AnimatedEntity
 {
 public:
   enum Type {
-    Goomba,
     Chumba,
-    /*
-    Zombie,
-    Human,
-    */
+    Goomba,
     TypeCount
   };
 
-  explicit                                NPC(Type type, const ResourceHolder<Animation, Animations::ID>& animations);
+  NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y);
 
   virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt);
   virtual void                            playAnimation();

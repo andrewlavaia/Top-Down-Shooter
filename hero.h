@@ -2,26 +2,30 @@
 #ifndef HERO_H
 #define HERO_H
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Time.hpp>
 #include "animatedentity.h"
 #include "resourceholder.h"
 #include "animation.h"
 #include "animatedsprite.h"
-#include "collidable.h"
-#include "projectile.h"
 #include "collision.h"
 #include "orientation.h"
 #include "attack.h"
 
-class NPC;
+#include "datatables.h"
+
+#include "projectile.h"
+#include "collidable.h"
+
 class Weapon;
+class NPC;
 
 class Hero : public AnimatedEntity
 {
 public:
 
-  Hero(const ResourceHolder<Animation, Animations::ID>& animations);
+  Hero(const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data);
 
   void                          collideWithEntity(const AnimatedEntity& a, sf::Time dt);
   void                          playAnimation();
@@ -41,6 +45,7 @@ private:
   void                          pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>& entities);
 
   const ResourceHolder<Animation, Animations::ID>&  animations;
+  const DataTable&              data;
   std::shared_ptr<NPC>          grabbed_npc;
   std::shared_ptr<Weapon>       weapon;
   std::shared_ptr<Weapon>       default_weapon;

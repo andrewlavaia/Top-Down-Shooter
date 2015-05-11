@@ -1,29 +1,38 @@
+
+
 #include "collidable.h"
 #include "datatables.h"
 
+
 namespace
 {
-  const std::vector<CollidableData> Table = initializeCollidableData();
+  //const std::vector<CollidableData> Table = initializeCollidableData();
 }
 
-Collidable::Collidable(Type t, double x, double y, double width, double height, const ResourceHolder<Animation, Animations::ID>& animations)
-  : idleAnimation(animations.get(Animations::Grass))
+Collidable::Collidable(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y, double width, double height)
+  : AnimatedEntity(AnimatedEntity::CollidableType),
+    type(t),
+    idleAnimation(animations.get(data.CollidableTable[t].idleAnimationID))
 {
-  type = t;
 
   position.x = x + width/2;
   position.y = y + height/2;
 
+  //const std::vector<CollidableData> Table = initializeCollidableData();
+  //std::cout<<"Collidable: "<<Table[t].power<<std::endl;
+
   //change texture based on type
-  sf::Texture texture;
-  texture.create(width,height);
+  //sf::Texture texture;
+  //texture.create(width,height);
   //moveAnimation = CreateAnimation(texture,width,height,1);
   //setCurrentAnimation(moveAnimation);
   //animatedSprite.play(*getCurrentAnimation());
+  setStatus(AnimatedEntity::Idle);
   animatedSprite.play(idleAnimation);
   animatedSprite.setLooped(true);
   animatedSprite.setFrameTime(sf::seconds(0.16));
   //animatedSprite.setColor(sf::Color(0, 0, 255, 100));
+
 
   animatedSprite.setScale(width/idleAnimation.getSpriteSheet()->getSize().x,
                           height/idleAnimation.getSpriteSheet()->getSize().y);
@@ -32,7 +41,7 @@ Collidable::Collidable(Type t, double x, double y, double width, double height, 
   animatedSprite.setPosition(position.x + width/2, position.y + height/2);
   animatedSprite.setOrigin(width/2, height/2);
 
-  animatedSprite.setHitbox(width, height);
+  setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(), width, height);
 
   switch(type)
   {
@@ -56,9 +65,29 @@ Collidable::Collidable(Type t, double x, double y, double width, double height, 
 
 void Collidable::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 {
-  if (checkCollision(a) == false)
+  if (!checkCollision(a))
     return;
 
+  switch(a.getParentType())
+  {
+    case AnimatedEntity::HeroType :
+      break;
+
+    case AnimatedEntity::NPCType :
+      break;
+
+    case AnimatedEntity::WeaponType :
+      TakeDamage(a.getPower());
+      break;
+
+    case AnimatedEntity::ProjectileType :
+      TakeDamage(a.getPower());
+      break;
+
+    case AnimatedEntity::CollidableType :
+      break;
+  }
+/*
   if(typeid(a) == typeid(Hero))
   {
     // do nothing
@@ -79,7 +108,7 @@ void Collidable::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
   {
     // not possible?
   }
-
+*/
 }
 
 void Collidable::playAnimation()

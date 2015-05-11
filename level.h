@@ -5,18 +5,23 @@
 #include <memory>
 #include "mapmanager.h"
 #include "resourceholder.h"
+#include "animation.h"
 #include "animatedentity.h"
+#include "orientation.h"
+
+#include "datatables.h"
 #include "npc.h"
+#include "weapon.h"
 #include "collidable.h"
 #include "projectile.h"
-#include "orientation.h"
-#include "animation.h"
+
+
 
 class Level
 {
 public:
 
-  Level(int id, const ResourceHolder<Animation, Animations::ID>& animations);
+  Level(int id, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data);
 
 
   void                                        MoveEntities();
@@ -38,13 +43,14 @@ private:
   template <typename T1, typename T2>
     void DestroyObject(T1& vec, T2& it);
 
-  void                                        CreateNPC(NPC::Type type);
+  void                                        CreateNPC(NPC::Type type, double x, double y);
   void                                        CreateWeapon(Weapon::Type type, double x, double y);
   void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
 
   int                                         level_id;
   const ResourceHolder<Animation, Animations::ID>&  animations;
+  const DataTable&                            data;
   sf::Clock                                   running_time;
   sf::Time                                    gameover_time;
   unsigned                                    npc_death_count;

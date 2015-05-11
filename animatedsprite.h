@@ -55,9 +55,7 @@ public:
     sf::Time getFrameTime() const;
     void setFrame(std::size_t newFrame, bool resetTime = true);
 
-    // every animated sprite should have an invisible sf::sprite behind it that will serve as a hitbox for collision tests
-    sf::Sprite hitbox;
-    void setHitbox(float width, float  height);
+
 
 private:
     const Animation* m_animation; // replace with shared_ptr
