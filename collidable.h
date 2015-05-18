@@ -17,7 +17,7 @@ class Collidable : public AnimatedEntity
       TypeCount
     };
 
-    Collidable(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y, double width, double height);
+    explicit Collidable(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y, double width, double height);
 
     virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
     virtual void playAnimation();

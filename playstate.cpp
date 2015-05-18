@@ -175,14 +175,13 @@ void CPlayState::Update(CGameEngine* game)
   // Collision Tests
   // ---------------
 
-  // Rest if hero reached exit
+  // Check if hero reached exit
   for(auto it = this->level->exits.begin(); it != this->level->exits.end(); ++it)
   {
     if(hero->checkCollision(**it))
     {
       std::cout<<"Exit Condition - Push Stack"<<std::endl;
     }
-
   }
 
   // Test all other collisions
@@ -243,7 +242,6 @@ void CPlayState::Update(CGameEngine* game)
 
   hero->getWeapon()->primaryAttack->reduceCooldown(game->logicTime);
   hero->getWeapon()->secondaryAttack->reduceCooldown(game->logicTime);
-
 
 
   // -------------------
@@ -349,8 +347,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // ---------------------
   for(std::vector< std::shared_ptr<AnimatedEntity> >::const_iterator it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
   {
-    //(*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
-    //(*it)->playAnimation();
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
@@ -362,8 +358,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // ---------------------
   for(auto it = this->level->exits.begin(); it != this->level->exits.end(); ++it)
   {
-    //(*it)->animatedSprite.play(*(*it)->getCurrentAnimation());
-    //(*it)->playAnimation();
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);

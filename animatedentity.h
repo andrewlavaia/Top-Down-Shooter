@@ -29,7 +29,8 @@ class AnimatedEntity
       Moving,
       Die,    // in process of becoming dead
       Dead,
-      Attacking,
+      AttackingPrimary,
+      AttackingSecondary,
       Grabbing,
       Throwing,
       Attacked, // getting attacked
@@ -40,9 +41,6 @@ class AnimatedEntity
     AnimatedEntity(ParentType pType);
     virtual ~AnimatedEntity() {}
 
-    sf::Vector2f                            position;
-    AnimatedSprite                          animatedSprite;
-
     virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt) = 0;
     virtual void                            playAnimation() = 0;
 
@@ -52,13 +50,12 @@ class AnimatedEntity
     void                                    AddDirection(Orientation::Type orientation_type, double distance, double speed, bool rpt = false);
     void                                    AddDirectionOppo(double d);
 
-    void                                    setOrientation(Orientation::Type t) { orientation.setType(t); }
-    void                                    setStatus(Status s) { status = s; }
-
     bool                                    checkCollision(const AnimatedEntity& a) const;
     bool                                    checkDistance(double distance, const AnimatedEntity& entity) const;
     bool                                    isDead() const;
     bool                                    isMoving() const { return !directions.empty(); }
+
+    void                                    setStatus(Status s) { status = s; }
 
     Orientation                             getOrientation() const { return orientation; }
     Orientation::Type                       getRelativeOrientation(const AnimatedEntity& entity) const;
@@ -68,33 +65,32 @@ class AnimatedEntity
     Status                                  getStatus() const { return status; }
     ParentType                              getParentType() const { return parentType; }
 
-    // every animated entity should have an invisible sf::sprite behind it that will serve as a hitbox for collision tests
-    sf::Sprite hitbox;
-    void setHitbox(const sf::Texture& texture, int width, int  height);
-
+    sf::Vector2f                            position;
+    AnimatedSprite                          animatedSprite;
+    sf::Sprite                              hitbox; // every animated entity should have an invisible sf::sprite behind it that will serve as a hitbox for collision tests
 
   protected:
-    std::shared_ptr<Animation>              CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count);
     void                                    Destroy();
     void                                    TakeDamage(double damage);
     void                                    TakeDamageOverTime(double damage, sf::Time dt);
+
+    void                                    setHitbox(const sf::Texture& texture, unsigned width, unsigned height);
     void                                    setHitPoints(double h) { hitpoints = h; }
     void                                    setSpeed(double s) { speed = s; }
     void                                    setPower(double p) { power = p; }
 
   private:
+    void                                    setOrientation(Orientation::Type t) { orientation.setType(t); }
+
     ParentType                              parentType;
     Orientation                             orientation;
-    std::vector<Direction>                  directions;
-    std::vector<Direction>::iterator        directions_it;
-    double                                  distance_travelled;
     double                                  hitpoints; // ammo, weapon durability, collidable destructibility
     double                                  speed;
     double                                  power;
     Status                                  status;
-
-
-    // AI demeanor (idle, passive, aggressive, defensive)
+    std::vector<Direction>                  directions;
+    std::vector<Direction>::iterator        directions_it;
+    double                                  distance_travelled;
 };
 
 #endif

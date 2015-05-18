@@ -4,37 +4,42 @@
 #include "weapon.h"
 
 
-Hero::Hero(const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data)
+Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data)
   : AnimatedEntity(AnimatedEntity::HeroType),
+    type(t),
     animations(animations),
     data(data),
-    idleAnimation(animations.get(Animations::Hero_Run)),
-    moveAnimation(animations.get(Animations::Hero_Run)),
-    dieAnimation(animations.get(Animations::Hero_Run)),
-    deadAnimation(animations.get(Animations::Hero_Run)),
-    grabAnimation(animations.get(Animations::Hero_Grab)),
-    punchAnimation(animations.get(Animations::Hero_Punch)),
-    kickAnimation(animations.get(Animations::Hero_Kick)),
+    idleAnimation(animations.get(data.HeroTable[t].idleAnimationID)),
+    moveAnimation(animations.get(data.HeroTable[t].moveAnimationID)),
+    dieAnimation(animations.get(data.HeroTable[t].dieAnimationID)),
+    deadAnimation(animations.get(data.HeroTable[t].deadAnimationID)),
+    attackedAnimation(animations.get(data.HeroTable[t].attackedAnimationID)),
+    grabAnimation(animations.get(data.HeroTable[t].grabAnimationID)),
+    punchAnimation(animations.get(data.HeroTable[t].punchAnimationID)),
     grabbed_npc(nullptr),
     weapon(nullptr),
     default_weapon(new Weapon(Weapon::Hands, animations, data, 50, 50))
 {
+  setHitPoints(data.HeroTable[t].hitpoints);
+  setSpeed(data.HeroTable[t].speed);
+  setPower(data.HeroTable[t].power);
+
   position.x = 50;
   position.y = 50;
 
-  setSpeed(10);
-
-  // set up AnimatedSprite
-  animatedSprite.setOrigin(29,22);
   animatedSprite.setPosition(position.x,position.y);
+  animatedSprite.setOrigin(data.HeroTable[t].origin.x,data.HeroTable[type].origin.y);
 
-  // set hitbox for collision testing
-  setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(), 20, 20);
+  setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(),
+          data.HeroTable[t].hitboxDimensions.x,
+          data.HeroTable[t].hitboxDimensions.y);
+
+  animatedSprite.setAnimation(moveAnimation); // needs to be initialized
+  animatedSprite.setLooped(false);
+  animatedSprite.setColor(data.HeroTable[type].color);
 
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);
-  animatedSprite.setAnimation(moveAnimation);
-  animatedSprite.setLooped(false);
 
   setStatus(AnimatedEntity::Idle);
   playAnimation();
@@ -45,7 +50,6 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 {
   if (checkCollision(a) == false)
     return;
-  //std::cout <<"collision with " << typeid(a).name() <<std::endl;
 
   switch(a.getParentType())
   {
@@ -65,24 +69,6 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
       break;
 
   }
-/*
-  if(a.getParentType() == AnimatedEntity::NPCType))
-  {
-    // adjust position?
-  }
-  else if(a.getParentType() == AnimatedEntity::WeaponType)
-  {
-    // take damage
-  }
-  else if(typeid(a) == typeid(Projectile))
-  {
-    // take damage
-  }
-  else if(typeid(a) == typeid(Collidable))
-  {
-    // stop movement?
-  }
-*/
 }
 
 void Hero::MoveGrabbedEntities()
@@ -91,7 +77,6 @@ void Hero::MoveGrabbedEntities()
   {
     grabbed_npc->position.x = position.x;
     grabbed_npc->position.y = position.y - 30;
-    // set currentAnimation to "grabbed"
   }
 
   getWeapon()->position = position;
@@ -104,8 +89,8 @@ void Hero::PrimaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
   if(!getWeapon()->primaryAttack->canAttack())
     return;
 
-  //setCurrentAnimation(getWeapon()->primaryAttackAnimation);
-  setStatus(AnimatedEntity::Attacking);
+  getWeapon()->setStatus(AnimatedEntity::AttackingPrimary);
+  getWeapon()->playAnimation();
   pAttack(*getWeapon()->primaryAttack, entities);
 }
 
@@ -114,9 +99,10 @@ void Hero::SecondaryAttack(std::vector<std::shared_ptr<AnimatedEntity>>& entitie
   if(!getWeapon()->secondaryAttack->canAttack())
     return;
 
-  //setCurrentAnimation(getWeapon()->secondaryAttackAnimation);
-  setStatus(AnimatedEntity::Attacking);
+  getWeapon()->setStatus(AnimatedEntity::AttackingSecondary);
+  getWeapon()->playAnimation();
   pAttack(*getWeapon()->secondaryAttack, entities);
+
 }
 
 void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>& entities)
@@ -127,7 +113,6 @@ void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>&
     case Attack::Standard :
       getWeapon()->hitbox.setScale(1, getWeapon()->getRange());
       getWeapon()->hitbox.setRotation(this->getOrientation().getRotation());
-      getWeapon()->setStatus(AnimatedEntity::Attacking);
       break;
 
     case Attack::Shoot :
@@ -170,6 +155,7 @@ void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
       Drop();
       grabbed_npc = std::dynamic_pointer_cast<NPC>(*it);
       grabbed_npc->setStatus(AnimatedEntity::Grabbed);
+      grabbed_npc->playAnimation();
       //grabbed_npc->setCurrentAnimation(grabbed_npc->grabbedAnimation);
     }
     else if(typeid(**it) == typeid(Weapon) && checkCollision(**it) == true)
@@ -205,6 +191,7 @@ void Hero::Throw()
     //grabbed_npc->setCurrentAnimation(grabbed_npc->thrownAnimation);
     grabbed_npc->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
     grabbed_npc->setStatus(AnimatedEntity::Thrown);
+    grabbed_npc->playAnimation();
     grabbed_npc = nullptr;
   }
 
@@ -214,6 +201,7 @@ void Hero::Throw()
     //weapon->hitbox.setOrigin(weapon->animatedSprite.getLocalBounds().width/2, weapon->animatedSprite.getLocalBounds().height/2);
     weapon->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
     weapon->setStatus(AnimatedEntity::Thrown);
+    weapon->playAnimation();
     weapon = nullptr;
   }
 }
@@ -243,6 +231,10 @@ void Hero::playAnimation()
 
     case AnimatedEntity::Moving :
       animatedSprite.play(moveAnimation);
+      break;
+
+    default :
+      animatedSprite.pause();
       break;
   }
 }

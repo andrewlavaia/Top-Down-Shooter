@@ -2,68 +2,34 @@
 #include "projectile.h"
 #include "datatables.h"
 
-namespace
-{
-  //const std::vector<ProjectileData> Table = initializeProjectileData();
-}
-
 Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y, Orientation::Type o)
   : AnimatedEntity(AnimatedEntity::ProjectileType),
     type(t),
+    orientation(o),
     moveAnimation(animations.get(data.ProjectileTable[t].moveAnimationID)),
-    dieAnimation(animations.get(data.ProjectileTable[t].dieAnimationID))
+    dieAnimation(animations.get(data.ProjectileTable[t].dieAnimationID)),
+    range(data.ProjectileTable[t].range)
 {
-  orientation = o;
-
-  // Default Weapon Settings
-  setSpeed(20);
-  range = 500;
-
-
-  //std::cout<<Table[type].speed<<std::endl;
+  setHitPoints(data.ProjectileTable[t].hitpoints);
+  setSpeed(data.ProjectileTable[t].speed);
+  setPower(data.ProjectileTable[t].power);
 
   position.x = x;
   position.y = y;
 
-  //change texture based on type
-  //sf::Texture texture;
-  //texture.create(5,5);
+  animatedSprite.setPosition(position.x, position.y);
+  setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(),
+            data.ProjectileTable[t].hitboxDimensions.x,
+            data.ProjectileTable[t].hitboxDimensions.y);
 
-  //moveAnimation = CreateAnimation(texture,5,5,1);
-  //setCurrentAnimation(moveAnimation);
-  //animatedSprite.play(*getCurrentAnimation());
-
+  // Projectile is always moving when created
   setStatus(AnimatedEntity::Moving);
+  AddDirection(orientation, range, getSpeed(), false);
+
   animatedSprite.play(moveAnimation);
   animatedSprite.setLooped(true);
   //animatedSprite.setFrameTime(sf::seconds(0.16));
-  //animatedSprite.setColor(sf::Color(255,255,0));
-  animatedSprite.setPosition(position.x, position.y);
-
-
-  setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(), 5, 5);
-
-  switch(type)
-  {
-    case Projectile::Bullet :
-      break;
-
-    case Projectile::BuckShot :
-      setPower(0.5);
-      //animatedSprite.setHitbox(2,2);
-      //moveAnimation = CreateAnimation(texture,2,2,1);
-      //setCurrentAnimation(moveAnimation);
-      //animatedSprite.play(*getCurrentAnimation());
-      break;
-
-    case Projectile::Rocket :
-      setPower(5);
-      setSpeed(10);
-      break;
-  }
-
-  AddDirection(orientation, range, getSpeed(), false);
-
+  animatedSprite.setColor(data.ProjectileTable[t].color);
 }
 
 void Projectile::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
@@ -91,29 +57,6 @@ void Projectile::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
       Destroy();
       break;
   }
-
-/*
-  if(typeid(a) == typeid(Hero))
-  {
-    Destroy();
-  }
-  else if(typeid(a) == typeid(NPC))
-  {
-    Destroy();
-  }
-  else if(typeid(a) == typeid(Weapon))
-  {
-    // do nothing?
-  }
-  else if(typeid(a) == typeid(Projectile))
-  {
-    // do nothing?
-  }
-  else if(typeid(a) == typeid(Collidable))
-  {
-    Destroy();
-  }
-*/
 }
 
 void Projectile::playAnimation()
@@ -133,6 +76,10 @@ void Projectile::playAnimation()
       break;
 
     case AnimatedEntity::Dead :
+      animatedSprite.pause();
+      break;
+
+    default :
       animatedSprite.pause();
       break;
   }

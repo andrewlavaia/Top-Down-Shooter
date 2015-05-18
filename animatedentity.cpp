@@ -4,36 +4,17 @@
 
 AnimatedEntity::AnimatedEntity(ParentType pType)
   : parentType(pType),
-    distance_travelled(0),
     hitpoints(10.0),
     speed(1.0),
     power(1.0),
-    status(AnimatedEntity::Idle)
+    status(AnimatedEntity::Idle),
+    distance_travelled(0)
 {
-  //attack_cooldown = sf::Time::Zero;
- // sf::Texture texture;
- // texture.create(1,1);
- // moveAnimation = CreateAnimation(texture,0,0,1); // hidden         // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
- // deadAnimation = CreateAnimation(texture,10,10,10); // hidden   // MOVE ALL ANIMATION DATA OUT OF ANIMATED ENTITY
   directions.clear();
   directions_it = directions.begin();
   animatedSprite.setLooped(false);
   setOrientation(Orientation::S);
 }
-
-
-std::shared_ptr<Animation> AnimatedEntity::CreateAnimation(const sf::Texture& tex, unsigned width, unsigned height, unsigned sprite_count)
-{
-  Animation animation;
-  animation.setSpriteSheet(tex);
-  for (unsigned i = 0; i < sprite_count; ++i)
-  {
-    animation.addFrame(sf::IntRect( i * width, 0, width,  height));
-  }
-
-  return std::make_shared<Animation>(animation);
-}
-
 
 void AnimatedEntity::MoveAnimatedSprite(double interpolation)
 {
@@ -262,7 +243,7 @@ void AnimatedEntity::TakeDamageOverTime(double damage, sf::Time dt)
 }
 
 
-void AnimatedEntity::setHitbox(const sf::Texture& texture, int width, int height)
+void AnimatedEntity::setHitbox(const sf::Texture& texture, unsigned width, unsigned height)
 {
   // set hitbox for collision testing
   hitbox.setTexture(texture);
@@ -270,6 +251,6 @@ void AnimatedEntity::setHitbox(const sf::Texture& texture, int width, int height
   hitbox.setOrigin(width/2, height/2);
   hitbox.setPosition(animatedSprite.getPosition());
 
-  assert(width <= 1000 && height <= 1000); // maximum texture size, this can be increased by making a bigger Texture
+  assert(width <= 1000 && height <= 1000); // maximum texture size, this can be increased by using a larger hitbox image
 }
 

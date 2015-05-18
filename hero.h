@@ -25,7 +25,13 @@ class Hero : public AnimatedEntity
 {
 public:
 
-  Hero(const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data);
+  enum Type {
+    Bob,
+    Joe,
+    TypeCount
+  };
+
+  Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data);
 
   void                          collideWithEntity(const AnimatedEntity& a, sf::Time dt);
   void                          playAnimation();
@@ -44,6 +50,7 @@ private:
 
   void                          pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>& entities);
 
+  Type                          type;
   const ResourceHolder<Animation, Animations::ID>&  animations;
   const DataTable&              data;
   std::shared_ptr<NPC>          grabbed_npc;
@@ -54,9 +61,9 @@ private:
   const Animation&              moveAnimation;
   const Animation&              dieAnimation;
   const Animation&              deadAnimation;
+  const Animation&              attackedAnimation;
   const Animation&              grabAnimation;
   const Animation&              punchAnimation;
-  const Animation&              kickAnimation;
 };
 
 #endif // HERO_H

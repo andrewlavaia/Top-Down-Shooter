@@ -75,7 +75,7 @@ protected:
     animations.load(Animations::Bullet, textures.get(Textures::Bullet), 10, 10, 1);
     animations.load(Animations::Grass, textures.get(Textures::Grass), 1024, 1024, 1);
 
-    hero = std::make_shared<Hero>(animations, data);
+    hero = std::make_shared<Hero>(Hero::Bob, animations, data);
 	  level = std::make_shared<Level>(1, animations, data);
 
     HUD_timer.setFont(fonts.get(Fonts::Calibri));

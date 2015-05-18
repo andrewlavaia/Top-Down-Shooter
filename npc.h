@@ -29,7 +29,6 @@ public:
 
 private:
   Type                                    type;
-
   const Animation&                        idleAnimation;
   const Animation&                        moveAnimation;
   const Animation&                        dieAnimation;
@@ -37,8 +36,6 @@ private:
   const Animation&                        attackedAnimation;
   const Animation&                        grabbedAnimation;
   const Animation&                        thrownAnimation;
-
 };
-
 
 #endif // NPC_H

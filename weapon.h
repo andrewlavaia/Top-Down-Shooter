@@ -21,37 +21,35 @@ class Weapon : public AnimatedEntity
       Pole,
       Sword,
       Axe,
-      SledgeHamemr,
       Pistol,
       Shotgun,
       Rifle,
       SMG,
       RocketLauncher,
-      //Grenade,
       TypeCount
     };
 
-    Weapon(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y);
+    explicit Weapon(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y);
 
     virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
     virtual void playAnimation();
+
+    Type getType() const { return type; }
+    unsigned getRange() const { return range; }
 
     std::unique_ptr<Attack> primaryAttack;
     std::unique_ptr<Attack> secondaryAttack;
     std::unique_ptr<Projectile> ammoType;
 
-    Type getType() { return type; }
-    int getRange() { return range; }
-
   private:
-    Type type;
-    int range;
-
-    const Animation& idleAnimation;
-    const Animation& moveAnimation;
-    const Animation& primaryAttackAnimation;
-    const Animation& secondaryAttackAnimation;
-
+    Type              type;
+    unsigned          range;
+    const Animation&  idleAnimation;
+    const Animation&  moveAnimation;
+    const Animation&  dieAnimation;
+    const Animation&  primaryAttackAnimation;
+    const Animation&  secondaryAttackAnimation;
+    unsigned          ammoCount;
 
 };
 
