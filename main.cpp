@@ -1,3 +1,4 @@
+#include <SFGUI/SFGUI.hpp>
 #include "gameengine.h"
 #include "menustate.h"
 #include "timer.h"
@@ -8,7 +9,11 @@ int main()
 {
   // Create main window
   sf::RenderWindow window;
-  window.create(sf::VideoMode(1024, 768), "Subway", sf::Style::Default);
+  window.create(sf::VideoMode(1024, 768), "QGE", sf::Style::Default);
+
+  //sf::View view(sf::FloatRect(50, 50, 512, 384)); // view is half the size centered at 300,300
+  //view.setViewport(sf::FloatRect(0.25f,0.25f,0.5f,0.5f)); //view port is also half the size and centered on window
+  //window.setView(view);
 
   // Set window settings
   //window.setFramerateLimit(200); // inaccurate, avoid if possible

@@ -3,6 +3,7 @@
 #define MENUSTATE_H
 
 #include "gamestate.h"
+#include "mainmenu.h"
 
 class CMenuState : public CGameState
 {
@@ -21,6 +22,7 @@ public:
 		return &MenuState;
 	}
 
+	MainMenu menu;
 
 protected:
 	CMenuState() { }

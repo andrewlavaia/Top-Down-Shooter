@@ -30,6 +30,7 @@ public:
   float                                       getRunningTime();
   float                                       getGameOverTime();
   unsigned                                    getNPCDeathCount() const { return npc_death_count; };
+  const sf::Vector2f                          getBounds() const { return bounds; }
 
   MapManager                                   mp;
   std::vector<std::shared_ptr<AnimatedEntity>> entities;
@@ -51,9 +52,11 @@ private:
   int                                         level_id;
   const ResourceHolder<Animation, Animations::ID>&  animations;
   const DataTable&                            data;
+  const sf::Vector2f                          bounds; // width, height of playable area in level
   sf::Clock                                   running_time;
   sf::Time                                    gameover_time;
   unsigned                                    npc_death_count;
+
 
 
 

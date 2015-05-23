@@ -87,6 +87,7 @@ protected:
     HUD_npc_count.setCharacterSize(40);
     HUD_npc_count.setColor(sf::Color::Black);
     HUD_npc_count.setPosition(700,20);
+
   }
 
 private:

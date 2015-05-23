@@ -5,6 +5,7 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
   : level_id(id),
     animations(animations),
     data(data),
+    bounds(3000.0,768.0),
     gameover_time(sf::seconds(30.0f)),
     npc_death_count(0)
 {

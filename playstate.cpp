@@ -310,6 +310,52 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   window.clear(sf::Color(255, 255, 255));
 
 
+  // Update view so that it is centered on hero as a function of time
+  // Note: Using interpolation will move the screen 1:1 with hero. Using game->frameTime.asSeconds() adds a nice delay effect but adds some fuzziness to animations
+/*
+  if( hero->position.x >= 100.0 && hero->position.x <= (level->getBounds().x - 100.0) ) // check if hero is within 100 pixels of horizontal edge of level
+  {
+    sf::View view = window.getView();
+    view.move( (hero->position.x - view.getCenter().x) * interpolation, 0.0 );
+    window.setView(view);
+  }
+  if( hero->position.y >= 100.0 && hero->position.y <= (level->getBounds().y - 100.0) ) // check if hero is within 100 pixels of verticla edge of level
+  {
+    sf::View view = window.getView();
+    view.move( 0.0, (hero->position.y - view.getCenter().y) * interpolation );
+    window.setView(view);
+  }
+*/
+
+  // Move view when hero is within 'limit' of  window edge
+  sf::Vector2i p = window.mapCoordsToPixel(hero->position);
+  const int limit = 200;
+  if( p.x > window.getSize().x - limit ) //
+  {
+    sf::View view = window.getView();
+    view.move( hero->getSpeed() * interpolation, 0.0 );
+    window.setView(view);
+  }
+  else if( p.x < limit )
+  {
+    sf::View view = window.getView();
+    view.move( hero->getSpeed() * interpolation * -1, 0.0 );
+    window.setView(view);
+  }
+  if( p.y > window.getSize().y - limit )
+  {
+    sf::View view = window.getView();
+    view.move( 0.0, hero->getSpeed() * interpolation );
+    window.setView(view);
+  }
+  else if ( p.y < limit )
+  {
+    sf::View view = window.getView();
+    view.move( 0.0, hero->getSpeed() * interpolation * -1);
+    window.setView(view);
+  }
+
+
   // --------------------
   // Draw Map
   // --------------------

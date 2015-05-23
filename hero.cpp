@@ -24,8 +24,8 @@ Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, 
   setSpeed(data.HeroTable[t].speed);
   setPower(data.HeroTable[t].power);
 
-  position.x = 50;
-  position.y = 50;
+  position.x = 100;
+  position.y = 100;
 
   animatedSprite.setPosition(position.x,position.y);
   animatedSprite.setOrigin(data.HeroTable[t].origin.x,data.HeroTable[type].origin.y);
@@ -37,6 +37,7 @@ Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, 
   animatedSprite.setAnimation(moveAnimation); // needs to be initialized
   animatedSprite.setLooped(false);
   animatedSprite.setColor(data.HeroTable[type].color);
+  animatedSprite.setFrameTime(sf::seconds(0.16));
 
   double scale_factor = 0.10;
   animatedSprite.setScale(scale_factor,scale_factor);

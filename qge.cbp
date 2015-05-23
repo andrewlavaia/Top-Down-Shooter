@@ -24,6 +24,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-std=c++11" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -62,6 +63,8 @@
 		<Unit filename="gameengine.cpp" />
 		<Unit filename="gameengine.h" />
 		<Unit filename="gamestate.h" />
+		<Unit filename="gui.cpp" />
+		<Unit filename="gui.h" />
 		<Unit filename="helpers.h" />
 		<Unit filename="hero.cpp" />
 		<Unit filename="hero.h" />
@@ -72,6 +75,8 @@
 		<Unit filename="level.cpp" />
 		<Unit filename="level.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="mainmenu.cpp" />
+		<Unit filename="mainmenu.h" />
 		<Unit filename="mapmanager.cpp" />
 		<Unit filename="mapmanager.h" />
 		<Unit filename="menustate.cpp" />

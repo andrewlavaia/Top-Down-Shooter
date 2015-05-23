@@ -1,8 +1,17 @@
 # depslib dependency file v1.0
-1404881223 source:c:\c++\qge\collision.cpp
+1431352804 source:c:\c++\qge\animatedentity.cpp
+	"animatedentity.h"
+
+1431524286 c:\c++\qge\animatedentity.h
+	<typeinfo>
 	<SFML/Graphics.hpp>
-	<map>
+	"animatedsprite.h"
+	"animation.h"
+	"direction.h"
+	"resourceholder.h"
 	"collision.h"
+	"orientation.h"
+	<iostream>
 
 1397941576 c:\program files (x86)\sfml\include\sfml\graphics.hpp
 	<SFML/Window.hpp>
@@ -338,8 +347,110 @@
 	<string>
 	<vector>
 
+1430486184 c:\c++\qge\animatedsprite.h
+	<SFML/Graphics.hpp>
+	<SFML/Graphics/RenderTarget.hpp>
+	<SFML/System/Time.hpp>
+	<SFML/Graphics/Drawable.hpp>
+	<SFML/Graphics/Transformable.hpp>
+	<SFML/System/Vector2.hpp>
+	"Animation.h"
+
+1413935252 c:\c++\qge\animation.h
+	<vector>
+	<SFML/Graphics/Rect.hpp>
+	<SFML/Graphics/Texture.hpp>
+
+1421294448 c:\c++\qge\direction.h
+	"orientation.h"
+
+1412084798 c:\c++\qge\orientation.h
+
+1430952916 c:\c++\qge\resourceholder.h
+	<map>
+	<string>
+	<memory>
+	<stdexcept>
+	<cassert>
+	<SFML/Graphics.hpp>
+	"animation.h"
+	"resourceholder.inl"
+
+1430229061 c:\c++\qge\resourceholder.inl
+
 1404881241 c:\c++\qge\collision.h
 	"animatedsprite.h"
+
+1430486187 source:c:\c++\qge\animatedsprite.cpp
+	"animatedsprite.h"
+
+1404879564 source:c:\c++\qge\animation.cpp
+	"animation.h"
+
+1431472307 source:c:\c++\qge\collidable.cpp
+	"collidable.h"
+	"datatables.h"
+
+1431386406 c:\c++\qge\collidable.h
+	<SFML/Graphics.hpp>
+	"animatedentity.h"
+
+1431558391 c:\c++\qge\datatables.h
+	"resourceholder.h"
+	"direction.h"
+	"hero.h"
+	"npc.h"
+	"weapon.h"
+	"collidable.h"
+	"projectile.h"
+
+1431609974 c:\c++\qge\hero.h
+	<iostream>
+	<SFML/Graphics.hpp>
+	<SFML/System/Time.hpp>
+	"animatedentity.h"
+	"resourceholder.h"
+	"animation.h"
+	"animatedsprite.h"
+	"collision.h"
+	"orientation.h"
+	"attack.h"
+	"datatables.h"
+	"projectile.h"
+	"collidable.h"
+
+1423665968 c:\c++\qge\attack.h
+	<SFML/Graphics.hpp>
+	"animation.h"
+
+1431386395 c:\c++\qge\projectile.h
+	"animatedentity.h"
+	"orientation.h"
+
+1431471822 c:\c++\qge\npc.h
+	<iostream>
+	<SFML/Graphics.hpp>
+	"animatedentity.h"
+	"animation.h"
+	"animatedsprite.h"
+	"direction.h"
+
+1431471584 c:\c++\qge\weapon.h
+	<SFML/Graphics.hpp>
+	"animatedentity.h"
+	"direction.h"
+	"npc.h"
+	"collidable.h"
+	"attack.h"
+	"datatables.h"
+
+1404881223 source:c:\c++\qge\collision.cpp
+	<SFML/Graphics.hpp>
+	<map>
+	"collision.h"
+
+1431558578 source:c:\c++\qge\datatables.cpp
+	"datatables.h"
 
 1421886490 source:c:\c++\qge\gameengine.cpp
 	"gameengine.h"
@@ -432,6 +543,11 @@
 1398542693 c:\c++\qge\gamestate.h
 	"gameengine.h"
 
+1432084303 source:c:\c++\qge\hero.cpp
+	"hero.h"
+	"npc.h"
+	"weapon.h"
+
 1398542753 source:c:\c++\qge\highscorestate.cpp
 	"highscorestate.h"
 	<iostream>
@@ -439,7 +555,7 @@
 1398542708 c:\c++\qge\highscorestate.h
 	"gamestate.h"
 
-1398542767 source:c:\c++\qge\introstate.cpp
+1432405401 source:c:\c++\qge\introstate.cpp
 	"introstate.h"
 	"playstate.h"
 	<iostream>
@@ -447,7 +563,7 @@
 1398542724 c:\c++\qge\introstate.h
 	"gamestate.h"
 
-1431609999 c:\c++\qge\playstate.h
+1432066937 c:\c++\qge\playstate.h
 	"gamestate.h"
 	<vector>
 	<memory>
@@ -472,19 +588,8 @@
 	"mapmanager.h"
 	"level.h"
 
-1431139290 c:\c++\qge\level.h
-	<vector>
-	<memory>
-	"mapmanager.h"
-	"resourceholder.h"
-	"animation.h"
-	"animatedentity.h"
-	"orientation.h"
-	"datatables.h"
-	"npc.h"
-	"weapon.h"
-	"collidable.h"
-	"projectile.h"
+1415370129 c:\c++\qge\helpers.h
+	<sstream>
 
 1406343501 c:\c++\qge\mapmanager.h
 	<SFML/Graphics.hpp>
@@ -499,172 +604,408 @@
 1398053945 c:\c++\qge\tile.h
 	<SFML/Graphics.hpp>
 
-1431609974 c:\c++\qge\hero.h
-	<iostream>
-	<SFML/Graphics.hpp>
-	<SFML/System/Time.hpp>
-	"animatedentity.h"
+1432084373 c:\c++\qge\level.h
+	<vector>
+	<memory>
+	"mapmanager.h"
 	"resourceholder.h"
 	"animation.h"
-	"animatedsprite.h"
-	"collision.h"
-	"orientation.h"
-	"attack.h"
-	"datatables.h"
-	"projectile.h"
-	"collidable.h"
-
-1431471822 c:\c++\qge\npc.h
-	<iostream>
-	<SFML/Graphics.hpp>
 	"animatedentity.h"
-	"animation.h"
-	"animatedsprite.h"
-	"direction.h"
+	"orientation.h"
+	"datatables.h"
+	"npc.h"
+	"weapon.h"
+	"collidable.h"
+	"projectile.h"
 
-1430411214 source:c:\c++\qge\main.cpp
+1432084362 source:c:\c++\qge\level.cpp
+	"level.h"
+
+1432393468 source:c:\c++\qge\main.cpp
+	<SFGUI/SFGUI.hpp>
 	"gameengine.h"
 	"menustate.h"
 	"timer.h"
 
-1398542732 c:\c++\qge\menustate.h
+1397946097 c:\program files (x86)\sfgui\include\sfgui\sfgui.hpp
+	<SFGUI/Bin.hpp>
+	<SFGUI/Box.hpp>
+	<SFGUI/Button.hpp>
+	<SFGUI/Context.hpp>
+	<SFGUI/Desktop.hpp>
+	<SFGUI/Engine.hpp>
+	<SFGUI/Entry.hpp>
+	<SFGUI/Fixed.hpp>
+	<SFGUI/Label.hpp>
+	<SFGUI/Range.hpp>
+	<SFGUI/Scale.hpp>
+	<SFGUI/Scrollbar.hpp>
+	<SFGUI/ScrolledWindow.hpp>
+	<SFGUI/Table.hpp>
+	<SFGUI/Window.hpp>
+	<SFGUI/ToggleButton.hpp>
+	<SFGUI/CheckButton.hpp>
+	<SFGUI/RadioButton.hpp>
+	<SFGUI/Viewport.hpp>
+	<SFGUI/ProgressBar.hpp>
+	<SFGUI/Separator.hpp>
+	<SFGUI/Frame.hpp>
+	<SFGUI/Image.hpp>
+	<SFGUI/Alignment.hpp>
+	<SFGUI/Notebook.hpp>
+	<SFGUI/Spinner.hpp>
+	<SFGUI/ComboBox.hpp>
+	<SFGUI/Canvas.hpp>
+	<SFGUI/SpinButton.hpp>
+	<SFGUI/Renderer.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\bin.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Container.hpp>
+	<memory>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\config.hpp
+	<iostream>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\container.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Widget.hpp>
+	<memory>
+	<vector>
+
+1397946096 c:\program files (x86)\sfgui\include\sfgui\widget.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Object.hpp>
+	<memory>
+	<SFGUI/RenderQueue.hpp>
+	<SFML/Graphics/Drawable.hpp>
+	<SFML/Window/Event.hpp>
+	<map>
+	<string>
+	<cstdint>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\object.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Signal.hpp>
+	<memory>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\signal.hpp
+	<SFGUI/Config.hpp>
+	<map>
+	<memory>
+	<functional>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\renderqueue.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Primitive.hpp>
+	<memory>
+	<SFML/Graphics/Drawable.hpp>
+	<SFML/OpenGL.hpp>
+	<vector>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\primitive.hpp
+	<SFGUI/Config.hpp>
+	<memory>
+	<SFGUI/Signal.hpp>
+	<SFGUI/RendererViewport.hpp>
+	<SFML/Graphics.hpp>
+	<SFML/OpenGL.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\rendererviewport.hpp
+	<SFGUI/Config.hpp>
+	<memory>
+	<SFML/Graphics.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\box.hpp
+	<SFGUI/Container.hpp>
+	<memory>
+	<list>
+	<cstdint>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\button.hpp
+	<SFGUI/Bin.hpp>
+	<SFGUI/Image.hpp>
+	<memory>
+	<SFML/System/String.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\image.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Widget.hpp>
+	<SFGUI/Misc.hpp>
+	<memory>
+	<SFML/Graphics/Texture.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\misc.hpp
+	<SFGUI/Config.hpp>
+	<memory>
+	<SFML/System.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\context.hpp
+	<SFGUI/Config.hpp>
+	<memory>
+	<SFGUI/Engine.hpp>
+	<SFGUI/Engines/BREW.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\engine.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Widget.hpp>
+	<SFGUI/Selector.hpp>
+	<SFGUI/ResourceManager.hpp>
+	<SFGUI/Parsers/ThemeParser/Parse.hpp>
+	<memory>
+	<SFML/Graphics/Drawable.hpp>
+	<string>
+	<map>
+	<list>
+	<stdexcept>
+	"Engine.inl"
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\selector.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Widget.hpp>
+	<memory>
+	<string>
+	<stdexcept>
+	<cstdint>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\resourcemanager.hpp
+	<SFGUI/Config.hpp>
+	<map>
+	<string>
+	<memory>
+	"ResourceManager.inl"
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\resourcemanager.inl
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\parsers\themeparser\parse.hpp
+	<SFGUI/Config.hpp>
+	<string>
+	<vector>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\engine.inl
+	<sstream>
+	<iomanip>
+	<typeinfo>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\engines\brew.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Engine.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\desktop.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Context.hpp>
+	<SFGUI/Engine.hpp>
+	<SFML/Graphics/Rect.hpp>
+	<SFML/Graphics/View.hpp>
+	<memory>
+	<string>
+	<deque>
+	"Desktop.inl"
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\desktop.inl
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\entry.hpp
+	<SFGUI/Widget.hpp>
+	<memory>
+	<SFML/System/String.hpp>
+	<SFML/System/Clock.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\fixed.hpp
+	<SFGUI/Container.hpp>
+	<memory>
+	<map>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\label.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Widget.hpp>
+	<SFGUI/Misc.hpp>
+	<memory>
+	<SFML/System/String.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\range.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Widget.hpp>
+	<SFGUI/Adjustment.hpp>
+	<memory>
+	<cstdint>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\adjustment.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Object.hpp>
+	<SFGUI/Signal.hpp>
+	<memory>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\scale.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Range.hpp>
+	<memory>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\scrollbar.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Range.hpp>
+	<memory>
+	<SFML/System/Clock.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\scrolledwindow.hpp
+	<SFGUI/Bin.hpp>
+	<SFGUI/Adjustment.hpp>
+	<SFGUI/Scrollbar.hpp>
+	<SFGUI/Viewport.hpp>
+	<memory>
+	<cstdint>
+
+1397946096 c:\program files (x86)\sfgui\include\sfgui\viewport.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Bin.hpp>
+	<SFGUI/Adjustment.hpp>
+	<memory>
+
+1397946096 c:\program files (x86)\sfgui\include\sfgui\table.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/TableCell.hpp>
+	<SFGUI/TableOptions.hpp>
+	<SFGUI/Container.hpp>
+	<memory>
+	<list>
+	<vector>
+
+1397946096 c:\program files (x86)\sfgui\include\sfgui\tablecell.hpp
+	<SFGUI/Widget.hpp>
+	<SFGUI/Container.hpp>
+	<SFML/Graphics/Rect.hpp>
+
+1397946096 c:\program files (x86)\sfgui\include\sfgui\tableoptions.hpp
+
+1397946096 c:\program files (x86)\sfgui\include\sfgui\window.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Bin.hpp>
+	<memory>
+	<SFML/Graphics/Drawable.hpp>
+	<SFML/System/String.hpp>
+	<cstdint>
+
+1397946096 c:\program files (x86)\sfgui\include\sfgui\togglebutton.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Button.hpp>
+	<memory>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\checkbutton.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/ToggleButton.hpp>
+	<memory>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\radiobutton.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/CheckButton.hpp>
+	<memory>
+	<set>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\progressbar.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Widget.hpp>
+	<memory>
+	<cstdint>
+	<SFML/System/String.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\separator.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Widget.hpp>
+	<memory>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\frame.hpp
+	<SFGUI/Bin.hpp>
+	<SFGUI/Misc.hpp>
+	<memory>
+	<SFML/System/String.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\alignment.hpp
+	<SFGUI/Bin.hpp>
+	<SFGUI/Misc.hpp>
+	<memory>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\notebook.hpp
+	<SFGUI/Container.hpp>
+	<memory>
+	<deque>
+	<cstdint>
+
+1397946096 c:\program files (x86)\sfgui\include\sfgui\spinner.hpp
+	<SFGUI/Widget.hpp>
+	<memory>
+	<SFML/System.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\combobox.hpp
+	<SFGUI/Bin.hpp>
+	<SFGUI/Scrollbar.hpp>
+	<memory>
+	<SFML/System/String.hpp>
+	<vector>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\canvas.hpp
+	<SFGUI/Config.hpp>
+	<SFGUI/Widget.hpp>
+	<SFGUI/RendererViewport.hpp>
+	<memory>
+
+1397946096 c:\program files (x86)\sfgui\include\sfgui\spinbutton.hpp
+	<SFGUI/Entry.hpp>
+	<SFGUI/Adjustment.hpp>
+	<memory>
+	<SFML/System/String.hpp>
+	<SFML/System/Clock.hpp>
+
+1397946097 c:\program files (x86)\sfgui\include\sfgui\renderer.hpp
+	<SFGUI/Config.hpp>
+	<memory>
+	<SFGUI/Primitive.hpp>
+	<SFML/Graphics.hpp>
+	<SFML/OpenGL.hpp>
+	<vector>
+	<map>
+	<list>
+	<cstdint>
+
+1432410194 c:\c++\qge\menustate.h
 	"gamestate.h"
+	"mainmenu.h"
+
+1432410184 c:\c++\qge\gui.h
+	<SFGUI/SFGUI.hpp>
+	<SFGUI/Widget.hpp>
+	<SFML/Graphics.hpp>
 
 1406336136 source:c:\c++\qge\mapmanager.cpp
 	"mapmanager.h"
-
-1398542786 source:c:\c++\qge\menustate.cpp
-	"menustate.h"
-	"introstate.h"
-	"highscorestate.h"
-	<iostream>
 
 1431524342 source:c:\c++\qge\npc.cpp
 	"npc.h"
 	"datatables.h"
 
-1431092265 source:c:\c++\qge\playstate.cpp
-	"playstate.h"
-
-1431610073 source:c:\c++\qge\hero.cpp
-	"hero.h"
-	"npc.h"
-	"weapon.h"
-
-1431140389 source:c:\c++\qge\level.cpp
-	"level.h"
-
-1421461486 c:\c++\qge\texturemanager.h
-	<memory>
-	<SFML/Graphics.hpp>
-
-1421458619 source:c:\c++\qge\texturemanager.cpp
-	"texturemanager.h"
-
-1430486187 source:c:\c++\qge\animatedsprite.cpp
-	"animatedsprite.h"
-
-1430486184 c:\c++\qge\animatedsprite.h
-	<SFML/Graphics.hpp>
-	<SFML/Graphics/RenderTarget.hpp>
-	<SFML/System/Time.hpp>
-	<SFML/Graphics/Drawable.hpp>
-	<SFML/Graphics/Transformable.hpp>
-	<SFML/System/Vector2.hpp>
-	"Animation.h"
-
-1413935252 c:\c++\qge\animation.h
-	<vector>
-	<SFML/Graphics/Rect.hpp>
-	<SFML/Graphics/Texture.hpp>
-
-1404879564 source:c:\c++\qge\animation.cpp
-	"animation.h"
-
-1421294448 c:\c++\qge\direction.h
-	"orientation.h"
-
-1431471584 c:\c++\qge\weapon.h
-	<SFML/Graphics.hpp>
-	"animatedentity.h"
-	"direction.h"
-	"npc.h"
-	"collidable.h"
-	"attack.h"
-	"datatables.h"
-
-1431472244 source:c:\c++\qge\weapon.cpp
-	"weapon.h"
-
-1423665968 c:\c++\qge\attack.h
-	<SFML/Graphics.hpp>
-	"animation.h"
-
-1421626059 source:c:\c++\qge\attack.cpp
-	"attack.h"
-
-1412084798 c:\c++\qge\orientation.h
-
 1412084862 source:c:\c++\qge\orientation.cpp
 	"orientation.h"
 
-1431386406 c:\c++\qge\collidable.h
-	<SFML/Graphics.hpp>
-	"animatedentity.h"
-
-1431472307 source:c:\c++\qge\collidable.cpp
-	"collidable.h"
-	"datatables.h"
-
-1431524286 c:\c++\qge\animatedentity.h
-	<typeinfo>
-	<SFML/Graphics.hpp>
-	"animatedsprite.h"
-	"animation.h"
-	"direction.h"
-	"resourceholder.h"
-	"collision.h"
-	"orientation.h"
-	<iostream>
-
-1431352804 source:c:\c++\qge\animatedentity.cpp
-	"animatedentity.h"
-
-1415370129 c:\c++\qge\helpers.h
-	<sstream>
-
-1431386395 c:\c++\qge\projectile.h
-	"animatedentity.h"
-	"orientation.h"
+1432301759 source:c:\c++\qge\playstate.cpp
+	"playstate.h"
 
 1431472332 source:c:\c++\qge\projectile.cpp
 	"projectile.h"
 	"datatables.h"
 
-1430952916 c:\c++\qge\resourceholder.h
-	<map>
-	<string>
-	<memory>
-	<stdexcept>
-	<cassert>
-	<SFML/Graphics.hpp>
-	"animation.h"
-	"resourceholder.inl"
-
-1421462574 source:c:\c++\qge\resourceholder.cpp
-	"resourceholder.h"
-
-1430229061 c:\c++\qge\resourceholder.inl
-
-1431558578 source:c:\c++\qge\datatables.cpp
-	"datatables.h"
-
-1431558391 c:\c++\qge\datatables.h
-	"resourceholder.h"
-	"direction.h"
-	"hero.h"
-	"npc.h"
+1431472244 source:c:\c++\qge\weapon.cpp
 	"weapon.h"
-	"collidable.h"
-	"projectile.h"
+
+1432410203 source:c:\c++\qge\menustate.cpp
+	"menustate.h"
+	"introstate.h"
+	"highscorestate.h"
+	<iostream>
+
+1432410184 source:c:\c++\qge\gui.cpp
+	"gui.h"
+
+1432410271 c:\c++\qge\mainmenu.h
+	"gui.h"
+
+1432410266 source:c:\c++\qge\mainmenu.cpp
+	"mainmenu.h"
 
