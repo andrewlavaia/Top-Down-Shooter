@@ -8,7 +8,7 @@
 class CMenuState : public CGameState
 {
 public:
-	void Init();
+	void Init(CGameEngine* game);
 	void Cleanup();
 
 	void Pause();

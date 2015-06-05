@@ -3,10 +3,11 @@
 
 CPlayState CPlayState::PlayState;
 
-void CPlayState::Init()
+void CPlayState::Init(CGameEngine* game)
 {
   std::cout << "Play State started." << std::endl;
   //this->level->Load(1);
+  level->background.setTexture( textures.get( Textures::Dungeon ) );
   std::cout << "Level 1 Loaded." << std::endl;
 }
 
@@ -188,11 +189,13 @@ void CPlayState::Update(CGameEngine* game)
   for(std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
   {
     // Set NPC Aggro
-    if(typeid(**it) == typeid(NPC) &&
-       (*it)->checkDistance(200, *hero) &&
-       (*it)->getStatus() == AnimatedEntity::Moving
+    if( (*it)->getParentType() == AnimatedEntity::NPCType
+        && (*it)->checkDistance(200, *hero)
+        && (  (*it)->getStatus() == AnimatedEntity::Moving
+           || (*it)->getStatus() == AnimatedEntity::Idle )
       )
     {
+      (*it)->setStatus( AnimatedEntity::Moving );
       (*it)->AddDirection((*it)->getRelativeOrientation(*hero), 0.01, (*it)->getSpeed());
     }
 
@@ -296,41 +299,22 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     hero->playAnimation();
   }
 
-/*
-  if(!hero->animatedSprite.isPlaying()) //&& hero->getCurrentAnimation() != hero->moveAnimation)
-  {
-    hero->restoreDefaultState();
-  }
-*/
-
   // ------------------------
   // Initialize Render Window
   // ------------------------
   sf::RenderWindow& window = game->window;
-  window.clear(sf::Color(255, 255, 255));
+  window.clear( sf::Color( 0, 0, 0) );
 
-
-  // Update view so that it is centered on hero as a function of time
-  // Note: Using interpolation will move the screen 1:1 with hero. Using game->frameTime.asSeconds() adds a nice delay effect but adds some fuzziness to animations
-/*
-  if( hero->position.x >= 100.0 && hero->position.x <= (level->getBounds().x - 100.0) ) // check if hero is within 100 pixels of horizontal edge of level
-  {
-    sf::View view = window.getView();
-    view.move( (hero->position.x - view.getCenter().x) * interpolation, 0.0 );
-    window.setView(view);
-  }
-  if( hero->position.y >= 100.0 && hero->position.y <= (level->getBounds().y - 100.0) ) // check if hero is within 100 pixels of verticla edge of level
-  {
-    sf::View view = window.getView();
-    view.move( 0.0, (hero->position.y - view.getCenter().y) * interpolation );
-    window.setView(view);
-  }
-*/
-
+  // ------------------------
+  // Move Camera
+  // ------------------------
   // Move view when hero is within 'limit' of  window edge
+
+  //std::cout << hero->position.x << ", " <<hero->position.y << std::endl;
+
   sf::Vector2i p = window.mapCoordsToPixel(hero->position);
-  const int limit = 200;
-  if( p.x > window.getSize().x - limit ) //
+  const double limit = 200;
+  if( p.x > (double)window.getSize().x - limit )
   {
     sf::View view = window.getView();
     view.move( hero->getSpeed() * interpolation, 0.0 );
@@ -342,7 +326,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     view.move( hero->getSpeed() * interpolation * -1, 0.0 );
     window.setView(view);
   }
-  if( p.y > window.getSize().y - limit )
+  if( p.y > (double)window.getSize().y - limit )
   {
     sf::View view = window.getView();
     view.move( 0.0, hero->getSpeed() * interpolation );
@@ -357,18 +341,11 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
 
 
   // --------------------
-  // Draw Map
+  // Draw Level Background
   // --------------------
 
-  // note: copying the tilemap initially is much quicker than using the member function calls in loop
-  std::vector<std::vector<Tile>> tilemap = this->level->mp.GetTiles();
-  for(unsigned i = 0; i < tilemap.size(); i++)
-  {
-    for(unsigned j = 0; j < tilemap[i].size(); j++)
-    {
-      window.draw(tilemap[i][j].sprite);
-    }
-  }
+  window.draw( level->background );
+
 
   // --------------------
   // Draw HUD
@@ -376,17 +353,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   window.draw(HUD_timer);
   window.draw(HUD_npc_count);
   // draw active weapon image
-
-
-  // -------------
-  // Draw Hero
-  // -------------
-  //hero->animatedSprite.play(*hero->getCurrentAnimation());
-  //hero->playAnimation();
-  hero->animatedSprite.update(game->frameTime);
-  hero->MoveAnimatedSprite(interpolation);
-  window.draw(hero->animatedSprite);
-  window.draw(hero->hitbox); // DEBUG only
 
   // ---------------------
   // Draw Entities
@@ -396,7 +362,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
-    window.draw((*it)->hitbox); // DEBUG only
+    //window.draw((*it)->hitbox); // DEBUG only
   }
 
   // ---------------------
@@ -410,12 +376,19 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     window.draw((*it)->hitbox);
   }
 
+  // -------------
+  // Draw Hero - drawn last so that it is shown on top of everything
+  // -------------
+  hero->animatedSprite.update(game->frameTime);
+  hero->MoveAnimatedSprite(interpolation);
+  window.draw(hero->animatedSprite);
+  //window.draw(hero->hitbox); // DEBUG only
+
 
   // ---------------
   // Update Window
   // ---------------
   window.display();
-
 
 }
 

@@ -42,8 +42,11 @@ void AnimatedEntity::Move()
   //std::cout<<obj.position.x << std::endl;
   if(directions.empty())
   {
-      if(!isDead())
-        setStatus(AnimatedEntity::Idle);
+      if( !isDead() )
+      {
+        setStatus( AnimatedEntity::Idle );
+        playAnimation();
+      }
       return;
   }
 
@@ -53,6 +56,7 @@ void AnimatedEntity::Move()
     // If distance exceeded, reset distance counter and have iterator point to next Direction object
     distance_travelled = 0;
     setStatus(AnimatedEntity::Moving); // since next direction object exists, the object must be moving
+    playAnimation();
 
     if(directions_it->isRepeat())
     {
@@ -95,8 +99,16 @@ void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
   playAnimation();
   setOrientation(o);
 
+  // Rotate Weapons and Projectiles to align with orientation
   if(rotation)
-    animatedSprite.setRotation(getOrientation().getRotation());
+  {
+    if( getParentType() == AnimatedEntity::WeaponType
+       || getParentType() == AnimatedEntity::ProjectileType )
+    {
+      animatedSprite.setRotation(getOrientation().getRotation());
+    }
+
+  }
 
   // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
   double hypotenuse = sqrt((spd * spd) + (spd * spd));
@@ -114,30 +126,48 @@ void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 
     case Orientation::E :
       position.x += spd;
+      if( getParentType() == AnimatedEntity::HeroType
+        || getParentType() == AnimatedEntity::NPCType )
+        animatedSprite.setScale(1,1); // restore sprite
       break;
 
     case Orientation::W :
       position.x -= spd;
+      if ( getParentType() == AnimatedEntity::HeroType
+         || getParentType() == AnimatedEntity::NPCType )
+        animatedSprite.setScale(-1,1); // flip sprite horizontally
       break;
 
     case Orientation::NW :
       position.x -= hypotenuse/2;
       position.y -= hypotenuse/2;
+       if( getParentType() == AnimatedEntity::HeroType
+         || getParentType() == AnimatedEntity::NPCType )
+        animatedSprite.setScale(-1,1); // flip sprite horizontally
       break;
 
     case Orientation::NE :
       position.x += hypotenuse/2;
       position.y -= hypotenuse/2;
+       if( getParentType() == AnimatedEntity::HeroType
+         || getParentType() == AnimatedEntity::NPCType )
+        animatedSprite.setScale(1,1); // restore sprite
       break;
 
     case Orientation::SW :
       position.x -= hypotenuse/2;
       position.y += hypotenuse/2;
+      if( getParentType() == AnimatedEntity::HeroType
+         || getParentType() == AnimatedEntity::NPCType )
+        animatedSprite.setScale(-1,1); // flip sprite horizontally
       break;
 
     case Orientation::SE :
       position.x += hypotenuse/2;
       position.y += hypotenuse/2;
+      if( getParentType() == AnimatedEntity::HeroType
+         || getParentType() == AnimatedEntity::NPCType )
+        animatedSprite.setScale(1,1); // restore sprite
       break;
   }
 }
@@ -251,6 +281,6 @@ void AnimatedEntity::setHitbox(const sf::Texture& texture, unsigned width, unsig
   hitbox.setOrigin(width/2, height/2);
   hitbox.setPosition(animatedSprite.getPosition());
 
-  assert(width <= 1000 && height <= 1000); // maximum texture size, this can be increased by using a larger hitbox image
+  assert(width <= 2000 && height <= 2000); // maximum texture size, this can be increased by using a larger hitbox image
 }
 

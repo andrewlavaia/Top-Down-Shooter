@@ -5,7 +5,7 @@
 
 CIntroState CIntroState::IntroState;
 
-void CIntroState::Init()
+void CIntroState::Init(CGameEngine* game)
 {
   std::cout << "Intro State started." << std::endl ;
 }

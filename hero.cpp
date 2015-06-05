@@ -34,13 +34,13 @@ Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, 
           data.HeroTable[t].hitboxDimensions.x,
           data.HeroTable[t].hitboxDimensions.y);
 
-  animatedSprite.setAnimation(moveAnimation); // needs to be initialized
+  animatedSprite.setAnimation(idleAnimation); // needs to be initialized
   animatedSprite.setLooped(false);
   animatedSprite.setColor(data.HeroTable[type].color);
-  animatedSprite.setFrameTime(sf::seconds(0.16));
+  animatedSprite.setFrameTime(sf::seconds(0.10)); // 6 fps is .166667
 
-  double scale_factor = 0.10;
-  animatedSprite.setScale(scale_factor,scale_factor);
+  //double scale_factor = 2.0;
+  //animatedSprite.setScale(scale_factor,scale_factor);
 
   setStatus(AnimatedEntity::Idle);
   playAnimation();
@@ -224,10 +224,13 @@ void Hero::restoreDefaultState()
 
 void Hero::playAnimation()
 {
+  animatedSprite.setLooped(false);
+
   switch(getStatus())
   {
     case AnimatedEntity::Idle :
-      animatedSprite.pause(); // or animatedSprite.stop() to revert back to first frame
+      animatedSprite.play(idleAnimation); // or animatedSprite.stop() to revert back to first frame
+      animatedSprite.setLooped(true);
       break;
 
     case AnimatedEntity::Moving :

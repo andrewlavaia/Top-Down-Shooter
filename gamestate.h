@@ -7,7 +7,7 @@
 class CGameState
 {
 public:
-	virtual void Init() = 0;
+	virtual void Init(CGameEngine* game) = 0;
 	virtual void Cleanup() = 0;
 
 	virtual void Pause() = 0;

@@ -3,14 +3,14 @@
 #include "menustate.h"
 #include "introstate.h"
 #include "highscorestate.h"
+#include "optionstate.h"
 #include <iostream>
 
 CMenuState CMenuState::MenuState;
 
-void CMenuState::Init()
+void CMenuState::Init(CGameEngine* game)
 {
   std::cout << "Menu State started." << std::endl;
-  menu.Initialize();
 
 }
 
@@ -53,13 +53,29 @@ void CMenuState::HandleEvents(CGameEngine* game)
               //ShowWindow(game->window.getSystemHandle(), SW_RESTORE);
         }
         break;
-/*
-      case sf::Event::MouseButtonPressed:
-        if(event.mouseButton.button == sf::Mouse::Left) {
-              game->PushState( CHighScoreState::Instance() );
+
+      case sf::Event::MouseButtonReleased:
+
+        // Check if main menu button was clicked
+        switch( menu.getState() )
+        {
+          case MainMenu::Menu :
+            // do nothing
+            break;
+          case MainMenu::Intro :
+            game->PushState( CIntroState::Instance() );
+            break;
+          case MainMenu::HighScore :
+            game->PushState( CHighScoreState::Instance() );
+            break;
+          case MainMenu::Option :
+            game->PushState( COptionState::Instance() );
+            break;
+          case MainMenu::Exit :
+            game->Quit();
+            break;
         }
-        break;
-*/
+
       default:
 
         break;

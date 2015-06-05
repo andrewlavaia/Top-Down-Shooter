@@ -14,6 +14,7 @@ class Collidable : public AnimatedEntity
       Indestructible,       // replace with specific sub-types
       Destructible,         // replace with specific sub-types
       Exit,                 // exit to next room (can overlay other things on top, like doors etc)
+      Boundary,             // invisible boundary for level
       TypeCount
     };
 

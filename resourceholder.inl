@@ -26,25 +26,66 @@ void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string
 }
 
 template <typename Resource, typename Identifier>
-void ResourceHolder<Resource, Identifier>::load(Identifier id, const sf::Texture& texture, unsigned width, unsigned height, unsigned sprite_count)
+void ResourceHolder<Resource, Identifier>::load(Identifier id, const sf::Texture& texture, unsigned width, unsigned height, unsigned col_count, unsigned row_count)
 {
-  assert(sprite_count > 0);
+  assert(col_count > 0);
   try
   {
     // Create and load resource
     std::unique_ptr<Resource> resource(new Resource());
     resource->setSpriteSheet(texture);
-    for (unsigned i = 0; i < sprite_count; ++i)
+    for( unsigned j = 0; j < row_count; ++j )
     {
-      resource->addFrame(sf::IntRect( i * width, 0, width, height));
+      for( unsigned i = 0; i < col_count; ++i )
+      {
+        resource->addFrame(sf::IntRect( i * width, j * height, width, height));
+      }
     }
-
     // If loading successful, insert resource to map
     insertResource(id, std::move(resource));
   }
   catch(std::exception& e)
   {
-    //assert(e.what());
+    assert(e.what());
+  }
+
+}
+
+template <typename Resource, typename Identifier>
+void ResourceHolder<Resource, Identifier>::load( Identifier id, const sf::Texture& spriteSheet,
+                                                 unsigned spriteWidth, unsigned spriteHeight,
+                                                 unsigned colCount, unsigned rowCount,
+                                                 std::vector<unsigned> spriteVec )
+{
+
+  assert( rowCount > 0 && colCount > 0 && spriteVec.size() > 0 );
+  for( auto it = spriteVec.begin(); it != spriteVec.end(); ++it )
+  {
+    assert( *it < rowCount * colCount );
+  }
+  try
+  {
+    // Create and load resource
+    std::unique_ptr<Resource> resource( new Resource() );
+    resource->setSpriteSheet( spriteSheet );
+
+    for( auto it = spriteVec.begin(); it != spriteVec.end(); ++it )
+    {
+      resource->addFrame( sf::IntRect( ( ( *it - 1 ) % colCount ) * spriteWidth,  // find starting horizontal point
+                                       ( ( ( *it - 1 ) / colCount ) % rowCount ) * spriteHeight, // find starting vertical point
+                                        spriteWidth,
+                                        spriteHeight
+                                     )
+                        );
+    }
+
+    // If loading successful, insert resource to map
+    insertResource( id, std::move( resource ) );
+
+  }
+  catch( std::exception& e )
+  {
+    assert( e.what() );
   }
 
 }

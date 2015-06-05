@@ -19,14 +19,14 @@ std::vector<HeroData> DataTable::initializeHeroData()
   data[Hero::Bob].hitpoints = 10;
   data[Hero::Bob].speed = 10;
   data[Hero::Bob].power = 1;
-  data[Hero::Bob].idleAnimationID = Animations::Hero_Run;
+  data[Hero::Bob].idleAnimationID = Animations::Hero_Idle;
   data[Hero::Bob].moveAnimationID = Animations::Hero_Run;
-  data[Hero::Bob].dieAnimationID = Animations::Hero_Run;
-  data[Hero::Bob].deadAnimationID = Animations::Hero_Run;
-  data[Hero::Bob].attackedAnimationID = Animations::Hero_Run;
+  data[Hero::Bob].dieAnimationID = Animations::Hero_Die;
+  data[Hero::Bob].deadAnimationID = Animations::Hero_Dead;
+  data[Hero::Bob].attackedAnimationID = Animations::Hero_Attacked;
   data[Hero::Bob].grabAnimationID = Animations::Hero_Grab;
   data[Hero::Bob].punchAnimationID = Animations::Hero_Punch;
-  data[Hero::Bob].origin = sf::Vector2u(29,22);
+  data[Hero::Bob].origin = sf::Vector2u(15,15);
   data[Hero::Bob].hitboxDimensions = sf::Vector2u(20,20);
   data[Hero::Bob].color = sf::Color::White;
 
@@ -45,28 +45,28 @@ std::vector<NPCData> DataTable::initializeNPCData()
   data[NPC::Chumba].hitpoints = 10;
   data[NPC::Chumba].speed = 1;
   data[NPC::Chumba].power = 1;
-  data[NPC::Chumba].idleAnimationID = Animations::NPC_Run;
-  data[NPC::Chumba].moveAnimationID = Animations::NPC_Run;
-  data[NPC::Chumba].dieAnimationID = Animations::Hero_Punch;
-  data[NPC::Chumba].deadAnimationID = Animations::NPC_Run;
-  data[NPC::Chumba].attackedAnimationID = Animations::NPC_Run;
-  data[NPC::Chumba].grabbedAnimationID = Animations::NPC_Run;
-  data[NPC::Chumba].thrownAnimationID = Animations::NPC_Run;
-  data[NPC::Chumba].origin = sf::Vector2u(16,16);
+  data[NPC::Chumba].idleAnimationID = Animations::Hero_Idle;
+  data[NPC::Chumba].moveAnimationID = Animations::Hero_Walk;
+  data[NPC::Chumba].dieAnimationID = Animations::Hero_Die;
+  data[NPC::Chumba].deadAnimationID = Animations::Hero_Dead;
+  data[NPC::Chumba].attackedAnimationID = Animations::Hero_Attacked;
+  data[NPC::Chumba].grabbedAnimationID = Animations::Hero_Idle;
+  data[NPC::Chumba].thrownAnimationID = Animations::Hero_Idle;
+  data[NPC::Chumba].origin = sf::Vector2u(15,15);
   data[NPC::Chumba].hitboxDimensions = sf::Vector2u(20,20);
-  data[NPC::Chumba].color = sf::Color::White;
+  data[NPC::Chumba].color = sf::Color::Blue;
 
   data[NPC::Goomba].hitpoints = 10;
   data[NPC::Goomba].speed = 2;
   data[NPC::Goomba].power = 1;
-  data[NPC::Goomba].idleAnimationID = Animations::NPC_Run;
-  data[NPC::Goomba].moveAnimationID = Animations::NPC_Run;
-  data[NPC::Goomba].dieAnimationID = Animations::Hero_Punch;
-  data[NPC::Goomba].deadAnimationID = Animations::NPC_Run;
-  data[NPC::Goomba].attackedAnimationID = Animations::NPC_Run;
-  data[NPC::Goomba].grabbedAnimationID = Animations::NPC_Run;
-  data[NPC::Goomba].thrownAnimationID = Animations::Hero_Punch;
-  data[NPC::Goomba].origin = sf::Vector2u(16,16);
+  data[NPC::Goomba].idleAnimationID = Animations::Hero_Idle;
+  data[NPC::Goomba].moveAnimationID = Animations::Hero_Run;
+  data[NPC::Goomba].dieAnimationID = Animations::Hero_Die;
+  data[NPC::Goomba].deadAnimationID = Animations::Hero_Dead;
+  data[NPC::Goomba].attackedAnimationID = Animations::Hero_Attacked;
+  data[NPC::Goomba].grabbedAnimationID = Animations::Hero_Idle;
+  data[NPC::Goomba].thrownAnimationID = Animations::Hero_Idle;
+  data[NPC::Goomba].origin = sf::Vector2u(15,15);
   data[NPC::Goomba].hitboxDimensions = sf::Vector2u(20,20);
   data[NPC::Goomba].color = sf::Color::Red;
 
@@ -202,6 +202,12 @@ std::vector<CollidableData> DataTable::initializeCollidableData()
 
   data[Collidable::Destructible] = data[Collidable::Indestructible];
   data[Collidable::Exit] = data[Collidable::Indestructible];
+
+  data[Collidable::Boundary].hitpoints = 10000000;
+  data[Collidable::Boundary].speed = 0;
+  data[Collidable::Boundary].power = 0;
+  data[Collidable::Boundary].idleAnimationID = Animations::Empty;
+  data[Collidable::Boundary].color = sf::Color::White;
 
   return data;
 }

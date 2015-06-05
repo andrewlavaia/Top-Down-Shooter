@@ -21,7 +21,7 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, co
   position.y = y;
 
   animatedSprite.setPosition(position.x, position.y);
-  animatedSprite.setOrigin(16,16);
+  animatedSprite.setOrigin(15,15);
   setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(),
           data.NPCTable[t].hitboxDimensions.x,
           data.NPCTable[t].hitboxDimensions.y);
@@ -29,7 +29,7 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, co
   setStatus(AnimatedEntity::Moving);
   animatedSprite.play(moveAnimation);
   animatedSprite.setLooped(false);
-  animatedSprite.setFrameTime(sf::seconds(0.16));
+  animatedSprite.setFrameTime(sf::seconds(0.10));
   animatedSprite.setColor(data.NPCTable[t].color);
   animatedSprite.setScale(1,1);
 
@@ -118,6 +118,7 @@ void NPC::playAnimation()
 
     case AnimatedEntity::Dead :
       animatedSprite.play(deadAnimation);
+      animatedSprite.setLooped(true);
       break;
 
     default :

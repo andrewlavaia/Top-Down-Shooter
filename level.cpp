@@ -5,7 +5,7 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
   : level_id(id),
     animations(animations),
     data(data),
-    bounds(3000.0,768.0),
+    bounds(1600.0,1600.0),
     gameover_time(sf::seconds(30.0f)),
     npc_death_count(0)
 {
@@ -22,7 +22,12 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
     case 1:
       mp.Load("map2.txt");
 
-      //CreateProjectile(Projectile::Bullet, 10, 10, Orientation::E);
+      // Need to add invisible indestructible wall surrounding level
+      CreateCollidable(Collidable::Boundary, 0, 0, 1, bounds.y); // left wall
+      CreateCollidable(Collidable::Boundary, bounds.x, 0, 1, bounds.y); // right wall
+      CreateCollidable(Collidable::Boundary, 0, 0, bounds.x, 1); // top wall
+      CreateCollidable(Collidable::Boundary, 0, bounds.y, bounds.x, 1); // bottom wall
+/*
                                                   //  x     y   width  height
       CreateCollidable(Collidable::Indestructible,     0,   300,   30,   200);
       CreateCollidable(Collidable::Indestructible,     0,     0,   30,   268);
@@ -31,21 +36,19 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
       CreateCollidable(Collidable::Indestructible,     0,   469,   30,    30);
       CreateCollidable(Collidable::Indestructible,    30,     0,   50,   800);
       CreateCollidable(Collidable::Indestructible,   500,   500,  100,    10);
-
+*/
       CreateCollidable(Collidable::Exit,             700,   700,  200,   200);
       CreateCollidable(Collidable::Exit,             700,   400,  100,   100);
 
-      CreateNPC(NPC::Goomba, 200, 200);
+      CreateNPC(NPC::Goomba, 300, 500);
       CreateNPC(NPC::Chumba, 400, 400);
 
-      CreateWeapon(Weapon::SMG, 20, 50);
+      CreateWeapon(Weapon::SMG, 200, 100);
       CreateWeapon(Weapon::Pole, 400, 400);
       CreateWeapon(Weapon::Pole, 200, 200);
-      CreateWeapon(Weapon::Shotgun, 100, 100);
+      CreateWeapon(Weapon::Shotgun, 0, 0);
       CreateWeapon(Weapon::Pistol, 700,700);
       CreateWeapon(Weapon::RocketLauncher, 500,500);
-
-
 
       break;
 

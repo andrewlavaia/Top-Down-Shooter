@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1431352804 source:c:\c++\qge\animatedentity.cpp
+1433337939 source:c:\c++\qge\animatedentity.cpp
 	"animatedentity.h"
 
 1431524286 c:\c++\qge\animatedentity.h
@@ -366,7 +366,7 @@
 
 1412084798 c:\c++\qge\orientation.h
 
-1430952916 c:\c++\qge\resourceholder.h
+1433460360 c:\c++\qge\resourceholder.h
 	<map>
 	<string>
 	<memory>
@@ -376,7 +376,7 @@
 	"animation.h"
 	"resourceholder.inl"
 
-1430229061 c:\c++\qge\resourceholder.inl
+1433425340 c:\c++\qge\resourceholder.inl
 
 1404881241 c:\c++\qge\collision.h
 	"animatedsprite.h"
@@ -391,7 +391,7 @@
 	"collidable.h"
 	"datatables.h"
 
-1431386406 c:\c++\qge\collidable.h
+1432819605 c:\c++\qge\collidable.h
 	<SFML/Graphics.hpp>
 	"animatedentity.h"
 
@@ -449,10 +449,10 @@
 	<map>
 	"collision.h"
 
-1431558578 source:c:\c++\qge\datatables.cpp
+1433288475 source:c:\c++\qge\datatables.cpp
 	"datatables.h"
 
-1421886490 source:c:\c++\qge\gameengine.cpp
+1432682009 source:c:\c++\qge\gameengine.cpp
 	"gameengine.h"
 	"gamestate.h"
 
@@ -540,30 +540,30 @@
 	<Windows.h>
 	<iostream>
 
-1398542693 c:\c++\qge\gamestate.h
+1432681848 c:\c++\qge\gamestate.h
 	"gameengine.h"
 
-1432084303 source:c:\c++\qge\hero.cpp
+1433287893 source:c:\c++\qge\hero.cpp
 	"hero.h"
 	"npc.h"
 	"weapon.h"
 
-1398542753 source:c:\c++\qge\highscorestate.cpp
+1432734045 source:c:\c++\qge\highscorestate.cpp
 	"highscorestate.h"
 	<iostream>
 
-1398542708 c:\c++\qge\highscorestate.h
+1432681954 c:\c++\qge\highscorestate.h
 	"gamestate.h"
 
-1432405401 source:c:\c++\qge\introstate.cpp
+1432681954 source:c:\c++\qge\introstate.cpp
 	"introstate.h"
 	"playstate.h"
 	<iostream>
 
-1398542724 c:\c++\qge\introstate.h
+1432681950 c:\c++\qge\introstate.h
 	"gamestate.h"
 
-1432066937 c:\c++\qge\playstate.h
+1433460652 c:\c++\qge\playstate.h
 	"gamestate.h"
 	<vector>
 	<memory>
@@ -604,7 +604,7 @@
 1398053945 c:\c++\qge\tile.h
 	<SFML/Graphics.hpp>
 
-1432084373 c:\c++\qge\level.h
+1432853490 c:\c++\qge\level.h
 	<vector>
 	<memory>
 	"mapmanager.h"
@@ -618,7 +618,7 @@
 	"collidable.h"
 	"projectile.h"
 
-1432084362 source:c:\c++\qge\level.cpp
+1433201899 source:c:\c++\qge\level.cpp
 	"level.h"
 
 1432393468 source:c:\c++\qge\main.cpp
@@ -965,11 +965,11 @@
 	<list>
 	<cstdint>
 
-1432410194 c:\c++\qge\menustate.h
+1432681954 c:\c++\qge\menustate.h
 	"gamestate.h"
 	"mainmenu.h"
 
-1432410184 c:\c++\qge\gui.h
+1432732924 c:\c++\qge\gui.h
 	<SFGUI/SFGUI.hpp>
 	<SFGUI/Widget.hpp>
 	<SFML/Graphics.hpp>
@@ -977,14 +977,14 @@
 1406336136 source:c:\c++\qge\mapmanager.cpp
 	"mapmanager.h"
 
-1431524342 source:c:\c++\qge\npc.cpp
+1433458978 source:c:\c++\qge\npc.cpp
 	"npc.h"
 	"datatables.h"
 
 1412084862 source:c:\c++\qge\orientation.cpp
 	"orientation.h"
 
-1432301759 source:c:\c++\qge\playstate.cpp
+1433458968 source:c:\c++\qge\playstate.cpp
 	"playstate.h"
 
 1431472332 source:c:\c++\qge\projectile.cpp
@@ -994,18 +994,26 @@
 1431472244 source:c:\c++\qge\weapon.cpp
 	"weapon.h"
 
-1432410203 source:c:\c++\qge\menustate.cpp
+1432766813 source:c:\c++\qge\menustate.cpp
 	"menustate.h"
 	"introstate.h"
 	"highscorestate.h"
+	"optionstate.h"
 	<iostream>
 
 1432410184 source:c:\c++\qge\gui.cpp
 	"gui.h"
 
-1432410271 c:\c++\qge\mainmenu.h
+1432733412 c:\c++\qge\mainmenu.h
 	"gui.h"
 
-1432410266 source:c:\c++\qge\mainmenu.cpp
+1432766944 source:c:\c++\qge\mainmenu.cpp
 	"mainmenu.h"
+
+1432734385 source:c:\c++\qge\optionstate.cpp
+	"optionstate.h"
+	<iostream>
+
+1432734248 c:\c++\qge\optionstate.h
+	"gamestate.h"
 

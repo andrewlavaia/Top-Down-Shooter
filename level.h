@@ -33,6 +33,7 @@ public:
   const sf::Vector2f                          getBounds() const { return bounds; }
 
   MapManager                                   mp;
+  sf::Sprite                                   background;
   std::vector<std::shared_ptr<AnimatedEntity>> entities;
   std::vector<std::shared_ptr<AnimatedEntity>> exits;
 

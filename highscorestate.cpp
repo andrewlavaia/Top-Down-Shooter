@@ -5,7 +5,7 @@
 
 CHighScoreState CHighScoreState::HighScoreState;
 
-void CHighScoreState::Init()
+void CHighScoreState::Init(CGameEngine* game)
 {
   std::cout << "High Score State started." << std::endl;
 }
@@ -54,5 +54,6 @@ void CHighScoreState::Update(CGameEngine* game)
 
 void CHighScoreState::Draw(CGameEngine* game, double interpolation)
 {
-
+  game->window.clear();
+  game->window.display();
 }

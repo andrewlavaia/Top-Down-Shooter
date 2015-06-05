@@ -83,6 +83,8 @@
 		<Unit filename="menustate.h" />
 		<Unit filename="npc.cpp" />
 		<Unit filename="npc.h" />
+		<Unit filename="optionstate.cpp" />
+		<Unit filename="optionstate.h" />
 		<Unit filename="orientation.cpp" />
 		<Unit filename="orientation.h" />
 		<Unit filename="playstate.cpp" />
