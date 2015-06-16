@@ -34,8 +34,9 @@ Weapon::Weapon(Type t, const ResourceHolder<Animation, Animations::ID>& animatio
   //animatedSprite.setFrameTime(sf::seconds(0.16));
   animatedSprite.setColor(data.WeaponTable[t].color);
 
-  double scale_factor = 0.50;
-  animatedSprite.setScale(scale_factor,scale_factor);
+  animatedSprite.setScale( getScaleFactor(), getScaleFactor() );
+  animatedSprite.setRotation( 90 );
+  hitbox.setRotation( 90 );
 }
 
 

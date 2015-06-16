@@ -31,7 +31,9 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, co
   animatedSprite.setLooped(false);
   animatedSprite.setFrameTime(sf::seconds(0.10));
   animatedSprite.setColor(data.NPCTable[t].color);
-  animatedSprite.setScale(1,1);
+
+  setScaleFactor(2);
+  animatedSprite.setScale( getScaleFactor(), getScaleFactor() );
 
   // set AI
   switch(type)
@@ -69,15 +71,24 @@ void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
       break;
 
     case AnimatedEntity::WeaponType :
-      if(a.getStatus() == AnimatedEntity::AttackingPrimary || a.getStatus() == AnimatedEntity::AttackingSecondary)
+      if( a.getStatus() != AnimatedEntity::Idle ) // weapons on ground should not hurt
       {
-        TakeDamage(a.getPower());
+        AddDirectionOppo(10);
+        setStatus( AnimatedEntity::Attacked );
+        playAnimation();
+
+        TakeDamage( a.getPower() ); // should be last function call as it determines death
         std::cout<<getHP()<<std::endl;
       }
       break;
 
     case AnimatedEntity::ProjectileType :
-      TakeDamage(a.getPower());
+      AddDirectionOppo(10);
+      setStatus( AnimatedEntity::Attacked );
+      playAnimation();
+
+      TakeDamage( a.getPower() ); // should be last function call as it determines death
+
       std::cout<<getHP()<<std::endl;
       break;
 
@@ -113,7 +124,6 @@ void NPC::playAnimation()
 
     case AnimatedEntity::Die :
       animatedSprite.play(dieAnimation);
-      animatedSprite.setLooped(false);
       break;
 
     case AnimatedEntity::Dead :

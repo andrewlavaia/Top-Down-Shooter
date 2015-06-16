@@ -46,7 +46,8 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
       CreateWeapon(Weapon::SMG, 200, 100);
       CreateWeapon(Weapon::Pole, 400, 400);
       CreateWeapon(Weapon::Pole, 200, 200);
-      CreateWeapon(Weapon::Shotgun, 0, 0);
+      CreateWeapon(Weapon::Shotgun, 500, 300);
+      CreateWeapon(Weapon::Rifle, 300, 300);
       CreateWeapon(Weapon::Pistol, 700,700);
       CreateWeapon(Weapon::RocketLauncher, 500,500);
 

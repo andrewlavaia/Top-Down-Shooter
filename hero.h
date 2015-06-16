@@ -42,7 +42,6 @@ public:
   void                          Drop();
   void                          Throw();
   std::shared_ptr<Weapon>       getWeapon();
-  void                          restoreDefaultState();
 
 private:
   Hero(const Hero&);              // Disallow copy constructor

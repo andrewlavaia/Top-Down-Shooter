@@ -19,7 +19,8 @@ public:
     TypeCount
   };
 
-  explicit Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x = 0, double y = 0, Orientation::Type o = Orientation::N);
+  explicit Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data,
+                      double x = 0, double y = 0, Orientation::Type o = Orientation::N, double degrees = 0);
 
   virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
   virtual void playAnimation();
@@ -30,6 +31,7 @@ public:
 private:
   Type type;
   Orientation::Type orientation;
+  double rotation;
   const Animation& moveAnimation;
   const Animation& dieAnimation;
   unsigned range;

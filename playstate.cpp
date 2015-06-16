@@ -52,7 +52,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
   // Keyboard Events
   // -----------------
 
-  // Movement
+  // Hero Movement
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A))
   {
     hero->MoveOneUnit(Orientation::NW, hero->getSpeed());
@@ -108,6 +108,19 @@ void CPlayState::HandleEvents(CGameEngine* game)
     hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
+
+  // Weapon Rotation
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
+  {
+    hero->getWeapon()->animatedSprite.rotate( 3 );
+    hero->getWeapon()->hitbox.rotate( 3 );
+  }
+  else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) )
+  {
+    hero->getWeapon()->animatedSprite.rotate( -3 );
+    hero->getWeapon()->hitbox.rotate( -3 );
+  }
+
 
   // Pickup NPC or Weapon
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::O))
@@ -373,16 +386,25 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
-    window.draw((*it)->hitbox);
+    //window.draw((*it)->hitbox);
   }
 
   // -------------
-  // Draw Hero - drawn last so that it is shown on top of everything
+  // Draw Hero
   // -------------
-  hero->animatedSprite.update(game->frameTime);
-  hero->MoveAnimatedSprite(interpolation);
-  window.draw(hero->animatedSprite);
+  // drawn last so that Hero is shown on top of everything
+  hero->animatedSprite.update( game->frameTime );
+  hero->MoveAnimatedSprite( interpolation );
+  window.draw( hero->animatedSprite );
   //window.draw(hero->hitbox); // DEBUG only
+
+  // draw weapon in front of hero only when weapon is not pointing towards top of screen
+  if( hero->getWeapon()->animatedSprite.getRotation() > 60
+     && hero->getWeapon()->animatedSprite.getRotation() < 300 )
+  {
+    window.draw( hero->getWeapon()->animatedSprite );
+  }
+
 
 
   // ---------------

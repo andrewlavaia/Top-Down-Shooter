@@ -61,7 +61,7 @@ void ResourceHolder<Resource, Identifier>::load( Identifier id, const sf::Textur
   assert( rowCount > 0 && colCount > 0 && spriteVec.size() > 0 );
   for( auto it = spriteVec.begin(); it != spriteVec.end(); ++it )
   {
-    assert( *it < rowCount * colCount );
+    assert( *it <= rowCount * colCount );
   }
   try
   {

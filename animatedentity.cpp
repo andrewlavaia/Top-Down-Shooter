@@ -2,18 +2,19 @@
 #include "animatedentity.h"
 
 
-AnimatedEntity::AnimatedEntity(ParentType pType)
-  : parentType(pType),
-    hitpoints(10.0),
-    speed(1.0),
-    power(1.0),
-    status(AnimatedEntity::Idle),
-    distance_travelled(0)
+AnimatedEntity::AnimatedEntity( ParentType pType )
+  : parentType( pType ),
+    hitpoints( 10.0 ),
+    speed( 1.0 ),
+    power( 1.0 ),
+    status( AnimatedEntity::Idle ),
+    distance_travelled( 0 ),
+    scaleFactor( 1.0 )
 {
   directions.clear();
   directions_it = directions.begin();
-  animatedSprite.setLooped(false);
-  setOrientation(Orientation::S);
+  animatedSprite.setLooped( false );
+  setOrientation( Orientation::S );
 }
 
 void AnimatedEntity::MoveAnimatedSprite(double interpolation)
@@ -24,10 +25,10 @@ void AnimatedEntity::MoveAnimatedSprite(double interpolation)
   hitbox.setPosition(animatedSprite.getPosition().x, animatedSprite.getPosition().y);
 }
 
-void AnimatedEntity::AddDirection(Orientation::Type orientation_type, double distance, double speed, bool rpt)
+void AnimatedEntity::AddDirection(Orientation::Type orientation_type, double distance, double speed, bool rpt, double degrees)
 {
-  directions_it = directions.insert(directions_it,
-                                     Direction(orientation_type,distance,speed,rpt));
+  directions_it = directions.insert( directions_it,
+                                     Direction( orientation_type, distance, speed, rpt, degrees ) );
   distance_travelled = 0;
 }
 
@@ -40,14 +41,14 @@ void AnimatedEntity::Move()
 {
   //random number generator : rand()%(max-min+1) + min
   //std::cout<<obj.position.x << std::endl;
-  if(directions.empty())
+  if( directions.empty() )
   {
-      if( !isDead() )
-      {
-        setStatus( AnimatedEntity::Idle );
-        playAnimation();
-      }
-      return;
+    if( !isDead() )
+    {
+      setStatus( AnimatedEntity::Idle );
+      playAnimation();
+    }
+    return;
   }
 
   // Check if object has travelled further than distance set in current Direction object
@@ -74,40 +75,103 @@ void AnimatedEntity::Move()
     }
   }
 
-  MoveOneUnit(directions_it->getType(), directions_it->getSpeed());
-
-  // update distance travelled
-  if ( directions_it->getType() == Orientation::NW ||
-       directions_it->getType() == Orientation::NE ||
-       directions_it->getType() == Orientation::SW ||
-       directions_it->getType() == Orientation::SE)
-  {
-    // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
-    double hypotenuse = sqrt(directions_it->getSpeed() * directions_it->getSpeed() + directions_it->getSpeed() * directions_it->getSpeed());
-    distance_travelled += hypotenuse;
-  }
+  if( parentType == ProjectileType )
+    MoveOneUnit( directions_it->getRotation(), directions_it->getSpeed() );
   else
   {
-    distance_travelled += directions_it->getSpeed();
+    MoveOneUnit( directions_it->getType(), directions_it->getSpeed() );
+
+     // update distance travelled
+    if ( directions_it->getType() == Orientation::NW ||
+         directions_it->getType() == Orientation::NE ||
+         directions_it->getType() == Orientation::SW ||
+         directions_it->getType() == Orientation::SE)
+    {
+      // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
+      double hypotenuse = sqrt( directions_it->getSpeed() * directions_it->getSpeed()
+                                + directions_it->getSpeed() * directions_it->getSpeed() );
+      distance_travelled += hypotenuse;
+    }
+    else
+    {
+      distance_travelled += directions_it->getSpeed();
+    }
   }
 
 }
 
+void AnimatedEntity::MoveOneUnit(double rotation, double speed)
+{
+  playAnimation();
+
+  // Projectiles align with current rotation when fired
+  if( getParentType() == AnimatedEntity::ProjectileType )
+  {
+    animatedSprite.setRotation( rotation );
+  }
+
+  int x_remainder; // int because modulus operator does not work on double
+  double x;
+  double y;
+
+  // calculate horizontal factor
+  if( rotation < 90.0 )
+  {
+    x_remainder = (int)rotation % 91;
+    x = x_remainder / 90.0;
+  }
+  else if(rotation > 270.0 )
+  {
+    x_remainder = ( (int)rotation - 360 ) % 91;
+    x = x_remainder / 90.0;
+  }
+  else
+  {
+    x_remainder = ( (int)rotation - 180 ) % 91;
+    x = -1 * x_remainder / 90.0;
+  }
+
+  // calculate vertical factor
+  y = 1 - std::abs( x );
+  if( rotation < 90.0 || rotation > 270.0 )
+  {
+    y = y*-1;
+  }
+
+  // calculate total distance using pythagorean's theorem and
+  // apply to factors to determine movement
+  double hypotenuse;
+  double x_movement;
+  double y_movement;
+
+  hypotenuse = 1/std::sqrt( ( x * x ) + ( y * y ) );
+  x_movement = hypotenuse * x;
+  y_movement = hypotenuse * y;
+
+  /*
+  std::cout<<x<<", "<<y<<std::endl;
+  std::cout<<"hypotenuse: "<<hypotenuse<<std::endl;
+  std::cout<<"move coords: "<<x_movement<<", "<<y_movement<<std::endl;
+  */
+
+  // Move entity
+  position.x += ( speed * x_movement );
+  position.y += ( speed * y_movement );
+
+  distance_travelled += hypotenuse;
+
+}
 
 void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 {
   playAnimation();
-  setOrientation(o);
+  setOrientation( o );
 
-  // Rotate Weapons and Projectiles to align with orientation
-  if(rotation)
+  // Rotate Weapons and Projectiles to align with orientation when thrown or fired
+  if( getParentType() == AnimatedEntity::WeaponType
+     || getParentType() == AnimatedEntity::ProjectileType )
   {
-    if( getParentType() == AnimatedEntity::WeaponType
-       || getParentType() == AnimatedEntity::ProjectileType )
-    {
-      animatedSprite.setRotation(getOrientation().getRotation());
-    }
-
+    animatedSprite.setRotation( getOrientation().getRotation() );
   }
 
   // use pythagorean's theorem to calculate distance when heading NE, NW, SE, or SW
@@ -126,56 +190,69 @@ void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 
     case Orientation::E :
       position.x += spd;
-      if( getParentType() == AnimatedEntity::HeroType
-        || getParentType() == AnimatedEntity::NPCType )
-        animatedSprite.setScale(1,1); // restore sprite
+      if( ( getParentType() == AnimatedEntity::HeroType || getParentType() == AnimatedEntity::NPCType )
+          && getStatus() != AnimatedEntity::Attacked )
+      {
+        animatedSprite.setScale( getScaleFactor(), getScaleFactor() ); // restore sprite
+      }
       break;
 
     case Orientation::W :
       position.x -= spd;
-      if ( getParentType() == AnimatedEntity::HeroType
-         || getParentType() == AnimatedEntity::NPCType )
-        animatedSprite.setScale(-1,1); // flip sprite horizontally
+      if( ( getParentType() == AnimatedEntity::HeroType || getParentType() == AnimatedEntity::NPCType )
+          && getStatus() != AnimatedEntity::Attacked )
+      {
+        animatedSprite.setScale( -1 * getScaleFactor(), getScaleFactor() ); // flip sprite horizontally
+      }
       break;
 
     case Orientation::NW :
       position.x -= hypotenuse/2;
       position.y -= hypotenuse/2;
-       if( getParentType() == AnimatedEntity::HeroType
-         || getParentType() == AnimatedEntity::NPCType )
-        animatedSprite.setScale(-1,1); // flip sprite horizontally
+      if( ( getParentType() == AnimatedEntity::HeroType || getParentType() == AnimatedEntity::NPCType )
+          && getStatus() != AnimatedEntity::Attacked )
+      {
+        animatedSprite.setScale( -1 * getScaleFactor(), getScaleFactor() ); // flip sprite horizontally
+      }
       break;
 
     case Orientation::NE :
       position.x += hypotenuse/2;
       position.y -= hypotenuse/2;
-       if( getParentType() == AnimatedEntity::HeroType
-         || getParentType() == AnimatedEntity::NPCType )
-        animatedSprite.setScale(1,1); // restore sprite
+      if( ( getParentType() == AnimatedEntity::HeroType || getParentType() == AnimatedEntity::NPCType )
+          && getStatus() != AnimatedEntity::Attacked )
+      {
+        animatedSprite.setScale( getScaleFactor(), getScaleFactor() ); // restore sprite
+      }
       break;
 
     case Orientation::SW :
       position.x -= hypotenuse/2;
       position.y += hypotenuse/2;
-      if( getParentType() == AnimatedEntity::HeroType
-         || getParentType() == AnimatedEntity::NPCType )
-        animatedSprite.setScale(-1,1); // flip sprite horizontally
+      if( ( getParentType() == AnimatedEntity::HeroType || getParentType() == AnimatedEntity::NPCType )
+          && getStatus() != AnimatedEntity::Attacked )
+      {
+        animatedSprite.setScale( -1 * getScaleFactor(), getScaleFactor() ); // flip sprite horizontally
+      }
+
       break;
 
     case Orientation::SE :
       position.x += hypotenuse/2;
       position.y += hypotenuse/2;
-      if( getParentType() == AnimatedEntity::HeroType
-         || getParentType() == AnimatedEntity::NPCType )
-        animatedSprite.setScale(1,1); // restore sprite
+      if( ( getParentType() == AnimatedEntity::HeroType || getParentType() == AnimatedEntity::NPCType )
+          && getStatus() != AnimatedEntity::Attacked )
+      {
+        animatedSprite.setScale( getScaleFactor(), getScaleFactor() ); // restore sprite
+      }
+
       break;
   }
 }
 
-
-bool AnimatedEntity::checkCollision(const AnimatedEntity& a) const
+bool AnimatedEntity::checkCollision( const AnimatedEntity& a ) const
 {
-  if(!isDead() && !a.isDead() && Collision::BoundingBoxTest(hitbox, a.hitbox))
+  if( !isDead() && !a.isDead() && Collision::BoundingBoxTest( hitbox, a.hitbox ) )
     return true;
   else
     return false;
@@ -183,13 +260,13 @@ bool AnimatedEntity::checkCollision(const AnimatedEntity& a) const
 
 bool AnimatedEntity::isDead() const
 {
-  if(getStatus() == AnimatedEntity::Dead || getStatus() == AnimatedEntity::Die)
+  if( getStatus() == AnimatedEntity::Dead || getStatus() == AnimatedEntity::Die )
     return true;
   else
     return false;
 }
 
-Orientation::Type AnimatedEntity::getRelativeOrientation(const AnimatedEntity& entity) const
+Orientation::Type AnimatedEntity::getRelativeOrientation( const AnimatedEntity& entity ) const
 {
   double dist_x = position.x - entity.position.x;
   double dist_y = position.y - entity.position.y;
@@ -246,14 +323,14 @@ bool AnimatedEntity::checkDistance(double distance, const AnimatedEntity& entity
 
 void AnimatedEntity::Destroy()
 {
-  if(isDead())
+  if( isDead() )
     return;
 
   directions.clear();
   directions_it = directions.begin();
 
-  setStatus(AnimatedEntity::Die);
-  animatedSprite.setLooped(false);
+  setStatus( AnimatedEntity::Die );
+  animatedSprite.setLooped( false );
   playAnimation();
 
 }

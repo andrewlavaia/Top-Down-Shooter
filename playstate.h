@@ -79,6 +79,9 @@ protected:
     textures.load(Textures::Hero_Kick, "hero_kick.png");
     textures.load(Textures::NPC_Texture, "zombie.png");
     textures.load(Textures::Pistol, "pistol_texture2.png");
+    textures.load(Textures::Rifle, "textures/rifle.png");
+    textures.load(Textures::Shotgun, "textures/shotgun.png");
+    textures.load(Textures::SMG, "textures/smg.png");
     textures.load(Textures::Bullet, "bullet.png");
     textures.load(Textures::Grass, "grass.jpg");
     textures.load(Textures::Dungeon, "dungeon.png");
@@ -94,17 +97,39 @@ protected:
     animations.load( Animations::Human_1_Die, textures.get( Textures::Human_1_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
     animations.load( Animations::Human_1_Dead, textures.get( Textures::Human_1_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
 
+    animations.load( Animations::Human_2_Idle, textures.get( Textures::Human_2_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_2_Walk, textures.get( Textures::Human_2_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_2_Run, textures.get( Textures::Human_2_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_2_Grab, textures.get( Textures::Human_2_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_2_Attacked, textures.get( Textures::Human_2_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_2_Die, textures.get( Textures::Human_2_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_2_Dead, textures.get( Textures::Human_2_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+    animations.load( Animations::Human_3_Idle, textures.get( Textures::Human_3_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_3_Walk, textures.get( Textures::Human_3_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_3_Run, textures.get( Textures::Human_3_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_3_Grab, textures.get( Textures::Human_3_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_3_Attacked, textures.get( Textures::Human_3_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_3_Die, textures.get( Textures::Human_3_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_3_Dead, textures.get( Textures::Human_3_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+/*
     animations.load( Animations::Hero_Idle, textures.get( Textures::Human_1_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
-    animations.load(Animations::Hero_Walk, textures.get(Textures::Hero_Walk), 20, 20, 8);
+    animations.load( Animations::Hero_Walk, textures.get(Textures::Hero_Walk), 20, 20, 8);
     animations.load(Animations::Hero_Run, textures.get(Textures::Hero_Run), 20, 20, 6);
     animations.load(Animations::Hero_Attacked, textures.get(Textures::Hero_Attacked), 20, 20, 4);
     animations.load(Animations::Hero_Die, textures.get(Textures::Hero_Die), 20, 20, 6);
     animations.load(Animations::Hero_Dead, textures.get(Textures::Hero_Dead), 20, 20, 1);
     animations.load(Animations::Hero_Grab, textures.get(Textures::Hero_Grab), 388, 319, 6);
+*/
     animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
     animations.load(Animations::Hero_Kick, textures.get(Textures::Hero_Kick), 385, 371, 6);
-    animations.load(Animations::NPC_Run, textures.get(Textures::NPC_Texture), 49, 50, 8);
+
+    //animations.load(Animations::NPC_Run, textures.get(Textures::NPC_Texture), 49, 50, 8);
     animations.load(Animations::Pistol, textures.get(Textures::Pistol), 48, 48, 1);
+    animations.load(Animations::Rifle, textures.get(Textures::Rifle), 11, 31, 1);
+    animations.load(Animations::Shotgun, textures.get(Textures::Shotgun), 13, 27, 1);
+    animations.load(Animations::SMG, textures.get(Textures::SMG), 12, 25, 1);
     animations.load(Animations::Bullet, textures.get(Textures::Bullet), 10, 10, 1);
     animations.load(Animations::Grass, textures.get(Textures::Grass), 1024, 1024, 1);
 

@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1433337939 source:c:\c++\qge\animatedentity.cpp
+1434411975 source:c:\c++\qge\animatedentity.cpp
 	"animatedentity.h"
 
-1431524286 c:\c++\qge\animatedentity.h
+1434375749 c:\c++\qge\animatedentity.h
 	<typeinfo>
 	<SFML/Graphics.hpp>
 	"animatedsprite.h"
@@ -361,12 +361,14 @@
 	<SFML/Graphics/Rect.hpp>
 	<SFML/Graphics/Texture.hpp>
 
-1421294448 c:\c++\qge\direction.h
+1434376488 c:\c++\qge\direction.h
 	"orientation.h"
+	<cassert>
+	<iostream>
 
 1412084798 c:\c++\qge\orientation.h
 
-1433460360 c:\c++\qge\resourceholder.h
+1433893946 c:\c++\qge\resourceholder.h
 	<map>
 	<string>
 	<memory>
@@ -376,7 +378,7 @@
 	"animation.h"
 	"resourceholder.inl"
 
-1433425340 c:\c++\qge\resourceholder.inl
+1433772089 c:\c++\qge\resourceholder.inl
 
 1404881241 c:\c++\qge\collision.h
 	"animatedsprite.h"
@@ -404,7 +406,7 @@
 	"collidable.h"
 	"projectile.h"
 
-1431609974 c:\c++\qge\hero.h
+1433943811 c:\c++\qge\hero.h
 	<iostream>
 	<SFML/Graphics.hpp>
 	<SFML/System/Time.hpp>
@@ -423,11 +425,11 @@
 	<SFML/Graphics.hpp>
 	"animation.h"
 
-1431386395 c:\c++\qge\projectile.h
+1434149802 c:\c++\qge\projectile.h
 	"animatedentity.h"
 	"orientation.h"
 
-1431471822 c:\c++\qge\npc.h
+1433856203 c:\c++\qge\npc.h
 	<iostream>
 	<SFML/Graphics.hpp>
 	"animatedentity.h"
@@ -435,7 +437,7 @@
 	"animatedsprite.h"
 	"direction.h"
 
-1431471584 c:\c++\qge\weapon.h
+1434409635 c:\c++\qge\weapon.h
 	<SFML/Graphics.hpp>
 	"animatedentity.h"
 	"direction.h"
@@ -449,7 +451,7 @@
 	<map>
 	"collision.h"
 
-1433288475 source:c:\c++\qge\datatables.cpp
+1434410271 source:c:\c++\qge\datatables.cpp
 	"datatables.h"
 
 1432682009 source:c:\c++\qge\gameengine.cpp
@@ -543,7 +545,7 @@
 1432681848 c:\c++\qge\gamestate.h
 	"gameengine.h"
 
-1433287893 source:c:\c++\qge\hero.cpp
+1434409733 source:c:\c++\qge\hero.cpp
 	"hero.h"
 	"npc.h"
 	"weapon.h"
@@ -563,7 +565,7 @@
 1432681950 c:\c++\qge\introstate.h
 	"gamestate.h"
 
-1433460652 c:\c++\qge\playstate.h
+1433942799 c:\c++\qge\playstate.h
 	"gamestate.h"
 	<vector>
 	<memory>
@@ -618,7 +620,7 @@
 	"collidable.h"
 	"projectile.h"
 
-1433201899 source:c:\c++\qge\level.cpp
+1433857641 source:c:\c++\qge\level.cpp
 	"level.h"
 
 1432393468 source:c:\c++\qge\main.cpp
@@ -977,21 +979,21 @@
 1406336136 source:c:\c++\qge\mapmanager.cpp
 	"mapmanager.h"
 
-1433458978 source:c:\c++\qge\npc.cpp
+1434411754 source:c:\c++\qge\npc.cpp
 	"npc.h"
 	"datatables.h"
 
 1412084862 source:c:\c++\qge\orientation.cpp
 	"orientation.h"
 
-1433458968 source:c:\c++\qge\playstate.cpp
+1434410448 source:c:\c++\qge\playstate.cpp
 	"playstate.h"
 
-1431472332 source:c:\c++\qge\projectile.cpp
+1434375671 source:c:\c++\qge\projectile.cpp
 	"projectile.h"
 	"datatables.h"
 
-1431472244 source:c:\c++\qge\weapon.cpp
+1433942986 source:c:\c++\qge\weapon.cpp
 	"weapon.h"
 
 1432766813 source:c:\c++\qge\menustate.cpp

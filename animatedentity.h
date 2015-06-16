@@ -46,8 +46,9 @@ class AnimatedEntity
 
     void                                    Move();
     void                                    MoveOneUnit(Orientation::Type o, double speed, bool rotation = true);
+    void                                    MoveOneUnit(double rotation, double speed);
     void                                    MoveAnimatedSprite(double interpolation);
-    void                                    AddDirection(Orientation::Type orientation_type, double distance, double speed, bool rpt = false);
+    void                                    AddDirection(Orientation::Type orientation_type, double distance, double speed, bool rpt = false, double degrees = 0);
     void                                    AddDirectionOppo(double d);
 
     bool                                    checkCollision(const AnimatedEntity& a) const;
@@ -64,6 +65,7 @@ class AnimatedEntity
     double                                  getPower() const { return power; }
     Status                                  getStatus() const { return status; }
     ParentType                              getParentType() const { return parentType; }
+    double                                  getScaleFactor() const { return scaleFactor; }
 
     sf::Vector2f                            position;
     AnimatedSprite                          animatedSprite;
@@ -78,6 +80,7 @@ class AnimatedEntity
     void                                    setHitPoints(double h) { hitpoints = h; }
     void                                    setSpeed(double s) { speed = s; }
     void                                    setPower(double p) { power = p; }
+    void                                    setScaleFactor(unsigned s) { scaleFactor = s; }
 
   private:
     void                                    setOrientation(Orientation::Type t) { orientation.setType(t); }
@@ -91,6 +94,7 @@ class AnimatedEntity
     std::vector<Direction>                  directions;
     std::vector<Direction>::iterator        directions_it;
     double                                  distance_travelled;
+    double                                  scaleFactor;
 };
 
 #endif
