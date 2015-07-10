@@ -19,9 +19,8 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, co
 
   position.x = x;
   position.y = y;
-
   animatedSprite.setPosition(position.x, position.y);
-  animatedSprite.setOrigin(15,15);
+
   setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(),
           data.NPCTable[t].hitboxDimensions.x,
           data.NPCTable[t].hitboxDimensions.y);
@@ -38,7 +37,7 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, co
   // set AI
   switch(type)
   {
-    case NPC::Goomba :
+    case NPC::McGinger :
       AddDirection(Orientation::S, 100, getSpeed(), false);
       //AddDirection(Orientation::NW, 100, getSpeed(), true);
       //AddDirection(Orientation::NE, 50, getSpeed(), true);
@@ -46,12 +45,15 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, co
 
       break;
 
-    case NPC::Chumba :
+    case NPC::BigRick :
       AddDirection(Orientation::S,  100, getSpeed(), true);
       AddDirection(Orientation::E,  100, getSpeed(), true);
       AddDirection(Orientation::NW, 100, getSpeed(), true);
       //AddDirection(Orientation::SW, 50, getSpeed(), true);
+      break;
 
+    default :
+      // do nothing
       break;
   }
 
@@ -59,7 +61,7 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, co
 
 void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 {
-  if(!checkCollision(a))
+  if( !checkCollision( a ) )
     return;
 
   switch(a.getParentType())
@@ -73,7 +75,7 @@ void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
     case AnimatedEntity::WeaponType :
       if( a.getStatus() != AnimatedEntity::Idle ) // weapons on ground should not hurt
       {
-        AddDirectionOppo(10);
+        AddDirectionOppo( 10 );
         setStatus( AnimatedEntity::Attacked );
         playAnimation();
 
@@ -83,7 +85,7 @@ void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
       break;
 
     case AnimatedEntity::ProjectileType :
-      AddDirectionOppo(10);
+      AddDirection( a.getOrientation().getType(), 10, 5, false );
       setStatus( AnimatedEntity::Attacked );
       playAnimation();
 
@@ -93,42 +95,80 @@ void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
       break;
 
     case AnimatedEntity::CollidableType :
+      // necessary to cast because AnimatedEntity cannot otherwise determine its sub-type
+      const Collidable& b = dynamic_cast<const Collidable&>(a);
+      switch( b.getType() )
+      {
+        case Collidable::Exit :
+          setStatus( AnimatedEntity::Exited );
+          playAnimation();
+          std::cout<<"Exit reached."<<std::endl;
+          break;
+
+        case Collidable::Boundary :
+          AddDirectionOppo( 20 );
+          //setOrientation( getOrientation().getOppo() );
+          //setStatus( AnimatedEntity::Moving );
+          //MoveOneUnit( getOrientation().getOppo(), getSpeed() );
+          break;
+
+        case Collidable::SheepPen :
+          if( getStatus() != AnimatedEntity::Captured )
+          {
+            clearDirections();
+            setStatus( AnimatedEntity::Captured );
+            AddDirection( Orientation::N, 10, getSpeed()/2, true );
+            AddDirection( Orientation::E, 10, getSpeed()/2, true );
+            AddDirection( Orientation::S, 10, getSpeed()/2, true );
+            AddDirection( Orientation::W, 10, getSpeed()/2, true );
+            AddDirection( getOrientation().getType(), 15, getSpeed(), false ); // moves last direction added gets looked at first
+          }
+
+          //std::cout<<"NPC captured in pen."<<std::endl;
+          break;
+
+        default :
+          break;
+      }
       break;
   }
 }
 
 void NPC::playAnimation()
 {
-
-  switch(getStatus())
+  switch( getStatus() )
   {
     case AnimatedEntity::Idle :
-      animatedSprite.play(idleAnimation); // or animatedSprite.stop() to revert back to first frame
+      animatedSprite.play( idleAnimation ); // or animatedSprite.stop() to revert back to first frame
       break;
 
     case AnimatedEntity::Moving :
-      animatedSprite.play(moveAnimation);
+      animatedSprite.play( moveAnimation );
       break;
 
     case AnimatedEntity::Attacked :
-      animatedSprite.play(attackedAnimation);
+      animatedSprite.play( attackedAnimation );
       break;
 
     case AnimatedEntity::Grabbed :
-      animatedSprite.play(grabbedAnimation);
+      animatedSprite.play( grabbedAnimation );
       break;
 
     case AnimatedEntity::Thrown :
-      animatedSprite.play(thrownAnimation);
+      animatedSprite.play( thrownAnimation );
       break;
 
     case AnimatedEntity::Die :
-      animatedSprite.play(dieAnimation);
+      animatedSprite.play( dieAnimation );
       break;
 
     case AnimatedEntity::Dead :
-      animatedSprite.play(deadAnimation);
-      animatedSprite.setLooped(true);
+      animatedSprite.play( deadAnimation );
+      animatedSprite.setLooped( true );
+      break;
+
+    case AnimatedEntity::Captured :
+      animatedSprite.play( moveAnimation );
       break;
 
     default :

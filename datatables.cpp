@@ -26,13 +26,47 @@ std::vector<HeroData> DataTable::initializeHeroData()
   data[Hero::Bob].attackedAnimationID = Animations::Human_1_Attacked;
   data[Hero::Bob].grabAnimationID = Animations::Human_1_Grab;
   data[Hero::Bob].punchAnimationID = Animations::Hero_Punch;
-  data[Hero::Bob].origin = sf::Vector2u(30,30);
   data[Hero::Bob].hitboxDimensions = sf::Vector2u(35,35);
   data[Hero::Bob].color = sf::Color::White;
 
-  data[Hero::Joe] = data[Hero::Bob];
-  data[Hero::Joe].color = sf::Color::Red;
+  data[Hero::SuitDrew].hitpoints = 10;
+  data[Hero::SuitDrew].speed = 10;
+  data[Hero::SuitDrew].power = 1;
+  data[Hero::SuitDrew].idleAnimationID = Animations::Human_10_Idle;
+  data[Hero::SuitDrew].moveAnimationID = Animations::Human_10_Run;
+  data[Hero::SuitDrew].dieAnimationID = Animations::Human_10_Die;
+  data[Hero::SuitDrew].deadAnimationID = Animations::Human_10_Dead;
+  data[Hero::SuitDrew].attackedAnimationID = Animations::Human_10_Attacked;
+  data[Hero::SuitDrew].grabAnimationID = Animations::Human_10_Grab;
+  data[Hero::SuitDrew].punchAnimationID = Animations::Hero_Punch;
+  data[Hero::SuitDrew].hitboxDimensions = sf::Vector2u(35,35);
+  data[Hero::SuitDrew].color = sf::Color::White;
 
+  data[Hero::GeezerHarry].hitpoints = 10;
+  data[Hero::GeezerHarry].speed = 10;
+  data[Hero::GeezerHarry].power = 1;
+  data[Hero::GeezerHarry].idleAnimationID = Animations::Human_11_Idle;
+  data[Hero::GeezerHarry].moveAnimationID = Animations::Human_11_Run;
+  data[Hero::GeezerHarry].dieAnimationID = Animations::Human_11_Die;
+  data[Hero::GeezerHarry].deadAnimationID = Animations::Human_11_Dead;
+  data[Hero::GeezerHarry].attackedAnimationID = Animations::Human_11_Attacked;
+  data[Hero::GeezerHarry].grabAnimationID = Animations::Human_11_Grab;
+  data[Hero::GeezerHarry].punchAnimationID = Animations::Hero_Punch;
+  data[Hero::GeezerHarry].hitboxDimensions = sf::Vector2u(35,35);
+  data[Hero::GeezerHarry].color = sf::Color::White;
+
+  data[Hero::DirtyPete].hitpoints = 10;
+  data[Hero::DirtyPete].speed = 10;
+  data[Hero::DirtyPete].power = 1;
+  data[Hero::DirtyPete].idleAnimationID = Animations::Human_12_Idle;
+  data[Hero::DirtyPete].moveAnimationID = Animations::Human_12_Run;
+  data[Hero::DirtyPete].dieAnimationID = Animations::Human_12_Die;
+  data[Hero::DirtyPete].deadAnimationID = Animations::Human_12_Dead;
+  data[Hero::DirtyPete].attackedAnimationID = Animations::Human_12_Attacked;
+  data[Hero::DirtyPete].grabAnimationID = Animations::Human_12_Grab;
+  data[Hero::DirtyPete].punchAnimationID = Animations::Hero_Punch;
+  data[Hero::DirtyPete].hitboxDimensions = sf::Vector2u(35,35);
+  data[Hero::DirtyPete].color = sf::Color::White;
 
   return data;
 
@@ -42,33 +76,122 @@ std::vector<NPCData> DataTable::initializeNPCData()
 {
   std::vector<NPCData> data(NPC::TypeCount);
 
-  data[NPC::Chumba].hitpoints = 10;
-  data[NPC::Chumba].speed = 1;
-  data[NPC::Chumba].power = 1;
-  data[NPC::Chumba].idleAnimationID = Animations::Human_2_Idle;
-  data[NPC::Chumba].moveAnimationID = Animations::Human_2_Walk;
-  data[NPC::Chumba].dieAnimationID = Animations::Human_2_Die;
-  data[NPC::Chumba].deadAnimationID = Animations::Human_2_Dead;
-  data[NPC::Chumba].attackedAnimationID = Animations::Human_2_Attacked;
-  data[NPC::Chumba].grabbedAnimationID = Animations::Human_2_Idle;
-  data[NPC::Chumba].thrownAnimationID = Animations::Human_2_Idle;
-  data[NPC::Chumba].origin = sf::Vector2u(30,30);
-  data[NPC::Chumba].hitboxDimensions = sf::Vector2u(35,35);
-  data[NPC::Chumba].color = sf::Color::White;
+  data[NPC::McGinger].hitpoints = 10;
+  data[NPC::McGinger].speed = 1;
+  data[NPC::McGinger].power = 1;
+  data[NPC::McGinger].idleAnimationID = Animations::Human_2_Idle;
+  data[NPC::McGinger].moveAnimationID = Animations::Human_2_Walk;
+  data[NPC::McGinger].dieAnimationID = Animations::Human_2_Die;
+  data[NPC::McGinger].deadAnimationID = Animations::Human_2_Dead;
+  data[NPC::McGinger].attackedAnimationID = Animations::Human_2_Attacked;
+  data[NPC::McGinger].grabbedAnimationID = Animations::Human_2_Idle;
+  data[NPC::McGinger].thrownAnimationID = Animations::Human_2_Idle;
+  data[NPC::McGinger].hitboxDimensions = sf::Vector2u(35,35);
+  data[NPC::McGinger].color = sf::Color::White;
 
-  data[NPC::Goomba].hitpoints = 10;
-  data[NPC::Goomba].speed = 2;
-  data[NPC::Goomba].power = 1;
-  data[NPC::Goomba].idleAnimationID = Animations::Human_3_Idle;
-  data[NPC::Goomba].moveAnimationID = Animations::Human_3_Run;
-  data[NPC::Goomba].dieAnimationID = Animations::Human_3_Die;
-  data[NPC::Goomba].deadAnimationID = Animations::Human_3_Dead;
-  data[NPC::Goomba].attackedAnimationID = Animations::Human_3_Attacked;
-  data[NPC::Goomba].grabbedAnimationID = Animations::Human_3_Idle;
-  data[NPC::Goomba].thrownAnimationID = Animations::Human_3_Idle;
-  data[NPC::Goomba].origin = sf::Vector2u(30,30);
-  data[NPC::Goomba].hitboxDimensions = sf::Vector2u(35,35);
-  data[NPC::Goomba].color = sf::Color::White;
+  data[NPC::BigRick].hitpoints = 10;
+  data[NPC::BigRick].speed = 2;
+  data[NPC::BigRick].power = 1;
+  data[NPC::BigRick].idleAnimationID = Animations::Human_3_Idle;
+  data[NPC::BigRick].moveAnimationID = Animations::Human_3_Run;
+  data[NPC::BigRick].dieAnimationID = Animations::Human_3_Die;
+  data[NPC::BigRick].deadAnimationID = Animations::Human_3_Dead;
+  data[NPC::BigRick].attackedAnimationID = Animations::Human_3_Attacked;
+  data[NPC::BigRick].grabbedAnimationID = Animations::Human_3_Idle;
+  data[NPC::BigRick].thrownAnimationID = Animations::Human_3_Idle;
+  data[NPC::BigRick].hitboxDimensions = sf::Vector2u(35,35);
+  data[NPC::BigRick].color = sf::Color::White;
+
+  data[NPC::UglyAmy].hitpoints = 10;
+  data[NPC::UglyAmy].speed = 2;
+  data[NPC::UglyAmy].power = 1;
+  data[NPC::UglyAmy].idleAnimationID = Animations::Human_4_Idle;
+  data[NPC::UglyAmy].moveAnimationID = Animations::Human_4_Run;
+  data[NPC::UglyAmy].dieAnimationID = Animations::Human_4_Die;
+  data[NPC::UglyAmy].deadAnimationID = Animations::Human_4_Dead;
+  data[NPC::UglyAmy].attackedAnimationID = Animations::Human_4_Attacked;
+  data[NPC::UglyAmy].grabbedAnimationID = Animations::Human_4_Idle;
+  data[NPC::UglyAmy].thrownAnimationID = Animations::Human_4_Idle;
+  data[NPC::UglyAmy].hitboxDimensions = sf::Vector2u(35,35);
+  data[NPC::UglyAmy].color = sf::Color::White;
+
+  data[NPC::TooCoolJack].hitpoints = 10;
+  data[NPC::TooCoolJack].speed = 2;
+  data[NPC::TooCoolJack].power = 1;
+  data[NPC::TooCoolJack].idleAnimationID = Animations::Human_5_Idle;
+  data[NPC::TooCoolJack].moveAnimationID = Animations::Human_5_Run;
+  data[NPC::TooCoolJack].dieAnimationID = Animations::Human_5_Die;
+  data[NPC::TooCoolJack].deadAnimationID = Animations::Human_5_Dead;
+  data[NPC::TooCoolJack].attackedAnimationID = Animations::Human_5_Attacked;
+  data[NPC::TooCoolJack].grabbedAnimationID = Animations::Human_5_Idle;
+  data[NPC::TooCoolJack].thrownAnimationID = Animations::Human_5_Idle;
+  data[NPC::TooCoolJack].hitboxDimensions = sf::Vector2u(35,35);
+  data[NPC::TooCoolJack].color = sf::Color::White;
+
+  data[NPC::DeNiro].hitpoints = 10;
+  data[NPC::DeNiro].speed = 2;
+  data[NPC::DeNiro].power = 1;
+  data[NPC::DeNiro].idleAnimationID = Animations::Human_6_Idle;
+  data[NPC::DeNiro].moveAnimationID = Animations::Human_6_Run;
+  data[NPC::DeNiro].dieAnimationID = Animations::Human_6_Die;
+  data[NPC::DeNiro].deadAnimationID = Animations::Human_6_Dead;
+  data[NPC::DeNiro].attackedAnimationID = Animations::Human_6_Attacked;
+  data[NPC::DeNiro].grabbedAnimationID = Animations::Human_6_Idle;
+  data[NPC::DeNiro].thrownAnimationID = Animations::Human_6_Idle;
+  data[NPC::DeNiro].hitboxDimensions = sf::Vector2u(35,35);
+  data[NPC::DeNiro].color = sf::Color::White;
+
+  data[NPC::Barnaby].hitpoints = 10;
+  data[NPC::Barnaby].speed = 2;
+  data[NPC::Barnaby].power = 1;
+  data[NPC::Barnaby].idleAnimationID = Animations::Human_7_Idle;
+  data[NPC::Barnaby].moveAnimationID = Animations::Human_7_Run;
+  data[NPC::Barnaby].dieAnimationID = Animations::Human_7_Die;
+  data[NPC::Barnaby].deadAnimationID = Animations::Human_7_Dead;
+  data[NPC::Barnaby].attackedAnimationID = Animations::Human_7_Attacked;
+  data[NPC::Barnaby].grabbedAnimationID = Animations::Human_7_Idle;
+  data[NPC::Barnaby].thrownAnimationID = Animations::Human_7_Idle;
+  data[NPC::Barnaby].hitboxDimensions = sf::Vector2u(35,35);
+  data[NPC::Barnaby].color = sf::Color::White;
+
+  data[NPC::ToughSugar].hitpoints = 10;
+  data[NPC::ToughSugar].speed = 2;
+  data[NPC::ToughSugar].power = 1;
+  data[NPC::ToughSugar].idleAnimationID = Animations::Human_8_Idle;
+  data[NPC::ToughSugar].moveAnimationID = Animations::Human_8_Run;
+  data[NPC::ToughSugar].dieAnimationID = Animations::Human_8_Die;
+  data[NPC::ToughSugar].deadAnimationID = Animations::Human_8_Dead;
+  data[NPC::ToughSugar].attackedAnimationID = Animations::Human_8_Attacked;
+  data[NPC::ToughSugar].grabbedAnimationID = Animations::Human_8_Idle;
+  data[NPC::ToughSugar].thrownAnimationID = Animations::Human_8_Idle;
+  data[NPC::ToughSugar].hitboxDimensions = sf::Vector2u(35,35);
+  data[NPC::ToughSugar].color = sf::Color::White;
+
+  data[NPC::AmbiguousAlex].hitpoints = 10;
+  data[NPC::AmbiguousAlex].speed = 2;
+  data[NPC::AmbiguousAlex].power = 1;
+  data[NPC::AmbiguousAlex].idleAnimationID = Animations::Human_9_Idle;
+  data[NPC::AmbiguousAlex].moveAnimationID = Animations::Human_9_Run;
+  data[NPC::AmbiguousAlex].dieAnimationID = Animations::Human_9_Die;
+  data[NPC::AmbiguousAlex].deadAnimationID = Animations::Human_9_Dead;
+  data[NPC::AmbiguousAlex].attackedAnimationID = Animations::Human_9_Attacked;
+  data[NPC::AmbiguousAlex].grabbedAnimationID = Animations::Human_9_Idle;
+  data[NPC::AmbiguousAlex].thrownAnimationID = Animations::Human_9_Idle;
+  data[NPC::AmbiguousAlex].hitboxDimensions = sf::Vector2u(35,35);
+  data[NPC::AmbiguousAlex].color = sf::Color::White;
+
+  data[NPC::BaldingSam].hitpoints = 10;
+  data[NPC::BaldingSam].speed = 2;
+  data[NPC::BaldingSam].power = 1;
+  data[NPC::BaldingSam].idleAnimationID = Animations::Human_13_Idle;
+  data[NPC::BaldingSam].moveAnimationID = Animations::Human_13_Run;
+  data[NPC::BaldingSam].dieAnimationID = Animations::Human_13_Die;
+  data[NPC::BaldingSam].deadAnimationID = Animations::Human_13_Dead;
+  data[NPC::BaldingSam].attackedAnimationID = Animations::Human_13_Attacked;
+  data[NPC::BaldingSam].grabbedAnimationID = Animations::Human_13_Idle;
+  data[NPC::BaldingSam].thrownAnimationID = Animations::Human_13_Idle;
+  data[NPC::BaldingSam].hitboxDimensions = sf::Vector2u(35,35);
+  data[NPC::BaldingSam].color = sf::Color::White;
 
   return data;
 }
@@ -132,7 +255,6 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Pistol].secondaryAttackSpeed = 0.5;
   data[Weapon::Pistol].ammoType = Projectile::Bullet;
   data[Weapon::Pistol].ammoCount = 25;
-  data[Weapon::Pistol].origin = sf::Vector2u(16,16);
   data[Weapon::Pistol].hitboxDimensions = sf::Vector2u(10,10);
 
   data[Weapon::Shotgun].power = 2;
@@ -145,7 +267,6 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Shotgun].secondaryAttackSpeed = 0.5;
   data[Weapon::Shotgun].ammoType = Projectile::BuckShot;
   data[Weapon::Shotgun].ammoCount = 25;
-  data[Weapon::Shotgun].origin = sf::Vector2u(5,12);
   data[Weapon::Shotgun].hitboxDimensions = sf::Vector2u(10,25);
 
   data[Weapon::Rifle].power = 2;
@@ -158,7 +279,6 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Rifle].secondaryAttackSpeed = 0.5;
   data[Weapon::Rifle].ammoType = Projectile::Bullet;
   data[Weapon::Rifle].ammoCount = 25;
-  data[Weapon::Rifle].origin = sf::Vector2u(5,15);
   data[Weapon::Rifle].hitboxDimensions = sf::Vector2u(10,30);
 
   data[Weapon::SMG].power = 1;
@@ -171,7 +291,6 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::SMG].secondaryAttackSpeed = 0.5;
   data[Weapon::SMG].ammoType = Projectile::Bullet;
   data[Weapon::SMG].ammoCount = 100;
-  data[Weapon::SMG].origin = sf::Vector2u(5,12);
   data[Weapon::SMG].hitboxDimensions = sf::Vector2u(10,25);
 
   data[Weapon::RocketLauncher].power = 2;
@@ -184,7 +303,6 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::RocketLauncher].secondaryAttackSpeed = 0.5;
   data[Weapon::RocketLauncher].ammoType = Projectile::Rocket;
   data[Weapon::RocketLauncher].ammoCount = 4;
-  data[Weapon::RocketLauncher].origin = sf::Vector2u(16,16);
   data[Weapon::RocketLauncher].hitboxDimensions = sf::Vector2u(10,10);
 
   return data;
@@ -209,6 +327,12 @@ std::vector<CollidableData> DataTable::initializeCollidableData()
   data[Collidable::Boundary].idleAnimationID = Animations::Empty;
   data[Collidable::Boundary].color = sf::Color::White;
 
+  data[Collidable::SheepPen].hitpoints = 10000000;
+  data[Collidable::SheepPen].speed = 0;
+  data[Collidable::SheepPen].power = 0;
+  data[Collidable::SheepPen].idleAnimationID = Animations::Empty;
+  data[Collidable::SheepPen].color = sf::Color::Blue;
+
   return data;
 }
 
@@ -223,7 +347,6 @@ std::vector<ProjectileData> DataTable::initializeProjectileData()
   data[Projectile::Empty].range = 0;
   data[Projectile::Empty].moveAnimationID = Animations::Empty;
   data[Projectile::Empty].dieAnimationID = Animations::Empty;
-  data[Projectile::Empty].origin = sf::Vector2u(0,0);
   data[Projectile::Empty].hitboxDimensions = sf::Vector2u(0,0);
 
   data[Projectile::Bullet].speed = 20.0;

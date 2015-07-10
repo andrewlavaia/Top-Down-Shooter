@@ -9,7 +9,9 @@ AnimatedEntity::AnimatedEntity( ParentType pType )
     power( 1.0 ),
     status( AnimatedEntity::Idle ),
     distance_travelled( 0 ),
-    scaleFactor( 1.0 )
+    scaleFactor( 1.0 ),
+    collisionOK( true )
+    //collisionCooldown( sf::Time::Zero )
 {
   directions.clear();
   directions_it = directions.begin();
@@ -34,7 +36,19 @@ void AnimatedEntity::AddDirection(Orientation::Type orientation_type, double dis
 
 void AnimatedEntity::AddDirectionOppo(double d)
 {
-  AddDirection(getOrientation().getOppo(), d, directions_it->getSpeed());
+  if( !directions.empty() && !directions_it->isRepeat() )
+  {
+    directions_it = directions.erase( directions_it );
+
+    // if last direction reached after incrementing iterator, reset to beginning
+    if( directions_it == directions.end() )
+    {
+      directions_it = directions.begin();
+    }
+  }
+
+  AddDirection( getOrientation().getOppo(), d, getSpeed() );
+  collisionOK = false;
 }
 
 void AnimatedEntity::Move()
@@ -52,14 +66,16 @@ void AnimatedEntity::Move()
   }
 
   // Check if object has travelled further than distance set in current Direction object
-  if(distance_travelled > directions_it->getDistance())
+  if( distance_travelled > directions_it->getDistance() )
   {
     // If distance exceeded, reset distance counter and have iterator point to next Direction object
     distance_travelled = 0;
-    setStatus(AnimatedEntity::Moving); // since next direction object exists, the object must be moving
+    if( getStatus() != AnimatedEntity::Captured )
+      setStatus( AnimatedEntity::Moving ); // since next direction object exists, the object must be moving
+    collisionOK = true;
     playAnimation();
 
-    if(directions_it->isRepeat())
+    if( directions_it->isRepeat() )
     {
       directions_it++;
     }
@@ -75,8 +91,13 @@ void AnimatedEntity::Move()
     }
   }
 
+  setOrientation( directions_it->getType() );
+
+
   if( parentType == ProjectileType )
+  {
     MoveOneUnit( directions_it->getRotation(), directions_it->getSpeed() );
+  }
   else
   {
     MoveOneUnit( directions_it->getType(), directions_it->getSpeed() );
@@ -108,6 +129,7 @@ void AnimatedEntity::MoveOneUnit(double rotation, double speed)
   if( getParentType() == AnimatedEntity::ProjectileType )
   {
     animatedSprite.setRotation( rotation );
+    setOrientation( rotation );
   }
 
   int x_remainder; // int because modulus operator does not work on double
@@ -165,11 +187,10 @@ void AnimatedEntity::MoveOneUnit(double rotation, double speed)
 void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 {
   playAnimation();
-  setOrientation( o );
+  setOrientation(o);
 
-  // Rotate Weapons and Projectiles to align with orientation when thrown or fired
-  if( getParentType() == AnimatedEntity::WeaponType
-     || getParentType() == AnimatedEntity::ProjectileType )
+  // Rotate Projectiles to align with orientation when fired
+  if( getParentType() == AnimatedEntity::ProjectileType )
   {
     animatedSprite.setRotation( getOrientation().getRotation() );
   }
@@ -178,7 +199,7 @@ void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
   double hypotenuse = sqrt((spd * spd) + (spd * spd));
 
   // check orientation and move accordingly
-  switch(getOrientation().getType())
+  switch( o )
   {
     case Orientation::N :
       position.y -= spd;
@@ -252,7 +273,7 @@ void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 
 bool AnimatedEntity::checkCollision( const AnimatedEntity& a ) const
 {
-  if( !isDead() && !a.isDead() && Collision::BoundingBoxTest( hitbox, a.hitbox ) )
+  if( /*collisionCooldown < sf::Time::Zero &&*/ isCollisionOK() && !isDead() && !a.isDead() && Collision::BoundingBoxTest( hitbox, a.hitbox ) )
     return true;
   else
     return false;
@@ -266,12 +287,14 @@ bool AnimatedEntity::isDead() const
     return false;
 }
 
-Orientation::Type AnimatedEntity::getRelativeOrientation( const AnimatedEntity& entity ) const
+Orientation AnimatedEntity::getRelativeOrientation( const AnimatedEntity& entity ) const
 {
-  double dist_x = position.x - entity.position.x;
-  double dist_y = position.y - entity.position.y;
-  double margin = 10;
-  double nmargin = margin * -1;
+  Orientation o;
+
+  const double dist_x = position.x - entity.position.x;
+  const double dist_y = position.y - entity.position.y;
+  const double margin = 10;
+  const double nmargin = margin * -1;
 
   int x_direction = 0;
   int y_direction = 0;
@@ -285,27 +308,26 @@ Orientation::Type AnimatedEntity::getRelativeOrientation( const AnimatedEntity& 
   if(dist_y < nmargin) // entity is below
     y_direction = 1;
 
-  if (x_direction == -1 && y_direction == -1)
-    return Orientation::NW;
-  if (x_direction == -1 && y_direction == 0)
-    return Orientation::W;
-  if (x_direction == -1 && y_direction == 1)
-    return Orientation::SW;
-  if (x_direction == 1 && y_direction == -1)
-    return Orientation::NE;
-  if (x_direction == 1 && y_direction == 0)
-    return Orientation::E;
-  if (x_direction == 1 && y_direction == 1)
-    return Orientation::SE;
-  if (x_direction == 0 && y_direction == -1)
-    return Orientation::N;
-  if (x_direction == 0 && y_direction == 1)
-    return Orientation::S;
-  if (x_direction == 0 && y_direction == 0) //collision
-    return Orientation::S;
+  if( x_direction == -1 && y_direction == -1 )
+    o.setType( Orientation::NW );
+  if( x_direction == -1 && y_direction == 0 )
+    o.setType( Orientation::W );
+  if( x_direction == -1 && y_direction == 1 )
+    o.setType( Orientation::SW );
+  if( x_direction == 1 && y_direction == -1 )
+    o.setType( Orientation::NE );
+  if( x_direction == 1 && y_direction == 0 )
+    o.setType( Orientation::E );
+  if( x_direction == 1 && y_direction == 1 )
+    o.setType( Orientation::SE );
+  if( x_direction == 0 && y_direction == -1 )
+    o.setType( Orientation::N );
+  if( x_direction == 0 && y_direction == 1 )
+    o.setType( Orientation::S );
+  if( x_direction == 0 && y_direction == 0 ) //collision
+    o.setType( Orientation::S );
 
-    //should not possible to reach here
-    return Orientation::S;
+  return o;
 
 }
 
@@ -335,18 +357,24 @@ void AnimatedEntity::Destroy()
 
 }
 
-void AnimatedEntity::TakeDamage(double damage)
+void AnimatedEntity::TakeDamage( double damage )
 {
   hitpoints = hitpoints - damage;
-  if(hitpoints <= 0)
+  if( hitpoints <= 0 )
     Destroy();
 }
 
-void AnimatedEntity::TakeDamageOverTime(double damage, sf::Time dt)
+void AnimatedEntity::TakeDamageOverTime( double damage, sf::Time dt )
 {
-  hitpoints = hitpoints - (damage * 10 * dt.asSeconds());
-  if(hitpoints <= 0)
+  hitpoints = hitpoints - ( damage * 10 * dt.asSeconds() );
+  if( hitpoints <= 0 )
     Destroy();
+}
+
+void AnimatedEntity::clearDirections()
+{
+  directions.clear();
+  directions_it = directions.begin();
 }
 
 

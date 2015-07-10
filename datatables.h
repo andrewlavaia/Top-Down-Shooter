@@ -23,8 +23,7 @@ struct HeroData
     Animations::ID  attackedAnimationID = Animations::Empty;
     Animations::ID  grabAnimationID = Animations::Empty;
     Animations::ID  punchAnimationID = Animations::Empty;
-    sf::Color       color = sf::Color::White; //default represents no color
-    sf::Vector2u    origin = sf::Vector2u(0,0);
+    sf::Color       color = sf::Color::White; // default represents no color
     sf::Vector2u    hitboxDimensions = sf::Vector2u(20,20);
 };
 
@@ -41,7 +40,6 @@ struct NPCData
     Animations::ID  grabbedAnimationID = Animations::Empty;
     Animations::ID  thrownAnimationID = Animations::Empty;
     sf::Color       color = sf::Color::White; //default represents no color
-    sf::Vector2u    origin = sf::Vector2u(16,16);
     sf::Vector2u    hitboxDimensions = sf::Vector2u(20,20);
 };
 
@@ -58,7 +56,7 @@ struct WeaponData
     double          secondaryAttackSpeed = 0.5;
 
     Projectile::Type ammoType = Projectile::Empty;
-    unsigned        ammoCount = 0;
+    unsigned         ammoCount = 0;
 
     Animations::ID  idleAnimationID = Animations::Empty;
     Animations::ID  moveAnimationID = Animations::Empty;
@@ -66,7 +64,6 @@ struct WeaponData
     Animations::ID  primaryAnimationID = Animations::Empty;
     Animations::ID  secondaryAnimationID = Animations::Empty;
     sf::Color       color = sf::Color::White; //default represents no color
-    sf::Vector2u    origin = sf::Vector2u(0,0);
     sf::Vector2u    hitboxDimensions = sf::Vector2u(10,10);
 };
 
@@ -88,7 +85,6 @@ struct ProjectileData
     Animations::ID  moveAnimationID = Animations::Empty;
     Animations::ID  dieAnimationID = Animations::Empty;
     sf::Color       color = sf::Color::White; //default represents no color
-    sf::Vector2u    origin = sf::Vector2u(0,0);
     sf::Vector2u    hitboxDimensions = sf::Vector2u(5,5);
 };
 

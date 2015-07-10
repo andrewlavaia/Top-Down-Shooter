@@ -1,6 +1,6 @@
 
 #include "introstate.h"
-#include "playstate.h"
+#include "charselectstate.h"
 #include <iostream>
 
 CIntroState CIntroState::IntroState;
@@ -35,10 +35,10 @@ void CIntroState::HandleEvents(CGameEngine* game)
         game->Quit();
         break;
       case sf::Event::KeyPressed:
-        game->PushState( CPlayState::Instance() );
+        game->PushState( CCharSelectState::Instance() );
         break;
       case sf::Event::MouseButtonPressed:
-        game->PushState( CPlayState::Instance() );
+        game->PushState( CCharSelectState::Instance() );
         break;
       default:
         //Do Nothing

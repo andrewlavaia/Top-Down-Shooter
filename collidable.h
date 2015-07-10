@@ -15,6 +15,8 @@ class Collidable : public AnimatedEntity
       Destructible,         // replace with specific sub-types
       Exit,                 // exit to next room (can overlay other things on top, like doors etc)
       Boundary,             // invisible boundary for level
+      SheepPen,             // holds the sheep
+      //SheepPenBoundary    // invisible boundary for captured sheep?
       TypeCount
     };
 

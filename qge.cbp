@@ -53,6 +53,8 @@
 		<Unit filename="animation.cpp" />
 		<Unit filename="animation.h" />
 		<Unit filename="attack.h" />
+		<Unit filename="charselectstate.cpp" />
+		<Unit filename="charselectstate.h" />
 		<Unit filename="collidable.cpp" />
 		<Unit filename="collidable.h" />
 		<Unit filename="collision.cpp" />

@@ -6,7 +6,7 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
     animations(animations),
     data(data),
     bounds(1600.0,1600.0),
-    gameover_time(sf::seconds(30.0f)),
+    gameover_time(sf::seconds(120.0f)),
     npc_death_count(0)
 {
 
@@ -14,7 +14,6 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
 
   // clear vectors and deallocate memory
   entities.clear();
-  exits.clear();
 
   // Load Level
   switch (level_id)
@@ -23,10 +22,27 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
       mp.Load("map2.txt");
 
       // Need to add invisible indestructible wall surrounding level
-      CreateCollidable(Collidable::Boundary, 0, 0, 1, bounds.y); // left wall
-      CreateCollidable(Collidable::Boundary, bounds.x, 0, 1, bounds.y); // right wall
-      CreateCollidable(Collidable::Boundary, 0, 0, bounds.x, 1); // top wall
-      CreateCollidable(Collidable::Boundary, 0, bounds.y, bounds.x, 1); // bottom wall
+      CreateCollidable(Collidable::Boundary, 0, 0, 5, bounds.y); // left wall
+      CreateCollidable(Collidable::Boundary, bounds.x, 0, 5, bounds.y); // right wall
+      CreateCollidable(Collidable::Boundary, 0, 0, bounds.x, 5); // top wall
+      CreateCollidable(Collidable::Boundary, 0, bounds.y, bounds.x, 5); // bottom wall
+
+
+
+      /*
+      // below code is too slow, as it pushes too many entities into the entity vector
+      for( int i = 0; i <= bounds.y; i = i + 10 )
+      {
+        for( int j = 0; j <= bounds.x; j = j + 10 )
+        {
+          if( i == 0 || j == 0 || i == bounds.y || j == bounds.x )
+            CreateCollidable(Collidable::Boundary, i, j, 10, 10);
+        }
+      }
+      */
+
+
+
 /*
                                                   //  x     y   width  height
       CreateCollidable(Collidable::Indestructible,     0,   300,   30,   200);
@@ -37,12 +53,18 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
       CreateCollidable(Collidable::Indestructible,    30,     0,   50,   800);
       CreateCollidable(Collidable::Indestructible,   500,   500,  100,    10);
 */
+
+      // add SheepPen(s)
+      CreateCollidable( Collidable::SheepPen, 800, 400, 100, 100 );
+
+      // add exits (still relevant?)
       CreateCollidable(Collidable::Exit,             700,   700,  200,   200);
       CreateCollidable(Collidable::Exit,             700,   400,  100,   100);
 
-      CreateNPC(NPC::Goomba, 300, 500);
-      CreateNPC(NPC::Chumba, 400, 400);
+      CreateNPC(NPC::McGinger, 300, 500);
+      CreateNPC(NPC::BigRick, 400, 400);
 
+      // add weapons
       CreateWeapon(Weapon::SMG, 200, 100);
       CreateWeapon(Weapon::Pole, 400, 400);
       CreateWeapon(Weapon::Pole, 200, 200);
@@ -56,8 +78,8 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
     case 2:
       mp.Load("map_L2.txt");
 
-      CreateNPC(NPC::Goomba, 200, 200);
-      CreateNPC(NPC::Chumba, 400, 400);
+      CreateNPC(NPC::McGinger, 200, 200);
+      CreateNPC(NPC::BigRick, 400, 400);
 
       break;
 
@@ -102,10 +124,11 @@ void Level::CreateCollidable(Collidable::Type type, int x, int y, int width, int
 {
   auto p = std::make_shared<Collidable>(type, animations, data, x, y, width, height);
 
-  if(type == Collidable::Exit)
+/*  if(type == Collidable::Exit)
     exits.push_back(p);
   else
-    entities.push_back(p);
+*/
+  entities.push_back(p);
 }
 
 void Level::MoveEntities()

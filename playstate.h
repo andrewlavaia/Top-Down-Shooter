@@ -113,19 +113,91 @@ protected:
     animations.load( Animations::Human_3_Die, textures.get( Textures::Human_3_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
     animations.load( Animations::Human_3_Dead, textures.get( Textures::Human_3_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
 
-/*
-    animations.load( Animations::Hero_Idle, textures.get( Textures::Human_1_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
-    animations.load( Animations::Hero_Walk, textures.get(Textures::Hero_Walk), 20, 20, 8);
-    animations.load(Animations::Hero_Run, textures.get(Textures::Hero_Run), 20, 20, 6);
-    animations.load(Animations::Hero_Attacked, textures.get(Textures::Hero_Attacked), 20, 20, 4);
-    animations.load(Animations::Hero_Die, textures.get(Textures::Hero_Die), 20, 20, 6);
-    animations.load(Animations::Hero_Dead, textures.get(Textures::Hero_Dead), 20, 20, 1);
-    animations.load(Animations::Hero_Grab, textures.get(Textures::Hero_Grab), 388, 319, 6);
-*/
+    animations.load( Animations::Human_4_Idle, textures.get( Textures::Human_4_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_4_Walk, textures.get( Textures::Human_4_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_4_Run, textures.get( Textures::Human_4_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_4_Grab, textures.get( Textures::Human_4_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_4_Attacked, textures.get( Textures::Human_4_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_4_Die, textures.get( Textures::Human_4_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_4_Dead, textures.get( Textures::Human_4_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+    animations.load( Animations::Human_5_Idle, textures.get( Textures::Human_5_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_5_Walk, textures.get( Textures::Human_5_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_5_Run, textures.get( Textures::Human_5_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_5_Grab, textures.get( Textures::Human_5_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_5_Attacked, textures.get( Textures::Human_5_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_5_Die, textures.get( Textures::Human_5_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_5_Dead, textures.get( Textures::Human_5_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+    animations.load( Animations::Human_6_Idle, textures.get( Textures::Human_6_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_6_Walk, textures.get( Textures::Human_6_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_6_Run, textures.get( Textures::Human_6_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_6_Grab, textures.get( Textures::Human_6_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_6_Attacked, textures.get( Textures::Human_6_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_6_Die, textures.get( Textures::Human_6_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_6_Dead, textures.get( Textures::Human_6_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+    animations.load( Animations::Human_7_Idle, textures.get( Textures::Human_7_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_7_Walk, textures.get( Textures::Human_7_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_7_Run, textures.get( Textures::Human_7_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_7_Grab, textures.get( Textures::Human_7_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_7_Attacked, textures.get( Textures::Human_7_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_7_Die, textures.get( Textures::Human_7_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_7_Dead, textures.get( Textures::Human_7_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+    animations.load( Animations::Human_8_Idle, textures.get( Textures::Human_8_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_8_Walk, textures.get( Textures::Human_8_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_8_Run, textures.get( Textures::Human_8_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_8_Grab, textures.get( Textures::Human_8_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_8_Attacked, textures.get( Textures::Human_8_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_8_Die, textures.get( Textures::Human_8_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_8_Dead, textures.get( Textures::Human_8_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+    animations.load( Animations::Human_9_Idle, textures.get( Textures::Human_9_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_9_Walk, textures.get( Textures::Human_9_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_9_Run, textures.get( Textures::Human_9_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_9_Grab, textures.get( Textures::Human_9_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_9_Attacked, textures.get( Textures::Human_9_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_9_Die, textures.get( Textures::Human_9_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_9_Dead, textures.get( Textures::Human_9_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+    animations.load( Animations::Human_10_Idle, textures.get( Textures::Human_10_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_10_Walk, textures.get( Textures::Human_10_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_10_Run, textures.get( Textures::Human_10_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_10_Grab, textures.get( Textures::Human_10_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_10_Attacked, textures.get( Textures::Human_10_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_10_Die, textures.get( Textures::Human_10_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_10_Dead, textures.get( Textures::Human_10_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+    animations.load( Animations::Human_11_Idle, textures.get( Textures::Human_11_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_11_Walk, textures.get( Textures::Human_11_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_11_Run, textures.get( Textures::Human_11_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_11_Grab, textures.get( Textures::Human_11_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_11_Attacked, textures.get( Textures::Human_11_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_11_Die, textures.get( Textures::Human_11_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_11_Dead, textures.get( Textures::Human_11_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+    animations.load( Animations::Human_12_Idle, textures.get( Textures::Human_12_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_12_Walk, textures.get( Textures::Human_12_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_12_Run, textures.get( Textures::Human_12_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_12_Grab, textures.get( Textures::Human_12_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_12_Attacked, textures.get( Textures::Human_12_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_12_Die, textures.get( Textures::Human_12_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_12_Dead, textures.get( Textures::Human_12_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+    animations.load( Animations::Human_13_Idle, textures.get( Textures::Human_13_SpriteSheet ), 20, 20, 5, 7, {1,1,1,2,2} );
+    animations.load( Animations::Human_13_Walk, textures.get( Textures::Human_13_SpriteSheet ), 20, 20, 5, 7, {3,4,5,6,7,8,9,10} );
+    animations.load( Animations::Human_13_Run, textures.get( Textures::Human_13_SpriteSheet ), 20, 20, 5, 7, {17,18,19,21,21,22} );
+    animations.load( Animations::Human_13_Grab, textures.get( Textures::Human_13_SpriteSheet ), 20, 20, 5, 7, {7,8,8,2} );
+    animations.load( Animations::Human_13_Attacked, textures.get( Textures::Human_13_SpriteSheet ), 20, 20, 5, 7, {23,23,23,24,2,1} );
+    animations.load( Animations::Human_13_Die, textures.get( Textures::Human_13_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
+    animations.load( Animations::Human_13_Dead, textures.get( Textures::Human_13_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
+
+
+    // Delete or replace these
     animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
     animations.load(Animations::Hero_Kick, textures.get(Textures::Hero_Kick), 385, 371, 6);
 
-    //animations.load(Animations::NPC_Run, textures.get(Textures::NPC_Texture), 49, 50, 8);
     animations.load(Animations::Pistol, textures.get(Textures::Pistol), 48, 48, 1);
     animations.load(Animations::Rifle, textures.get(Textures::Rifle), 11, 31, 1);
     animations.load(Animations::Shotgun, textures.get(Textures::Shotgun), 13, 27, 1);
@@ -141,10 +213,10 @@ protected:
     HUD_timer.setColor(sf::Color::Black);
     HUD_timer.setPosition(400,20);
 
-    HUD_npc_count.setFont(fonts.get(Fonts::Calibri));
-    HUD_npc_count.setCharacterSize(40);
-    HUD_npc_count.setColor(sf::Color::Black);
-    HUD_npc_count.setPosition(700,20);
+    HUD_sheep_count.setFont(fonts.get(Fonts::Calibri));
+    HUD_sheep_count.setCharacterSize(40);
+    HUD_sheep_count.setColor(sf::Color::Black);
+    HUD_sheep_count.setPosition(700,20);
 
   }
 
@@ -161,7 +233,7 @@ private:
 	std::shared_ptr<Level> level;
 
 	sf::Text HUD_timer;
-	sf::Text HUD_npc_count;
+	sf::Text HUD_sheep_count;
 
 };
 

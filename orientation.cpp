@@ -1,9 +1,46 @@
 
 #include "orientation.h"
 
+void Orientation::setType( double d )
+{
+  double x = 45/2;
+  if( d <= x || d > 360 - x )
+  {
+    type = Orientation::N;
+  }
+  else if( d > x && d <= x*3 )
+  {
+    type = Orientation::NE;
+  }
+  else if( d > x*3 && d <= x*5 )
+  {
+    type = Orientation::E;
+  }
+  else if( d > x*5 && d <= x*7 )
+  {
+    type = Orientation::SE;
+  }
+  else if( d > x*7 && d <= x*9 )
+  {
+    type = Orientation::S;
+  }
+  else if( d > x*9 && d <= x*11 )
+  {
+    type = Orientation::SW;
+  }
+  else if( d > x*11 && d <= x*13 )
+  {
+    type = Orientation::W;
+  }
+  else if( d > x*13 && d <= x*15 )
+  {
+    type = Orientation::NW;
+  }
+}
+
 Orientation::Type Orientation::getSlightLeft()
 {
-  switch (type)
+  switch( type )
   {
     case N:
       return Orientation::NW;

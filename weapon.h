@@ -28,6 +28,7 @@ class Weapon : public AnimatedEntity
       RocketLauncher,
       TypeCount
     };
+    // weapon that immbolizes NPC for period of time (ancient rope with balls on it)
 
     explicit Weapon(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y);
 
@@ -44,12 +45,13 @@ class Weapon : public AnimatedEntity
   private:
     Type              type;
     unsigned          range;
+    unsigned          ammoCount;
     const Animation&  idleAnimation;
     const Animation&  moveAnimation;
     const Animation&  dieAnimation;
     const Animation&  primaryAttackAnimation;
     const Animation&  secondaryAttackAnimation;
-    unsigned          ammoCount;
+
 
 };
 

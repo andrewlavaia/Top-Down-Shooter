@@ -53,59 +53,67 @@ void CPlayState::HandleEvents(CGameEngine* game)
   // -----------------
 
   // Hero Movement
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A) && hero->getStatus() != AnimatedEntity::Impassable )
   {
+    hero->setStatus(AnimatedEntity::Moving);
+    hero->setOrientation(Orientation::NW);
     hero->MoveOneUnit(Orientation::NW, hero->getSpeed());
-    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::D) && hero->getStatus() != AnimatedEntity::Impassable )
   {
+    hero->setStatus(AnimatedEntity::Moving);
+    hero->setOrientation(Orientation::NE);
     hero->MoveOneUnit(Orientation::NE, hero->getSpeed());
-    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::A) && hero->getStatus() != AnimatedEntity::Impassable )
   {
+    hero->setStatus(AnimatedEntity::Moving);
+    hero->setOrientation(Orientation::SW);
     hero->MoveOneUnit(Orientation::SW, hero->getSpeed());
-    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::D) && hero->getStatus() != AnimatedEntity::Impassable )
   {
+    hero->setStatus(AnimatedEntity::Moving);
+    hero->setOrientation(Orientation::SE);
     hero->MoveOneUnit(Orientation::SE, hero->getSpeed());
-    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && hero->getStatus() != AnimatedEntity::Impassable )
   {
+    hero->setStatus(AnimatedEntity::Moving);
+    hero->setOrientation(Orientation::W);
     hero->MoveOneUnit(Orientation::W, hero->getSpeed());
-    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && hero->getStatus() != AnimatedEntity::Impassable )
   {
+    hero->setStatus(AnimatedEntity::Moving);
+    hero->setOrientation(Orientation::E);
     hero->MoveOneUnit(Orientation::E, hero->getSpeed());
-    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && hero->getStatus() != AnimatedEntity::Impassable )
   {
+    hero->setStatus(AnimatedEntity::Moving);
+    hero->setOrientation(Orientation::N);
     hero->MoveOneUnit(Orientation::N, hero->getSpeed());
-    hero->setStatus(AnimatedEntity::Moving);
     noKeyPressed = false;
   }
   else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && hero->getStatus() != AnimatedEntity::Impassable )
   {
-    hero->MoveOneUnit(Orientation::S, hero->getSpeed());
     hero->setStatus(AnimatedEntity::Moving);
+    hero->setOrientation(Orientation::S);
+    hero->MoveOneUnit(Orientation::S, hero->getSpeed());
     noKeyPressed = false;
   }
 
@@ -151,16 +159,17 @@ void CPlayState::HandleEvents(CGameEngine* game)
     hero->Throw();
   }
 
-/*
+
   // Spawning Controls (administrative only), requires public member functions
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
   {
-    this->level->CreateNPC(NPC::Chumba);
+    this->level->CreateNPC(NPC::BigRick, 300, 500);
   }
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
   {
-    this->level->CreateNPC(NPC::Goomba);
+    this->level->CreateNPC(NPC::McGinger, 200, 200);
   }
+/*
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
   {
     this->level->CreateProjectile( Projectile::Bullet,
@@ -182,34 +191,23 @@ void CPlayState::HandleEvents(CGameEngine* game)
 void CPlayState::Update(CGameEngine* game)
 {
 
-
-
-
   // ---------------
   // Collision Tests
   // ---------------
 
-  // Check if hero reached exit
-  for(auto it = this->level->exits.begin(); it != this->level->exits.end(); ++it)
-  {
-    if(hero->checkCollision(**it))
-    {
-      std::cout<<"Exit Condition - Push Stack"<<std::endl;
-    }
-  }
-
-  // Test all other collisions
+  // Test all collisions
   for(std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
   {
     // Set NPC Aggro
     if( (*it)->getParentType() == AnimatedEntity::NPCType
-        && (*it)->checkDistance(200, *hero)
+        && (*it)->checkDistance( 200, *hero )
         && (  (*it)->getStatus() == AnimatedEntity::Moving
            || (*it)->getStatus() == AnimatedEntity::Idle )
+        && (*it)->isCollisionOK()
       )
     {
       (*it)->setStatus( AnimatedEntity::Moving );
-      (*it)->AddDirection((*it)->getRelativeOrientation(*hero), 0.01, (*it)->getSpeed());
+      (*it)->AddDirection((*it)->getRelativeOrientation(*hero).getType(), 0.01, (*it)->getSpeed());
     }
 
     // Test collision with hero
@@ -258,34 +256,24 @@ void CPlayState::Update(CGameEngine* game)
 
   hero->getWeapon()->primaryAttack->reduceCooldown(game->logicTime);
   hero->getWeapon()->secondaryAttack->reduceCooldown(game->logicTime);
-
-
-  // -------------------
-  // Animation Logic
-  // -------------------
-
-/*
-  for(auto it = level->entities.begin(); it != level->entities.end(); ++it)
+  /*
+  hero->reduceCollisionCooldown( game->logicTime );
+  for( auto it = level->entities.begin(); it != level->entities.end(); ++it )
   {
-    if((*it)->getStatus() == AnimatedEntity::Attacking && !(*it)->animatedSprite.isPlaying()) // if dying with no active die animation, entity should be dead
-    {
-      (*it)->setStatus(AnimatedEntity::Grabbed);
-      (*it)->hitbox.setScale(1,1);
-    }
+    (*it)->reduceCollisionCooldown( game->logicTime );
   }
-*/
-
+  */
 
   // -------------------
   // Victory Conditions
   // -------------------
   /*
-  if(Victory())
+  if( Victory() )
   {
     //push state to victory state
   }
 
-  if(GameOver())
+  if( GameOver() )
   {
     // push state to game over state
   }
@@ -295,7 +283,7 @@ void CPlayState::Update(CGameEngine* game)
   // Update HUD
   // -------------------
   HUD_timer.setString(to_string(this->level->getGameOverTime() - this->level->getRunningTime()));
-  HUD_npc_count.setString(to_string(this->level->getNPCDeathCount()));
+  HUD_sheep_count.setString(to_string(this->level->getNPCDeathCount()));
   //update active_weapon image
 
 
@@ -306,7 +294,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
 {
 
   // Hero Animation Rules
-  if(this->noKeyPressed && hero->getStatus() == AnimatedEntity::Moving)
+  if(this->noKeyPressed && ( hero->getStatus() == AnimatedEntity::Moving || hero->getStatus() == AnimatedEntity::Impassable ) )
   {
     hero->setStatus(AnimatedEntity::Idle);
     hero->playAnimation();
@@ -331,25 +319,25 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   {
     sf::View view = window.getView();
     view.move( hero->getSpeed() * interpolation, 0.0 );
-    window.setView(view);
+    window.setView( view );
   }
   else if( p.x < limit )
   {
     sf::View view = window.getView();
     view.move( hero->getSpeed() * interpolation * -1, 0.0 );
-    window.setView(view);
+    window.setView( view );
   }
   if( p.y > (double)window.getSize().y - limit )
   {
     sf::View view = window.getView();
     view.move( 0.0, hero->getSpeed() * interpolation );
-    window.setView(view);
+    window.setView( view );
   }
   else if ( p.y < limit )
   {
     sf::View view = window.getView();
     view.move( 0.0, hero->getSpeed() * interpolation * -1);
-    window.setView(view);
+    window.setView( view );
   }
 
 
@@ -359,12 +347,16 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
 
   window.draw( level->background );
 
-
   // --------------------
   // Draw HUD
   // --------------------
+  // move hud to top of active view
+  HUD_timer.setPosition( window.mapPixelToCoords( sf::Vector2i(200, 200) ) );
+  HUD_sheep_count.setPosition( window.mapPixelToCoords( sf::Vector2i(400, 200) ) );
+
+  // draw hud
   window.draw(HUD_timer);
-  window.draw(HUD_npc_count);
+  window.draw(HUD_sheep_count);
   // draw active weapon image
 
   // ---------------------
@@ -378,17 +370,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     //window.draw((*it)->hitbox); // DEBUG only
   }
 
-  // ---------------------
-  // Draw Exits - DEBUG ONLY
-  // ---------------------
-  for(auto it = this->level->exits.begin(); it != this->level->exits.end(); ++it)
-  {
-    (*it)->animatedSprite.update(game->frameTime);
-    (*it)->MoveAnimatedSprite(interpolation);
-    window.draw((*it)->animatedSprite);
-    //window.draw((*it)->hitbox);
-  }
-
   // -------------
   // Draw Hero
   // -------------
@@ -399,8 +380,8 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   //window.draw(hero->hitbox); // DEBUG only
 
   // draw weapon in front of hero only when weapon is not pointing towards top of screen
-  if( hero->getWeapon()->animatedSprite.getRotation() > 60
-     && hero->getWeapon()->animatedSprite.getRotation() < 300 )
+  if( hero->getWeapon()->animatedSprite.getRotation() >= 90
+     && hero->getWeapon()->animatedSprite.getRotation() <= 270 )
   {
     window.draw( hero->getWeapon()->animatedSprite );
   }

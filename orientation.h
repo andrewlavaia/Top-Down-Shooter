@@ -16,13 +16,13 @@ class Orientation
       NW,
     };
 
-    Type getType() { return type; }
     void setType(Type t) { type = t; }
+    void setType(double d);
 
+    Type getType() { return type; }
     Type getSlightLeft();
     Type getSlightRight();
     Type getOppo();
-
     double getRotation();
 
 

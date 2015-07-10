@@ -31,12 +31,11 @@ public:
   float                                       getGameOverTime();
   unsigned                                    getNPCDeathCount() const { return npc_death_count; };
   const sf::Vector2f                          getBounds() const { return bounds; }
+  void                                        CreateNPC(NPC::Type type, double x, double y);
 
   MapManager                                   mp;
   sf::Sprite                                   background;
   std::vector<std::shared_ptr<AnimatedEntity>> entities;
-  std::vector<std::shared_ptr<AnimatedEntity>> exits;
-
 
 private:
   Level(const Level&);                        // Disallow copy constructor
@@ -45,7 +44,7 @@ private:
   template <typename T1, typename T2>
     void DestroyObject(T1& vec, T2& it);
 
-  void                                        CreateNPC(NPC::Type type, double x, double y);
+
   void                                        CreateWeapon(Weapon::Type type, double x, double y);
   void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);

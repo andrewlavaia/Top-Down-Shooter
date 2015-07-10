@@ -20,6 +20,7 @@ void CGameEngine::Init()
     //throw exception...
     std::cout<<"Font Not Loaded"<<std::endl;
   }
+
 }
 
 void CGameEngine::Cleanup()

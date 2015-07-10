@@ -10,6 +10,8 @@
 #include <vector>
 #include <stack>
 #include "timer.h"
+#include "resourceholder.h"
+#include "animation.h"
 
 class CGameState;
 

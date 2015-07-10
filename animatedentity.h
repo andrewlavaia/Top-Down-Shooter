@@ -25,17 +25,19 @@ class AnimatedEntity
     };
 
     enum Status {
-      Idle,
-      Moving,
-      Die,    // in process of becoming dead
-      Dead,
-      AttackingPrimary,
-      AttackingSecondary,
-      Grabbing,
-      Throwing,
-      Attacked, // getting attacked
-      Grabbed, // getting grabbed
-      Thrown, // getting thrown
+      Idle,       // Affects all entities. Set automatically whenever an entity is not moving, dying, or some other status. Plays Idle animation if available.
+      Moving,     // Affects all entities. Set after entity is instructed to move. Plays Move animation if available.
+      Die,        // Affects all entities. Set after entity's HP is reduced to 0. Plays Die animation if available. No collisions possible.
+      Dead,       // Affects all entities. Set after entity's die animation has finished playing. Plays Dead animation if available. No collision possible.
+      AttackingPrimary,   // Affects Weapon. Set after that weapon attacks. Plays PrimaryAttack animation if available.
+      AttackingSecondary, // Affects Weapon. Set after that weapon attacks. Plays SecondaryAttack animation if available.
+      Grabbing,   // Affects Hero. Set after Hero attempts to grab something. Plays Grabbing animation if available.
+      Attacked,   // Affects Hero, NPC and Weapon. Set after entity takes damage. Plays Attacked animation if available.
+      Grabbed,    // Affects NPC and Weapon. Set after Hero picks up entity. Plays Grabbed animation if available.
+      Thrown,     // Affects NPC and Weapon. Set after Hero throws entity. Plays Thrown animation if available.
+      Exited,     // Affects Hero and NPC. Set after collision with Exit Collidable. Currently does nothing.
+      Impassable, // Affects Hero. Set after collision with impassable Collidable. Prevents movement and automatically moves entity back.
+      Captured,   // Affects NPC. Set after collision with the SheepPen Collidable. Clears all directions.
     };
 
     AnimatedEntity(ParentType pType);
@@ -57,15 +59,18 @@ class AnimatedEntity
     bool                                    isMoving() const { return !directions.empty(); }
 
     void                                    setStatus(Status s) { status = s; }
+    void                                    setOrientation(Orientation::Type t) { orientation.setType(t); }
+    void                                    setOrientation(double d) { orientation.setType(d); }
 
     Orientation                             getOrientation() const { return orientation; }
-    Orientation::Type                       getRelativeOrientation(const AnimatedEntity& entity) const;
+    Orientation                             getRelativeOrientation(const AnimatedEntity& entity) const;
     double                                  getHP() const { return hitpoints; }
     double                                  getSpeed() const { return speed; }
     double                                  getPower() const { return power; }
     Status                                  getStatus() const { return status; }
     ParentType                              getParentType() const { return parentType; }
     double                                  getScaleFactor() const { return scaleFactor; }
+    bool                                    isCollisionOK() const { return collisionOK; }
 
     sf::Vector2f                            position;
     AnimatedSprite                          animatedSprite;
@@ -76,6 +81,7 @@ class AnimatedEntity
     void                                    TakeDamage(double damage);
     void                                    TakeDamageOverTime(double damage, sf::Time dt);
 
+    void                                    clearDirections();
     void                                    setHitbox(const sf::Texture& texture, unsigned width, unsigned height);
     void                                    setHitPoints(double h) { hitpoints = h; }
     void                                    setSpeed(double s) { speed = s; }
@@ -83,8 +89,6 @@ class AnimatedEntity
     void                                    setScaleFactor(unsigned s) { scaleFactor = s; }
 
   private:
-    void                                    setOrientation(Orientation::Type t) { orientation.setType(t); }
-
     ParentType                              parentType;
     Orientation                             orientation;
     double                                  hitpoints; // ammo, weapon durability, collidable destructibility
@@ -93,8 +97,11 @@ class AnimatedEntity
     Status                                  status;
     std::vector<Direction>                  directions;
     std::vector<Direction>::iterator        directions_it;
+
     double                                  distance_travelled;
     double                                  scaleFactor;
+    bool                                    collisionOK;
+
 };
 
 #endif

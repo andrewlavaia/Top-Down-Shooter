@@ -27,7 +27,9 @@ public:
 
   enum Type {
     Bob,
-    Joe,
+    SuitDrew,
+    GeezerHarry,
+    DirtyPete,
     TypeCount
   };
 

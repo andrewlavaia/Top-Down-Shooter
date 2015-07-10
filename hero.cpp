@@ -2,6 +2,7 @@
 #include "hero.h"
 #include "npc.h"
 #include "weapon.h"
+#include <cmath> // trig functions sin and cos
 
 
 Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data)
@@ -9,28 +10,24 @@ Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, 
     type(t),
     animations(animations),
     data(data),
+    grabbed_npc(nullptr),
+    weapon(nullptr),
+    default_weapon(new Weapon(Weapon::Hands, animations, data, 50, 50)),
     idleAnimation(animations.get(data.HeroTable[t].idleAnimationID)),
     moveAnimation(animations.get(data.HeroTable[t].moveAnimationID)),
     dieAnimation(animations.get(data.HeroTable[t].dieAnimationID)),
     deadAnimation(animations.get(data.HeroTable[t].deadAnimationID)),
     attackedAnimation(animations.get(data.HeroTable[t].attackedAnimationID)),
     grabAnimation(animations.get(data.HeroTable[t].grabAnimationID)),
-    punchAnimation(animations.get(data.HeroTable[t].punchAnimationID)),
-    grabbed_npc(nullptr),
-    weapon(nullptr),
-    default_weapon(new Weapon(Weapon::Hands, animations, data, 50, 50))
+    punchAnimation(animations.get(data.HeroTable[t].punchAnimationID))
 {
   setHitPoints(data.HeroTable[t].hitpoints);
   setSpeed(data.HeroTable[t].speed);
   setPower(data.HeroTable[t].power);
 
-
-
   position.x = 100;
   position.y = 100;
-
   animatedSprite.setPosition(position.x,position.y);
-  animatedSprite.setOrigin(data.HeroTable[t].origin.x,data.HeroTable[type].origin.y);
 
   setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(),
           data.HeroTable[t].hitboxDimensions.x,
@@ -69,6 +66,26 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
       break;
 
     case AnimatedEntity::CollidableType :
+      // necessary to cast because AnimatedEntity cannot otherwise determine its sub-type
+      const Collidable& b = dynamic_cast<const Collidable&>(a);
+      switch( b.getType() )
+      {
+        case Collidable::Exit :
+          setStatus( AnimatedEntity::Exited );
+          playAnimation();
+          std::cout<<"Exit reached."<<std::endl;
+          break;
+
+        case Collidable::Boundary :
+          setStatus( AnimatedEntity::Impassable ); // how should I use this?
+          MoveOneUnit( getOrientation().getOppo(), getSpeed() );
+          MoveOneUnit( getOrientation().getType(), getSpeed() );
+          MoveOneUnit( getOrientation().getType(), getSpeed() );
+          break;
+
+        default :
+          break;
+      }
       break;
 
   }
@@ -82,9 +99,12 @@ void Hero::MoveGrabbedEntities()
     grabbed_npc->position.y = position.y - 30;
   }
 
-  getWeapon()->position = position;
-
-  // flip grabbed weapon if it is point towards left half of screen
+  const double PI = 3.14159265;
+  double r = getWeapon()->animatedSprite.getRotation();
+  getWeapon()->position.x = position.x + ( 15 * sin( r * PI/180 ) );
+  getWeapon()->position.y = position.y - ( 15 * cos( r * PI/180 ) ) + 10; // minus because cos(180) = -1, and cos(0) = 1,
+                                                                          // 10 added back to put weapon closer to hands
+  // flip grabbed weapon if it is pointed towards left half of screen
   if( getWeapon()->animatedSprite.getRotation() > 180 )
   {
     getWeapon()->animatedSprite.setScale( -1 * getWeapon()->getScaleFactor(), getWeapon()->getScaleFactor() );
@@ -127,27 +147,26 @@ void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>&
       break;
 
     case Attack::Shoot :
-      auto p1 = std::make_shared<Projectile>( getWeapon()->ammoType->getType(),
-                                              animations,
-                                              data,
-                                              position.x,
-                                              position.y,
-                                              getOrientation().getType(),
-                                              getWeapon()->animatedSprite.getRotation()
-                                             );
-      entities.push_back(p1);
+        // Should this be optimized? 5 projectiles constructed every shot. 4 are then immediately destructed if not buckshot.
+        auto p1 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x, position.y, getWeapon()->animatedSprite.getRotation());
+        auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x, position.y, getWeapon()->animatedSprite.getRotation()-5);
+        auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x, position.y, getWeapon()->animatedSprite.getRotation()-3);
+        auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x, position.y, getWeapon()->animatedSprite.getRotation()+3);
+        auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x, position.y, getWeapon()->animatedSprite.getRotation()+5);
 
-      if(getWeapon()->ammoType->getType() == Projectile::BuckShot)
+      switch( getWeapon()->ammoType->getType() )
       {
-          auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x-15, position.y-3, getOrientation().getType(), getWeapon()->animatedSprite.getRotation());
-          auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x-10, position.y+3, getOrientation().getType(), getWeapon()->animatedSprite.getRotation());
-          auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x+15, position.y-3, getOrientation().getType(), getWeapon()->animatedSprite.getRotation());
-          auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x+10, position.y+3, getOrientation().getType(), getWeapon()->animatedSprite.getRotation());
-
+        case Projectile::BuckShot :
+          entities.push_back(p1);
           entities.push_back(p2);
           entities.push_back(p3);
           entities.push_back(p4);
           entities.push_back(p5);
+          break;
+
+        default:
+          entities.push_back(p1);
+          break;
       }
       break;
   }
@@ -156,35 +175,34 @@ void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>&
 
 }
 
-void Hero::Pickup(std::vector<std::shared_ptr<AnimatedEntity>>& entities)
+void Hero::Pickup( std::vector<std::shared_ptr<AnimatedEntity>>& entities )
 {
-  setStatus(AnimatedEntity::Grabbing);
-  for(auto it = entities.begin(); it != entities.end(); ++it)
+  setStatus( AnimatedEntity::Grabbing );
+  for( auto it = entities.begin(); it != entities.end(); ++it )
   {
-    if(typeid(**it) == typeid(NPC) && checkCollision(**it) == true)
+    if( typeid( **it ) == typeid( NPC ) && checkCollision( **it ) == true )
     {
       Drop();
-      grabbed_npc = std::dynamic_pointer_cast<NPC>(*it);
-      grabbed_npc->setStatus(AnimatedEntity::Grabbed);
+      grabbed_npc = std::dynamic_pointer_cast<NPC>( *it );
+      grabbed_npc->setStatus( AnimatedEntity::Grabbed );
       grabbed_npc->playAnimation();
     }
-    else if(typeid(**it) == typeid(Weapon) && checkCollision(**it) == true)
+    else if( typeid( **it ) == typeid( Weapon ) && checkCollision( **it ) == true )
     {
       Drop();
       weapon = std::dynamic_pointer_cast<Weapon>(*it);
-      getWeapon()->hitbox.setScale(getWeapon()->getScaleFactor(), getWeapon()->getRange());
-      //weapon->hitbox.setOrigin(weapon->animatedSprite.getLocalBounds().width/2, weapon->animatedSprite.getLocalBounds().height);
+      getWeapon()->hitbox.setScale( getWeapon()->getScaleFactor(), getWeapon()->getRange() );
     }
   }
 }
 
 void Hero::Drop()
 {
-  if(grabbed_npc != nullptr)
+  if( grabbed_npc != nullptr )
   {
     grabbed_npc = nullptr;
   }
-  else if(weapon != nullptr)
+  else if( weapon != nullptr )
   {
     weapon->hitbox.setScale( getWeapon()->getScaleFactor(), getWeapon()->getScaleFactor() );
     //weapon->hitbox.setRotation( getWeapon()->animatedSprite.getRotation() );
@@ -197,18 +215,19 @@ void Hero::Throw()
   double throw_speed = 20;
   double throw_distance = 500;
 
-  if(grabbed_npc != nullptr)
+  if( grabbed_npc != nullptr )
   {
-    grabbed_npc->AddDirection(getOrientation().getType(), throw_distance, throw_speed);
-    grabbed_npc->setStatus(AnimatedEntity::Thrown);
+    grabbed_npc->AddDirection( getOrientation().getType(), throw_distance, throw_speed );
+    grabbed_npc->setOrientation( getOrientation().getType() );
+    grabbed_npc->setStatus( AnimatedEntity::Thrown );
     grabbed_npc->playAnimation();
     grabbed_npc = nullptr;
   }
 
-  if(weapon != nullptr)
+  if( weapon != nullptr )
   {
     weapon->hitbox.setScale( getWeapon()->getScaleFactor(), getWeapon()->getScaleFactor() );
-    weapon->hitbox.setRotation( getOrientation().getRotation() );
+    //weapon->hitbox.setRotation( getOrientation().getRotation() );
     weapon->AddDirection( getOrientation().getType(), throw_distance, throw_speed );
     weapon->setStatus( AnimatedEntity::Thrown );
     weapon->playAnimation();
@@ -218,7 +237,7 @@ void Hero::Throw()
 
 std::shared_ptr<Weapon> Hero::getWeapon()
 {
-  if(weapon == nullptr)
+  if( weapon == nullptr )
     return default_weapon;
   else
     return weapon;
@@ -226,17 +245,17 @@ std::shared_ptr<Weapon> Hero::getWeapon()
 
 void Hero::playAnimation()
 {
-  animatedSprite.setLooped(false);
+  animatedSprite.setLooped( false );
 
-  switch(getStatus())
+  switch( getStatus() )
   {
     case AnimatedEntity::Idle :
-      animatedSprite.play(idleAnimation); // or animatedSprite.stop() to revert back to first frame
-      animatedSprite.setLooped(true);
+      animatedSprite.play( idleAnimation ); // or animatedSprite.stop() to revert back to first frame
+      animatedSprite.setLooped( true );
       break;
 
     case AnimatedEntity::Moving :
-      animatedSprite.play(moveAnimation);
+      animatedSprite.play( moveAnimation );
       break;
 
     default :

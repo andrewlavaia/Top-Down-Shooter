@@ -16,8 +16,19 @@ class NPC : public AnimatedEntity
 {
 public:
   enum Type {
-    Chumba,
-    Goomba,
+    Sheep,
+    //BlackSheep,
+    //RebelSheep,
+    //PrizeSheep,
+    McGinger,
+    BigRick,
+    UglyAmy,
+    TooCoolJack,
+    DeNiro,
+    Barnaby,
+    ToughSugar,
+    AmbiguousAlex,
+    BaldingSam,
     TypeCount
   };
 

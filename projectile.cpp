@@ -3,10 +3,9 @@
 #include "datatables.h"
 
 Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data,
-                       double x, double y, Orientation::Type o, double degrees)
+                       double x, double y, double degrees)
   : AnimatedEntity(AnimatedEntity::ProjectileType),
     type(t),
-    orientation(o),
     rotation(degrees),
     moveAnimation(animations.get(data.ProjectileTable[t].moveAnimationID)),
     dieAnimation(animations.get(data.ProjectileTable[t].dieAnimationID)),
@@ -26,7 +25,7 @@ Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& 
 
   // Projectile is always moving when created
   setStatus(AnimatedEntity::Moving);
-  AddDirection(orientation, range, getSpeed(), false, rotation);
+  AddDirection(getOrientation().getType(), range, getSpeed(), false, rotation);
 
   animatedSprite.play(moveAnimation);
   animatedSprite.setLooped(true);

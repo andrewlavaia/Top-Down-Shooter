@@ -14,9 +14,8 @@ Collidable::Collidable(Type t, const ResourceHolder<Animation, Animations::ID>& 
 
   position.x = x + width/2;
   position.y = y + height/2;
-
   animatedSprite.setPosition(position.x + width/2, position.y + height/2);
-  animatedSprite.setOrigin(width/2, height/2);
+
   setHitbox(*animations.get(Animations::Hitbox).getSpriteSheet(), width, height);
 
   setStatus(AnimatedEntity::Idle);
