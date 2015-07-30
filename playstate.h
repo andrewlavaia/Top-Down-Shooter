@@ -20,14 +20,17 @@
 #include "attack.h"
 
 #include "resourceholder.h"
-#include "datatables.h"
 #include "hero.h"
-#include "npc.h"
+
 #include "collidable.h"
 #include "projectile.h"
 #include "weapon.h"
+#include "npc.h"
+#include "datatables.h"
 #include "mapmanager.h"
 #include "level.h"
+
+#include "charselectstate.h" // needed for CCharSelectState::Instance()->getSelectedHero()
 
 class CPlayState : public CGameState
 {
@@ -68,20 +71,14 @@ protected:
     textures.load(Textures::Human_11_SpriteSheet, "textures/human11.png");
     textures.load(Textures::Human_12_SpriteSheet, "textures/human12.png");
     textures.load(Textures::Human_13_SpriteSheet, "textures/human13.png");
-    textures.load(Textures::Hero_Idle, "human1-idle.png");
-    textures.load(Textures::Hero_Walk, "human1-walk.png");
-    textures.load(Textures::Hero_Run, "human1-run.png");
-    textures.load(Textures::Hero_Attacked, "human1-attacked.png");
-    textures.load(Textures::Hero_Die, "human1-die.png");
-    textures.load(Textures::Hero_Dead, "human1-dead.png");
-    textures.load(Textures::Hero_Grab, "hero_grab.png");
+    textures.load(Textures::Sheep_SpriteSheet, "textures/sheep.png");
     textures.load(Textures::Hero_Punch, "hero_punch.png");
     textures.load(Textures::Hero_Kick, "hero_kick.png");
-    textures.load(Textures::NPC_Texture, "zombie.png");
     textures.load(Textures::Pistol, "pistol_texture2.png");
     textures.load(Textures::Rifle, "textures/rifle.png");
     textures.load(Textures::Shotgun, "textures/shotgun.png");
     textures.load(Textures::SMG, "textures/smg.png");
+    textures.load(Textures::RocketLauncher, "textures/rocketlauncher.png");
     textures.load(Textures::Bullet, "bullet.png");
     textures.load(Textures::Grass, "grass.jpg");
     textures.load(Textures::Dungeon, "dungeon.png");
@@ -193,30 +190,46 @@ protected:
     animations.load( Animations::Human_13_Die, textures.get( Textures::Human_13_SpriteSheet ), 20, 20, 5, 7, {2,24,23,33,14,35} );
     animations.load( Animations::Human_13_Dead, textures.get( Textures::Human_13_SpriteSheet ), 20, 20, 5, 7, {35} ); // frame 6 rotated and moved down
 
+    animations.load( Animations::Sheep_Idle, textures.get( Textures::Sheep_SpriteSheet ), 50, 40, 4, 1, {4,3,2,1} );
+    animations.load( Animations::Sheep_Walk, textures.get( Textures::Sheep_SpriteSheet ), 50, 40, 4, 1, {4,3,2,1} );
+    animations.load( Animations::Sheep_Attacked, textures.get( Textures::Sheep_SpriteSheet ), 50, 40, 4, 1, {4,3,2,1} );
+    animations.load( Animations::Sheep_Die, textures.get( Textures::Sheep_SpriteSheet ), 50, 40, 4, 1, {4,3,2,1} );
+    animations.load( Animations::Sheep_Dead, textures.get( Textures::Sheep_SpriteSheet ), 50, 40, 4, 1, {4,3,2,1} );
 
     // Delete or replace these
     animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
     animations.load(Animations::Hero_Kick, textures.get(Textures::Hero_Kick), 385, 371, 6);
 
+    // Weapon animations
     animations.load(Animations::Pistol, textures.get(Textures::Pistol), 48, 48, 1);
     animations.load(Animations::Rifle, textures.get(Textures::Rifle), 11, 31, 1);
     animations.load(Animations::Shotgun, textures.get(Textures::Shotgun), 13, 27, 1);
     animations.load(Animations::SMG, textures.get(Textures::SMG), 12, 25, 1);
+    animations.load(Animations::RocketLauncher_Idle, textures.get(Textures::RocketLauncher), 11, 31, 1);
     animations.load(Animations::Bullet, textures.get(Textures::Bullet), 10, 10, 1);
     animations.load(Animations::Grass, textures.get(Textures::Grass), 1024, 1024, 1);
 
-    hero = std::make_shared<Hero>(Hero::Bob, animations, data);
+    hero = std::make_shared<Hero>(Hero::Bob, animations, data); // constructor is called upon program startup so cannot use
+                                                                // CCharState::Instance()->getSelectedHero() here as it will return 0
 	  level = std::make_shared<Level>(1, animations, data);
+
+    HUD_background.setSize( sf::Vector2f( 0, 0 ) ); // empty initialization. Set to window size in Playstate::Init()
+    //HUD_background.setTexture( );
+    HUD_background.setFillColor( sf::Color( 255, 255, 255, 255 ) );
+
+    HUD_weapon.setScale(1, 1);
+
+    HUD_health.setFont(fonts.get(Fonts::Calibri));
+    HUD_health.setCharacterSize(40);
+    HUD_health.setColor(sf::Color::Black);
 
     HUD_timer.setFont(fonts.get(Fonts::Calibri));
     HUD_timer.setCharacterSize(40);
     HUD_timer.setColor(sf::Color::Black);
-    HUD_timer.setPosition(400,20);
 
     HUD_sheep_count.setFont(fonts.get(Fonts::Calibri));
     HUD_sheep_count.setCharacterSize(40);
     HUD_sheep_count.setColor(sf::Color::Black);
-    HUD_sheep_count.setPosition(700,20);
 
   }
 
@@ -232,6 +245,9 @@ private:
   std::shared_ptr<Hero> hero;
 	std::shared_ptr<Level> level;
 
+	sf::RectangleShape HUD_background;
+	AnimatedSprite HUD_weapon;
+	sf::Text HUD_health;
 	sf::Text HUD_timer;
 	sf::Text HUD_sheep_count;
 

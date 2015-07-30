@@ -5,11 +5,10 @@
 #include "resourceholder.h"
 #include "direction.h"
 #include "hero.h"
-#include "npc.h"
 #include "weapon.h"
+#include "npc.h"
 #include "collidable.h"
 #include "projectile.h"
-
 
 struct HeroData
 {
@@ -41,6 +40,7 @@ struct NPCData
     Animations::ID  thrownAnimationID = Animations::Empty;
     sf::Color       color = sf::Color::White; //default represents no color
     sf::Vector2u    hitboxDimensions = sf::Vector2u(20,20);
+    Weapon::Type    weapon = Weapon::Hands;
 };
 
 struct WeaponData

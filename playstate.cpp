@@ -9,6 +9,31 @@ void CPlayState::Init(CGameEngine* game)
   //this->level->Load(1);
   level->background.setTexture( textures.get( Textures::Dungeon ) );
   std::cout << "Level 1 Loaded." << std::endl;
+  std::cout<< "Hero " << CCharSelectState::Instance()->getSelectedHero() << " selected" << std::endl;
+
+  switch( CCharSelectState::Instance()->getSelectedHero() )
+ {
+  case 1:
+    hero = std::make_shared<Hero>(Hero::Bob, animations, data);
+    break;
+
+  case 2:
+    hero = std::make_shared<Hero>(Hero::SuitDrew, animations, data);
+    break;
+
+  case 3:
+    hero = std::make_shared<Hero>(Hero::GeezerHarry, animations, data);
+    break;
+
+  case 4:
+    hero = std::make_shared<Hero>(Hero::DirtyPete, animations, data);
+    break;
+
+  default:
+    break;
+ }
+
+  HUD_background.setSize( sf::Vector2f( game->window.getSize().x, 50 ) );
 }
 
 void CPlayState::Cleanup()
@@ -143,31 +168,38 @@ void CPlayState::HandleEvents(CGameEngine* game)
   }
 
   // Primary Attack
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::K ) || sf::Mouse::isButtonPressed( sf::Mouse::Left ) )
   {
-    hero->PrimaryAttack(this->level->entities);
+    hero->PrimaryAttack( this->level->entities );
   }
 
   // Secondary Attack
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::L ) || sf::Mouse::isButtonPressed( sf::Mouse::Right ) )
   {
-    hero->SecondaryAttack(this->level->entities);
+    hero->SecondaryAttack( this->level->entities );
   }
 
   // Throw
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) )
+  {
     hero->Throw();
   }
 
 
   // Spawning Controls (administrative only), requires public member functions
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num1 ) )
   {
-    this->level->CreateNPC(NPC::BigRick, 300, 500);
+    this->level->CreateNPC( NPC::BigRick, rand() % (int)level->getBounds().x, rand() % (int)level->getBounds().y );
   }
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num2 ) )
   {
-    this->level->CreateNPC(NPC::McGinger, 200, 200);
+    this->level->CreateNPC( NPC::McGinger, rand() % (int)level->getBounds().x, rand() % (int)level->getBounds().y  );
+  }
+
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num3 ) )
+  {
+    this->level->CreateNPC( NPC::Sheep, rand() % (int)level->getBounds().x, rand() % (int)level->getBounds().y  );
   }
 /*
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
@@ -198,17 +230,6 @@ void CPlayState::Update(CGameEngine* game)
   // Test all collisions
   for(std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
   {
-    // Set NPC Aggro
-    if( (*it)->getParentType() == AnimatedEntity::NPCType
-        && (*it)->checkDistance( 200, *hero )
-        && (  (*it)->getStatus() == AnimatedEntity::Moving
-           || (*it)->getStatus() == AnimatedEntity::Idle )
-        && (*it)->isCollisionOK()
-      )
-    {
-      (*it)->setStatus( AnimatedEntity::Moving );
-      (*it)->AddDirection((*it)->getRelativeOrientation(*hero).getType(), 0.01, (*it)->getSpeed());
-    }
 
     // Test collision with hero
     hero->collideWithEntity(**it, game->logicTime);
@@ -217,6 +238,16 @@ void CPlayState::Update(CGameEngine* game)
     for(std::vector< std::shared_ptr<AnimatedEntity> >::iterator jt = this->level->entities.begin(); jt != this->level->entities.end(); ++jt)
     {
       (*it)->collideWithEntity(**jt, game->logicTime);
+    }
+
+  }
+
+  // Trigger NPC aggro
+  for( auto i = 0; i < level->entities.size(); ++i ) // need to use standard loop otherwise iterators will become invalidated if projectiles are added to entities
+  {
+    if( level->entities[i]->getParentType() == AnimatedEntity::NPCType )
+    {
+      dynamic_cast<NPC&>(*level->entities[i]).engageHero(*hero, *level);
     }
   }
 
@@ -256,13 +287,17 @@ void CPlayState::Update(CGameEngine* game)
 
   hero->getWeapon()->primaryAttack->reduceCooldown(game->logicTime);
   hero->getWeapon()->secondaryAttack->reduceCooldown(game->logicTime);
-  /*
-  hero->reduceCollisionCooldown( game->logicTime );
+
+  //hero->reduceCollisionCooldown( game->logicTime );
   for( auto it = level->entities.begin(); it != level->entities.end(); ++it )
   {
-    (*it)->reduceCollisionCooldown( game->logicTime );
+    if( (*it)->getParentType() == AnimatedEntity::NPCType )
+    {
+      dynamic_cast<NPC&>(**it).getWeapon()->primaryAttack->reduceCooldown(game->logicTime);
+      dynamic_cast<NPC&>(**it).getWeapon()->secondaryAttack->reduceCooldown(game->logicTime);
+    }
   }
-  */
+
 
   // -------------------
   // Victory Conditions
@@ -282,10 +317,12 @@ void CPlayState::Update(CGameEngine* game)
   // -------------------
   // Update HUD
   // -------------------
-  HUD_timer.setString(to_string(this->level->getGameOverTime() - this->level->getRunningTime()));
-  HUD_sheep_count.setString(to_string(this->level->getNPCDeathCount()));
-  //update active_weapon image
-
+  HUD_weapon.play( *hero->getWeapon()->animatedSprite.getAnimation() );
+  HUD_weapon.setLooped( true );
+  HUD_weapon.setRotation( 90 );
+  HUD_health.setString( to_string( hero->getHP() ) );
+  HUD_timer.setString( to_string( this->level->getGameOverTime() - this->level->getRunningTime() ) );
+  HUD_sheep_count.setString( to_string( this->level->getNPCDeathCount() ) );
 
 } // end CState::Update
 
@@ -333,7 +370,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     view.move( 0.0, hero->getSpeed() * interpolation );
     window.setView( view );
   }
-  else if ( p.y < limit )
+  else if( p.y < limit )
   {
     sf::View view = window.getView();
     view.move( 0.0, hero->getSpeed() * interpolation * -1);
@@ -351,13 +388,21 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // Draw HUD
   // --------------------
   // move hud to top of active view
-  HUD_timer.setPosition( window.mapPixelToCoords( sf::Vector2i(200, 200) ) );
-  HUD_sheep_count.setPosition( window.mapPixelToCoords( sf::Vector2i(400, 200) ) );
+  HUD_background.setPosition( window.mapPixelToCoords( sf::Vector2i( 0, 0 ) ) );
+  HUD_health.setPosition( window.mapPixelToCoords( sf::Vector2i( 50, 0 ) ) );
+  HUD_weapon.setPosition( window.mapPixelToCoords( sf::Vector2i( 150, 10 ) ) );
+  HUD_timer.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x/2, 0 ) ) );
+  HUD_sheep_count.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x - 50, 0 ) ) );
+
+  // update AnimatedSprites
+  HUD_weapon.update( game->frameTime );
 
   // draw hud
-  window.draw(HUD_timer);
-  window.draw(HUD_sheep_count);
-  // draw active weapon image
+  window.draw( HUD_background );
+  window.draw( HUD_health );
+  window.draw( HUD_weapon );
+  window.draw( HUD_timer );
+  window.draw( HUD_sheep_count );
 
   // ---------------------
   // Draw Entities
@@ -368,6 +413,23 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
     //window.draw((*it)->hitbox); // DEBUG only
+    if( (*it)->getParentType() == AnimatedEntity::NPCType )
+    {
+      if( !(*it)->isDead() )
+      {
+        window.draw( (*it)->healthbar_damage );
+        window.draw( (*it)->healthbar );
+      }
+
+      if( dynamic_cast<NPC&>(**it).getWeapon() != nullptr )
+      {
+        NPC& npc = dynamic_cast<NPC&>(**it);
+        npc.getWeapon()->animatedSprite.update( game->frameTime );
+        npc.getWeapon()->MoveAnimatedSprite( interpolation );
+        window.draw( npc.getWeapon()->animatedSprite );
+      }
+    }
+
   }
 
   // -------------

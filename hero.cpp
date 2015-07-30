@@ -1,7 +1,6 @@
 
 #include "hero.h"
-#include "npc.h"
-#include "weapon.h"
+#include "datatables.h"
 #include <cmath> // trig functions sin and cos
 
 
@@ -22,6 +21,7 @@ Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, 
     punchAnimation(animations.get(data.HeroTable[t].punchAnimationID))
 {
   setHitPoints(data.HeroTable[t].hitpoints);
+  setMaxHitPoints(data.HeroTable[t].hitpoints);
   setSpeed(data.HeroTable[t].speed);
   setPower(data.HeroTable[t].power);
 
@@ -57,6 +57,12 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
       break;
 
     case AnimatedEntity::NPCType :
+      if( dynamic_cast<const NPC&>(a).getTemprament() == NPC::Aggressive )
+      {
+        //TakeDamage( a.getPower() );
+      }
+      if( &(*grabbed_npc) != &a ) // grabbed npc's should not trigger collisions
+        MoveOneUnit( getRelativeOrientation( a ).getOppo(), getSpeed() );
       break;
 
     case AnimatedEntity::WeaponType :
@@ -67,8 +73,7 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 
     case AnimatedEntity::CollidableType :
       // necessary to cast because AnimatedEntity cannot otherwise determine its sub-type
-      const Collidable& b = dynamic_cast<const Collidable&>(a);
-      switch( b.getType() )
+      switch( dynamic_cast<const Collidable&>(a).getType() )
       {
         case Collidable::Exit :
           setStatus( AnimatedEntity::Exited );
@@ -78,7 +83,7 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 
         case Collidable::Boundary :
           setStatus( AnimatedEntity::Impassable ); // how should I use this?
-          MoveOneUnit( getOrientation().getOppo(), getSpeed() );
+          MoveOneUnit( getOrientation().getOppo(), getSpeed() ); // can't use getRelativeOrientation because that would use the origin of boundary
           MoveOneUnit( getOrientation().getType(), getSpeed() );
           MoveOneUnit( getOrientation().getType(), getSpeed() );
           break;

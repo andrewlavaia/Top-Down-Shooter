@@ -17,6 +17,13 @@ AnimatedEntity::AnimatedEntity( ParentType pType )
   directions_it = directions.begin();
   animatedSprite.setLooped( false );
   setOrientation( Orientation::S );
+
+  healthbar.setPosition( position.x - 5, position.y - 25 );
+  healthbar.setSize( sf::Vector2f( 20, 5 ) );
+  healthbar.setFillColor( sf::Color::Green );
+
+  healthbar_damage = healthbar;
+  healthbar_damage.setFillColor( sf::Color::Red );
 }
 
 void AnimatedEntity::MoveAnimatedSprite(double interpolation)
@@ -25,17 +32,16 @@ void AnimatedEntity::MoveAnimatedSprite(double interpolation)
   sf::Vector2f distance = position - animatedSprite.getPosition();
   animatedSprite.move(distance.x * interpolation, distance.y * interpolation);
   hitbox.setPosition(animatedSprite.getPosition().x, animatedSprite.getPosition().y);
+
+  healthbar.setPosition( position.x - 5, position.y - 25);
+  healthbar_damage.setPosition( position.x - 5, position.y - 25 );
+  healthbar.setSize( sf::Vector2f( ( getHP() / getMaxHP() ) * 20, 5 ) );
+
 }
 
 void AnimatedEntity::AddDirection(Orientation::Type orientation_type, double distance, double speed, bool rpt, double degrees)
 {
-  directions_it = directions.insert( directions_it,
-                                     Direction( orientation_type, distance, speed, rpt, degrees ) );
-  distance_travelled = 0;
-}
-
-void AnimatedEntity::AddDirectionOppo(double d)
-{
+  // override current direction if repeat is off
   if( !directions.empty() && !directions_it->isRepeat() )
   {
     directions_it = directions.erase( directions_it );
@@ -47,6 +53,14 @@ void AnimatedEntity::AddDirectionOppo(double d)
     }
   }
 
+  directions_it = directions.insert( directions_it,
+                                     Direction( orientation_type, distance, speed, rpt, degrees ) );
+  distance_travelled = 0;
+
+}
+
+void AnimatedEntity::AddDirectionOppo(double d)
+{
   AddDirection( getOrientation().getOppo(), d, getSpeed() );
   collisionOK = false;
 }
@@ -273,7 +287,7 @@ void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 
 bool AnimatedEntity::checkCollision( const AnimatedEntity& a ) const
 {
-  if( /*collisionCooldown < sf::Time::Zero &&*/ isCollisionOK() && !isDead() && !a.isDead() && Collision::BoundingBoxTest( hitbox, a.hitbox ) )
+  if( this != &a && checkDistance(100, a) && isCollisionOK() && !isDead() && !a.isDead() && Collision::BoundingBoxTest( hitbox, a.hitbox ) )
     return true;
   else
     return false;

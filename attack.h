@@ -18,6 +18,7 @@ public:
   {
     type = t;
     attackSpeed = attack_speed;
+    cooldown = sf::Time::Zero;
   }
 
   bool canAttack() { return cooldown < sf::Time::Zero; }

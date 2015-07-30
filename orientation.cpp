@@ -158,3 +158,9 @@ double Orientation::getRotation() {
       break;
   }
 }
+
+double Orientation::getOppoRotation()
+{
+  double d = ( static_cast<int>( getRotation() ) + 180 ) % 360; // need to cast to int for modulus operator
+  return d;
+}

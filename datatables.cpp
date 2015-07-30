@@ -1,7 +1,6 @@
 
 #include "datatables.h"
 
-
 DataTable::DataTable()
   : HeroTable(initializeHeroData()),
     NPCTable(initializeNPCData()),
@@ -76,6 +75,19 @@ std::vector<NPCData> DataTable::initializeNPCData()
 {
   std::vector<NPCData> data(NPC::TypeCount);
 
+  data[NPC::Sheep].hitpoints = 10;
+  data[NPC::Sheep].speed = 1;
+  data[NPC::Sheep].power = 1;
+  data[NPC::Sheep].idleAnimationID = Animations::Sheep_Walk;
+  data[NPC::Sheep].moveAnimationID = Animations::Sheep_Walk;
+  data[NPC::Sheep].dieAnimationID = Animations::Sheep_Walk;
+  data[NPC::Sheep].deadAnimationID = Animations::Sheep_Walk;
+  data[NPC::Sheep].attackedAnimationID = Animations::Sheep_Walk;
+  data[NPC::Sheep].grabbedAnimationID = Animations::Sheep_Walk;
+  data[NPC::Sheep].thrownAnimationID = Animations::Sheep_Walk;
+  data[NPC::Sheep].hitboxDimensions = sf::Vector2u(35,35);
+  data[NPC::Sheep].color = sf::Color::White;
+
   data[NPC::McGinger].hitpoints = 10;
   data[NPC::McGinger].speed = 1;
   data[NPC::McGinger].power = 1;
@@ -88,6 +100,8 @@ std::vector<NPCData> DataTable::initializeNPCData()
   data[NPC::McGinger].thrownAnimationID = Animations::Human_2_Idle;
   data[NPC::McGinger].hitboxDimensions = sf::Vector2u(35,35);
   data[NPC::McGinger].color = sf::Color::White;
+  data[NPC::McGinger].weapon = Weapon::Rifle;
+
 
   data[NPC::BigRick].hitpoints = 10;
   data[NPC::BigRick].speed = 2;
@@ -101,6 +115,7 @@ std::vector<NPCData> DataTable::initializeNPCData()
   data[NPC::BigRick].thrownAnimationID = Animations::Human_3_Idle;
   data[NPC::BigRick].hitboxDimensions = sf::Vector2u(35,35);
   data[NPC::BigRick].color = sf::Color::White;
+  data[NPC::BigRick].weapon = Weapon::SMG;
 
   data[NPC::UglyAmy].hitpoints = 10;
   data[NPC::UglyAmy].speed = 2;
@@ -295,8 +310,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
 
   data[Weapon::RocketLauncher].power = 2;
   data[Weapon::RocketLauncher].range = 3;
-  data[Weapon::RocketLauncher].idleAnimationID = Animations::Pistol;
-  data[Weapon::RocketLauncher].moveAnimationID = Animations::Pistol;
+  data[Weapon::RocketLauncher].idleAnimationID = Animations::RocketLauncher_Idle;
+  data[Weapon::RocketLauncher].moveAnimationID = Animations::RocketLauncher_Idle;
   data[Weapon::RocketLauncher].primaryAttackType = Attack::Shoot;
   data[Weapon::RocketLauncher].secondaryAttackType = Attack::Standard;
   data[Weapon::RocketLauncher].primaryAttackSpeed = 1.0;

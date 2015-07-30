@@ -12,6 +12,7 @@ Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& 
     range(data.ProjectileTable[t].range)
 {
   setHitPoints(data.ProjectileTable[t].hitpoints);
+  setMaxHitPoints(data.ProjectileTable[t].hitpoints);
   setSpeed(data.ProjectileTable[t].speed);
   setPower(data.ProjectileTable[t].power);
 
@@ -45,7 +46,7 @@ void Projectile::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
       break;
 
     case AnimatedEntity::NPCType :
-      Destroy();
+      //Destroy(); //fix collision detection
       break;
 
     case AnimatedEntity::WeaponType :

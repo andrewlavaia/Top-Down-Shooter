@@ -10,8 +10,8 @@
 #include "orientation.h"
 
 #include "datatables.h"
-#include "npc.h"
 #include "weapon.h"
+#include "npc.h"
 #include "collidable.h"
 #include "projectile.h"
 
@@ -27,6 +27,7 @@ public:
   void                                        MoveEntities();
   void                                        DeleteEntities();
 
+
   float                                       getRunningTime();
   float                                       getGameOverTime();
   unsigned                                    getNPCDeathCount() const { return npc_death_count; };
@@ -37,6 +38,9 @@ public:
   sf::Sprite                                   background;
   std::vector<std::shared_ptr<AnimatedEntity>> entities;
 
+  const ResourceHolder<Animation, Animations::ID>&  animations;
+  const DataTable&                            data;
+
 private:
   Level(const Level&);                        // Disallow copy constructor
   Level& operator=(const Level&);             // Disallow assignment
@@ -44,22 +48,19 @@ private:
   template <typename T1, typename T2>
     void DestroyObject(T1& vec, T2& it);
 
-
-  void                                        CreateWeapon(Weapon::Type type, double x, double y);
+  // createProjectile should be reworked so that it can be used for npc and hero weapons and so animations and data can go back to being private
   void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
+  void                                        CreateWeapon(Weapon::Type type, double x, double y);
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
 
   int                                         level_id;
-  const ResourceHolder<Animation, Animations::ID>&  animations;
-  const DataTable&                            data;
+
   const sf::Vector2f                          bounds; // width, height of playable area in level
   sf::Clock                                   running_time;
   sf::Time                                    gameover_time;
   unsigned                                    npc_death_count;
-
-
-
-
+  unsigned                                    sheep_pen_count;
+  unsigned                                    sheep_total;
 
 
 };

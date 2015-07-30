@@ -5,13 +5,10 @@
 #include <SFML/Graphics.hpp>
 #include "animatedentity.h"
 #include "direction.h"
-#include "npc.h"
-#include "collidable.h"
 #include "attack.h"
-#include "datatables.h"
 
-class Hero;
 class Projectile;
+class DataTable;
 
 class Weapon : public AnimatedEntity
 {

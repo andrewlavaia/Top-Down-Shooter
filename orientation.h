@@ -24,10 +24,11 @@ class Orientation
     Type getSlightRight();
     Type getOppo();
     double getRotation();
+    double getOppoRotation();
 
 
   private:
-      Type type;
+    Type type;
 
 };
 

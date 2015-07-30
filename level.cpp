@@ -5,9 +5,11 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
   : level_id(id),
     animations(animations),
     data(data),
-    bounds(1600.0,1600.0),
+    bounds(1600.0, 1600.0),
     gameover_time(sf::seconds(120.0f)),
-    npc_death_count(0)
+    npc_death_count(0),
+    sheep_pen_count(0),
+    sheep_total(0)
 {
 
   running_time.restart();
@@ -30,7 +32,7 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
 
 
       /*
-      // below code is too slow, as it pushes too many entities into the entity vector
+      // below code is too slow, as it pushes too many entities into the entity vector, slowing down all operations
       for( int i = 0; i <= bounds.y; i = i + 10 )
       {
         for( int j = 0; j <= bounds.x; j = j + 10 )
@@ -40,9 +42,6 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
         }
       }
       */
-
-
-
 /*
                                                   //  x     y   width  height
       CreateCollidable(Collidable::Indestructible,     0,   300,   30,   200);
@@ -55,31 +54,42 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
 */
 
       // add SheepPen(s)
-      CreateCollidable( Collidable::SheepPen, 800, 400, 100, 100 );
-
+      CreateCollidable( Collidable::SheepPen,        800,   400,  100,   100 );
+/*
       // add exits (still relevant?)
       CreateCollidable(Collidable::Exit,             700,   700,  200,   200);
       CreateCollidable(Collidable::Exit,             700,   400,  100,   100);
-
-      CreateNPC(NPC::McGinger, 300, 500);
-      CreateNPC(NPC::BigRick, 400, 400);
-
+*/
       // add weapons
-      CreateWeapon(Weapon::SMG, 200, 100);
-      CreateWeapon(Weapon::Pole, 400, 400);
-      CreateWeapon(Weapon::Pole, 200, 200);
-      CreateWeapon(Weapon::Shotgun, 500, 300);
-      CreateWeapon(Weapon::Rifle, 300, 300);
-      CreateWeapon(Weapon::Pistol, 700,700);
-      CreateWeapon(Weapon::RocketLauncher, 500,500);
+      CreateWeapon( Weapon::SMG, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateWeapon( Weapon::Pole, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateWeapon( Weapon::Pole, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateWeapon( Weapon::Shotgun, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateWeapon( Weapon::Rifle, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateWeapon( Weapon::Pistol, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateWeapon( Weapon::RocketLauncher, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+
+
+      CreateNPC( NPC::Sheep,          rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::McGinger,       rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::BigRick,        rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::UglyAmy,        rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::TooCoolJack,    rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::DeNiro,         rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::Barnaby,        rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::ToughSugar,     rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::AmbiguousAlex,  rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::BaldingSam,     rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+
+
 
       break;
 
     case 2:
       mp.Load("map_L2.txt");
 
-      CreateNPC(NPC::McGinger, 200, 200);
-      CreateNPC(NPC::BigRick, 400, 400);
+      CreateNPC( NPC::McGinger, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::BigRick, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
 
       break;
 
@@ -92,6 +102,9 @@ void Level::CreateNPC(NPC::Type type, double x, double y)
 {
   auto p = std::make_shared<NPC>(type, animations, data, x, y);
   entities.push_back(p);
+
+  if( type == NPC::Sheep )
+    sheep_total++;
 }
 
 // Dynamically creates a new Weapon object and returns a smart pointer to it
@@ -143,9 +156,9 @@ void Level::DeleteEntities()
 {
   for (auto it = entities.begin(); it != entities.end(); )
   {
-    if((*it)->getStatus() == AnimatedEntity::Dead && !(*it)->animatedSprite.isPlaying()) // any entity that is declared dead with no active death animation should be deleted
+    if( (*it)->getStatus() == AnimatedEntity::Dead && !(*it)->animatedSprite.isPlaying() ) // any entity that is declared dead with no active death animation should be deleted
       DestroyObject(entities, it);
-    else if(typeid(**it) == typeid(Projectile) && !(*it)->isMoving()) // projectiles that are not moving should be deleted
+    else if( (*it)->getParentType() == AnimatedEntity::ProjectileType && !(*it)->isMoving() ) // projectiles that are not moving should be deleted
       DestroyObject(entities, it);
     else
       ++it;

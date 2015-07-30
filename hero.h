@@ -13,13 +13,9 @@
 #include "orientation.h"
 #include "attack.h"
 
-#include "datatables.h"
-
-#include "projectile.h"
-#include "collidable.h"
-
 class Weapon;
 class NPC;
+class DataTable;
 
 class Hero : public AnimatedEntity
 {

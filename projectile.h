@@ -3,7 +3,6 @@
 #define PROJECTILE_H
 
 #include "animatedentity.h"
-#include "orientation.h"
 
 class DataTable;
 
@@ -34,6 +33,7 @@ private:
   const Animation& moveAnimation;
   const Animation& dieAnimation;
   unsigned range;
+  //const Weapon& firedWeapon; // weapon that projectile originated from (needed for collision detection purposes)
 };
 
 #endif

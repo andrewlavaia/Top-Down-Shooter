@@ -1,6 +1,6 @@
 
 #include "weapon.h"
-
+#include "datatables.h"
 
 Weapon::Weapon(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y)
   : AnimatedEntity(AnimatedEntity::WeaponType),
@@ -17,6 +17,7 @@ Weapon::Weapon(Type t, const ResourceHolder<Animation, Animations::ID>& animatio
     secondaryAttackAnimation(animations.get(data.WeaponTable[t].secondaryAnimationID))
 {
   setHitPoints(data.WeaponTable[t].hitpoints);
+  setMaxHitPoints(data.WeaponTable[t].hitpoints);
   setSpeed(data.WeaponTable[t].speed);
   setPower(data.WeaponTable[t].power);
 

@@ -46,7 +46,7 @@ class AnimatedEntity
     virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt) = 0;
     virtual void                            playAnimation() = 0;
 
-    void                                    Move();
+    virtual void                            Move();
     void                                    MoveOneUnit(Orientation::Type o, double speed, bool rotation = true);
     void                                    MoveOneUnit(double rotation, double speed);
     void                                    MoveAnimatedSprite(double interpolation);
@@ -65,6 +65,7 @@ class AnimatedEntity
     Orientation                             getOrientation() const { return orientation; }
     Orientation                             getRelativeOrientation(const AnimatedEntity& entity) const;
     double                                  getHP() const { return hitpoints; }
+    double                                  getMaxHP() const { return max_hitpoints; }
     double                                  getSpeed() const { return speed; }
     double                                  getPower() const { return power; }
     Status                                  getStatus() const { return status; }
@@ -75,6 +76,8 @@ class AnimatedEntity
     sf::Vector2f                            position;
     AnimatedSprite                          animatedSprite;
     sf::Sprite                              hitbox; // every animated entity should have an invisible sf::sprite behind it that will serve as a hitbox for collision tests
+    sf::RectangleShape                      healthbar; //graphically displays current health
+    sf::RectangleShape                      healthbar_damage; //graphically displays missing health
 
   protected:
     void                                    Destroy();
@@ -84,6 +87,7 @@ class AnimatedEntity
     void                                    clearDirections();
     void                                    setHitbox(const sf::Texture& texture, unsigned width, unsigned height);
     void                                    setHitPoints(double h) { hitpoints = h; }
+    void                                    setMaxHitPoints(double h) { max_hitpoints = h; }
     void                                    setSpeed(double s) { speed = s; }
     void                                    setPower(double p) { power = p; }
     void                                    setScaleFactor(unsigned s) { scaleFactor = s; }
@@ -91,7 +95,8 @@ class AnimatedEntity
   private:
     ParentType                              parentType;
     Orientation                             orientation;
-    double                                  hitpoints; // ammo, weapon durability, collidable destructibility
+    double                                  hitpoints; // weapon durability, collidable destructibility
+    double                                  max_hitpoints; // starting health
     double                                  speed;
     double                                  power;
     Status                                  status;

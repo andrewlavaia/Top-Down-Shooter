@@ -2,7 +2,6 @@
 #ifndef COLLIDABLE_H
 #define COLLIDABLE_H
 
-#include <SFML/Graphics.hpp>
 #include "animatedentity.h"
 
 class DataTable;

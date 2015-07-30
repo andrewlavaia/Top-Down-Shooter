@@ -9,6 +9,7 @@ Collidable::Collidable(Type t, const ResourceHolder<Animation, Animations::ID>& 
     idleAnimation(animations.get(data.CollidableTable[t].idleAnimationID))
 {
   setHitPoints(data.CollidableTable[t].hitpoints);
+  setMaxHitPoints(data.CollidableTable[t].hitpoints);
   setSpeed(data.CollidableTable[t].speed);
   setPower(data.CollidableTable[t].power);
 
