@@ -7,7 +7,7 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
     data(data),
     bounds(1600.0, 1600.0),
     gameover_time(sf::seconds(120.0f)),
-    npc_death_count(0),
+    enemy_death_count(0),
     sheep_pen_count(0),
     sheep_total(0)
 {
@@ -100,7 +100,14 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
 // Dynamically creates a new NPC object and returns a smart pointer to it
 void Level::CreateNPC(NPC::Type type, double x, double y)
 {
-  auto p = std::make_shared<NPC>(type, animations, data, x, y);
+  //create weapon from NPCTable and add to entities if anything other than hand
+  auto w = std::make_shared<Weapon>( data.NPCTable[type].weapon, animations, data, x, y );
+  if( data.NPCTable[type].weapon == Weapon::Hands )
+    w = nullptr;
+  else
+    entities.push_back(w);
+
+  auto p = std::make_shared<NPC>(type, animations, data, x, y, w);
   entities.push_back(p);
 
   if( type == NPC::Sheep )
@@ -113,7 +120,7 @@ void Level::CreateWeapon(Weapon::Type type, double x, double y)
   auto p = std::make_shared<Weapon>(type, animations, data, x, y);
   entities.push_back(p);
 }
-
+/*
 void Level::CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o)
 {
   auto p = std::make_shared<Projectile>(type, animations, data, x, y, o);
@@ -132,6 +139,7 @@ void Level::CreateProjectile(Projectile::Type type, double x, double y, Orientat
       entities.push_back(p5);
   }
 }
+*/
 
 void Level::CreateCollidable(Collidable::Type type, int x, int y, int width, int height)
 {
@@ -163,15 +171,13 @@ void Level::DeleteEntities()
     else
       ++it;
   }
-
 }
 
 template <typename T1, typename T2>
 void Level::DestroyObject(T1& vec, T2& it)
 {
   // erase remove idiom
-  vec.erase(std::remove(vec.begin(), vec.end(), *it),
-            vec.end());
+  vec.erase( std::remove( vec.begin(), vec.end(), *it ), vec.end() );
 }
 
 /*

@@ -30,7 +30,7 @@ public:
 
   float                                       getRunningTime();
   float                                       getGameOverTime();
-  unsigned                                    getNPCDeathCount() const { return npc_death_count; };
+  unsigned                                    getEnemyDeathCount() const { return enemy_death_count; };
   const sf::Vector2f                          getBounds() const { return bounds; }
   void                                        CreateNPC(NPC::Type type, double x, double y);
 
@@ -49,16 +49,17 @@ private:
     void DestroyObject(T1& vec, T2& it);
 
   // createProjectile should be reworked so that it can be used for npc and hero weapons and so animations and data can go back to being private
-  void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
+  //void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
   void                                        CreateWeapon(Weapon::Type type, double x, double y);
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
 
   int                                         level_id;
 
+
   const sf::Vector2f                          bounds; // width, height of playable area in level
   sf::Clock                                   running_time;
   sf::Time                                    gameover_time;
-  unsigned                                    npc_death_count;
+  unsigned                                    enemy_death_count;
   unsigned                                    sheep_pen_count;
   unsigned                                    sheep_total;
 

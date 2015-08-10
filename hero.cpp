@@ -17,8 +17,8 @@ Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, 
     dieAnimation(animations.get(data.HeroTable[t].dieAnimationID)),
     deadAnimation(animations.get(data.HeroTable[t].deadAnimationID)),
     attackedAnimation(animations.get(data.HeroTable[t].attackedAnimationID)),
-    grabAnimation(animations.get(data.HeroTable[t].grabAnimationID)),
-    punchAnimation(animations.get(data.HeroTable[t].punchAnimationID))
+    grabAnimation(animations.get(data.HeroTable[t].grabAnimationID))
+    //punchAnimation(animations.get(data.HeroTable[t].punchAnimationID))
 {
   setHitPoints(data.HeroTable[t].hitpoints);
   setMaxHitPoints(data.HeroTable[t].hitpoints);
@@ -38,7 +38,7 @@ Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, 
   animatedSprite.setColor(data.HeroTable[type].color);
   animatedSprite.setFrameTime(sf::seconds(0.10)); // 6 fps is .166667
 
-  setScaleFactor(2);
+  setScaleFactor( data.HeroTable[t].scaleFactor );
   animatedSprite.setScale( getScaleFactor(), getScaleFactor() );
 
   setStatus(AnimatedEntity::Idle);
@@ -69,6 +69,14 @@ void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
       break;
 
     case AnimatedEntity::ProjectileType :
+      // first check to see if the projectiles came from the weapon that the NPC is holding
+      if( &(*getWeapon()) != &(dynamic_cast<const Projectile&>(a).getOriginatingWeapon()) )
+      {
+        setStatus( AnimatedEntity::Attacked );
+        playAnimation();
+        MoveOneUnit( a.getOrientation().getType(), getSpeed() );
+        TakeDamage( a.getPower() );
+      }
       break;
 
     case AnimatedEntity::CollidableType :
@@ -153,11 +161,11 @@ void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>&
 
     case Attack::Shoot :
         // Should this be optimized? 5 projectiles constructed every shot. 4 are then immediately destructed if not buckshot.
-        auto p1 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x, position.y, getWeapon()->animatedSprite.getRotation());
-        auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x, position.y, getWeapon()->animatedSprite.getRotation()-5);
-        auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x, position.y, getWeapon()->animatedSprite.getRotation()-3);
-        auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x, position.y, getWeapon()->animatedSprite.getRotation()+3);
-        auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, position.x, position.y, getWeapon()->animatedSprite.getRotation()+5);
+        auto p1 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation());
+        auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()-5);
+        auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()-3);
+        auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()+3);
+        auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()+5);
 
       switch( getWeapon()->ammoType->getType() )
       {

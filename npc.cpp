@@ -3,11 +3,13 @@
 #include "level.h"
 #include "datatables.h"
 
-NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y)
+NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations,
+         const DataTable& data, double x, double y, std::shared_ptr<Weapon> weap)
   : AnimatedEntity(AnimatedEntity::NPCType),
     type(t),
     temprament(NPC::Aggressive),
-    weapon( new Weapon( data.NPCTable[t].weapon, animations, data, 50, 50  ) ),
+    weapon( weap ),
+    default_weapon( new Weapon(Weapon::Hands, animations, data, x, y) ),
     idleAnimation(animations.get(data.NPCTable[t].idleAnimationID)),
     moveAnimation(animations.get(data.NPCTable[t].moveAnimationID)),
     dieAnimation(animations.get(data.NPCTable[t].dieAnimationID)),
@@ -35,7 +37,7 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, co
   animatedSprite.setFrameTime(sf::seconds(0.10));
   animatedSprite.setColor(data.NPCTable[t].color);
 
-  setScaleFactor(2);
+  setScaleFactor( data.NPCTable[t].scaleFactor );
   animatedSprite.setScale( getScaleFactor(), getScaleFactor() );
 
   // set AI
@@ -57,7 +59,6 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, co
       break;
 
     case NPC::Sheep :
-      setScaleFactor(1);
       temprament = NPC::Passive;
       AddDirection(Orientation::S,  100, getSpeed(), true);
       AddDirection(Orientation::E,  100, getSpeed(), true);
@@ -76,7 +77,7 @@ void NPC::Move()
 {
   AnimatedEntity::Move();
 
-  if( getWeapon() != nullptr )
+  if( getWeapon()->getType() != Weapon::Hands )
   {
     const double PI = 3.14159265;
     double r = getWeapon()->animatedSprite.getRotation();
@@ -96,6 +97,13 @@ void NPC::Move()
   }
 }
 
+void NPC::ifDead()
+{
+  AnimatedEntity::ifDead();
+  if( getStatus() == AnimatedEntity::Dead )
+    dropWeapon();
+}
+
 void NPC::pAttack(Attack& attack, Level& level)
 {
 
@@ -106,7 +114,7 @@ void NPC::pAttack(Attack& attack, Level& level)
       break;
 
     case Attack::Shoot :
-      auto p1 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), level.animations, level.data, position.x, position.y, getWeapon()->animatedSprite.getRotation());
+      auto p1 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), level.animations, level.data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation());
       level.entities.push_back(p1);
       //CreateProjectile(getWeapon()->ammoType->getType(), getWeapon()->position.x, getWeapon()->position.y, getOrientation().getType() );
       break;
@@ -128,6 +136,7 @@ void NPC::engageHero(const AnimatedEntity& hero, Level& level)
     {
       setStatus( AnimatedEntity::Moving );
       AddDirection( getRelativeOrientation( hero ).getType(), 0.01, getSpeed() );
+      getWeapon()->animatedSprite.setRotation( getRelativeOrientation(hero).getRotation() );
 
       if( getWeapon()->primaryAttack->canAttack() )
       {
@@ -135,6 +144,19 @@ void NPC::engageHero(const AnimatedEntity& hero, Level& level)
       }
 
     }
+}
+
+std::shared_ptr<Weapon> NPC::getWeapon() const
+{
+  if( weapon == nullptr )
+    return default_weapon;
+  else
+    return weapon;
+}
+
+void NPC::dropWeapon()
+{
+  weapon = nullptr;
 }
 
 void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
@@ -164,20 +186,21 @@ void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
         playAnimation();
 
         TakeDamage( a.getPower() ); // should be last function call as it determines death
-        std::cout<<getHP()<<std::endl;
       }
       break;
 
     case AnimatedEntity::ProjectileType :
-/*
-      AddDirection( a.getOrientation().getType(), 10, 5, false );
-      setStatus( AnimatedEntity::Attacked );
-      playAnimation();
-
-      TakeDamage( a.getPower() ); // should be last function call as it determines death
-
-      std::cout<<getHP()<<std::endl;
-*/
+      // first check to see if the projectiles came from the weapon that the NPC is holding
+      if( &(*getWeapon()) != &(dynamic_cast<const Projectile&>(a).getOriginatingWeapon()) )
+      {
+        if( getStatus() != AnimatedEntity::Die ) // special exception so that repeated projectile collisions don't interupt Die animation
+        {
+          AddDirection( a.getOrientation().getType(), 10, 5, false );
+          setStatus( AnimatedEntity::Attacked );
+          playAnimation();
+        }
+        TakeDamage( a.getPower() ); // should be last function call as it determines death
+      }
       break;
 
     case AnimatedEntity::CollidableType :

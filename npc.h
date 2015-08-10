@@ -40,20 +40,23 @@ public:
     Passive,
   };
 
-  NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y);
+  NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y, std::shared_ptr<Weapon> weap);
 
   virtual void                            collideWithEntity(const AnimatedEntity& a, sf::Time dt);
   virtual void                            playAnimation();
   virtual void                            Move();
+  virtual void                            ifDead();
 
   void                                    engageHero(const AnimatedEntity& hero, Level& level);
   Temprament                              getTemprament() const { return temprament; }
-  std::shared_ptr<Weapon>                 getWeapon() { assert(weapon!=nullptr); return weapon; } // force creation of new hands weapon if weapon == nullptr?
+  std::shared_ptr<Weapon>                 getWeapon() const;
+  void                                    dropWeapon();
 
 private:
   Type                                    type;
   Temprament                              temprament;
   std::shared_ptr<Weapon>                 weapon;
+  std::shared_ptr<Weapon>                 default_weapon;
   const Animation&                        idleAnimation;
   const Animation&                        moveAnimation;
   const Animation&                        dieAnimation;

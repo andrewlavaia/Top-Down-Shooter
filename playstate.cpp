@@ -143,6 +143,15 @@ void CPlayState::HandleEvents(CGameEngine* game)
   }
 
   // Weapon Rotation
+      // Mouse Controls
+  sf::Vector2i heroPos = game->window.mapCoordsToPixel(hero->position);
+  float dx = sf::Mouse::getPosition( game->window ).x - heroPos.x; // needs to be negative for cos in tangent function (?)
+  float dy = heroPos.y - sf::Mouse::getPosition( game->window ).y;
+  const double PI = 3.14159265;
+  float rotation = ( atan2( dx, dy ) * 180 )/PI; // take arctangent and convert from radians to degrees
+  hero->getWeapon()->animatedSprite.setRotation( rotation );
+
+      // Keyboard Controls
   if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
   {
     hero->getWeapon()->animatedSprite.rotate( 3 );
@@ -243,7 +252,7 @@ void CPlayState::Update(CGameEngine* game)
   }
 
   // Trigger NPC aggro
-  for( auto i = 0; i < level->entities.size(); ++i ) // need to use standard loop otherwise iterators will become invalidated if projectiles are added to entities
+  for( unsigned i = 0; i < level->entities.size(); ++i ) // need to use standard loop otherwise iterators will become invalidated if projectiles are added to entities
   {
     if( level->entities[i]->getParentType() == AnimatedEntity::NPCType )
     {
@@ -261,21 +270,11 @@ void CPlayState::Update(CGameEngine* game)
   // Cleanup Dead Entities
   // -------------------
 
-  // Check if hero should be Dead
-  if(hero->getStatus() == AnimatedEntity::Die && !hero->animatedSprite.isPlaying()) // if dying with no active die animation, entity should be dead
-  {
-    hero->setStatus(AnimatedEntity::Dead);
-    hero->playAnimation();
-  }
-
   // Check if entity should be Dead
-  for(auto it = level->entities.begin(); it != level->entities.end(); ++it)
+  hero->ifDead();
+  for( auto it = level->entities.begin(); it != level->entities.end(); ++it )
   {
-    if((*it)->getStatus() == AnimatedEntity::Die && !(*it)->animatedSprite.isPlaying()) // if dying with no active die animation, entity should be dead
-    {
-      (*it)->setStatus(AnimatedEntity::Dead);
-      (*it)->playAnimation();
-    }
+    (*it)->ifDead();
   }
 
   // remove dead entities from level
@@ -300,19 +299,19 @@ void CPlayState::Update(CGameEngine* game)
 
 
   // -------------------
-  // Victory Conditions
+  // Game Over Conditions
   // -------------------
-  /*
-  if( Victory() )
+
+  if( hero->getHP() <= 0 )
   {
     //push state to victory state
   }
-
-  if( GameOver() )
+/*
+  if( )
   {
     // push state to game over state
   }
-  */
+*/
 
   // -------------------
   // Update HUD
@@ -322,7 +321,7 @@ void CPlayState::Update(CGameEngine* game)
   HUD_weapon.setRotation( 90 );
   HUD_health.setString( to_string( hero->getHP() ) );
   HUD_timer.setString( to_string( this->level->getGameOverTime() - this->level->getRunningTime() ) );
-  HUD_sheep_count.setString( to_string( this->level->getNPCDeathCount() ) );
+  HUD_sheep_count.setString( to_string( this->level->getEnemyDeathCount() ) );
 
 } // end CState::Update
 
@@ -421,13 +420,22 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
         window.draw( (*it)->healthbar );
       }
 
-      if( dynamic_cast<NPC&>(**it).getWeapon() != nullptr )
+      // draw weapon in front of npc only when weapon is not pointing towards top of screen
+      if( dynamic_cast<NPC&>(**it).getWeapon()->animatedSprite.getRotation() >= 90
+         && dynamic_cast<NPC&>(**it).getWeapon()->animatedSprite.getRotation() <= 270 )
+      {
+        window.draw( dynamic_cast<NPC&>(**it).getWeapon()->animatedSprite );
+      }
+/*
+      // no longer needed now that npc weapons are treated like any other entity
+      if( dynamic_cast<NPC&>(**it).getWeapon()->getType() != Weapon::Hands  )
       {
         NPC& npc = dynamic_cast<NPC&>(**it);
         npc.getWeapon()->animatedSprite.update( game->frameTime );
         npc.getWeapon()->MoveAnimatedSprite( interpolation );
         window.draw( npc.getWeapon()->animatedSprite );
       }
+*/
     }
 
   }

@@ -15,7 +15,7 @@ std::vector<HeroData> DataTable::initializeHeroData()
 {
   std::vector<HeroData> data(Hero::TypeCount);
 
-  data[Hero::Bob].hitpoints = 10;
+  data[Hero::Bob].hitpoints = 100;
   data[Hero::Bob].speed = 10;
   data[Hero::Bob].power = 1;
   data[Hero::Bob].idleAnimationID = Animations::Human_1_Idle;
@@ -24,7 +24,7 @@ std::vector<HeroData> DataTable::initializeHeroData()
   data[Hero::Bob].deadAnimationID = Animations::Human_1_Dead;
   data[Hero::Bob].attackedAnimationID = Animations::Human_1_Attacked;
   data[Hero::Bob].grabAnimationID = Animations::Human_1_Grab;
-  data[Hero::Bob].punchAnimationID = Animations::Hero_Punch;
+  //data[Hero::Bob].punchAnimationID = Animations::Hero_Punch;
   data[Hero::Bob].hitboxDimensions = sf::Vector2u(35,35);
   data[Hero::Bob].color = sf::Color::White;
 
@@ -37,7 +37,7 @@ std::vector<HeroData> DataTable::initializeHeroData()
   data[Hero::SuitDrew].deadAnimationID = Animations::Human_10_Dead;
   data[Hero::SuitDrew].attackedAnimationID = Animations::Human_10_Attacked;
   data[Hero::SuitDrew].grabAnimationID = Animations::Human_10_Grab;
-  data[Hero::SuitDrew].punchAnimationID = Animations::Hero_Punch;
+  //data[Hero::SuitDrew].punchAnimationID = Animations::Hero_Punch;
   data[Hero::SuitDrew].hitboxDimensions = sf::Vector2u(35,35);
   data[Hero::SuitDrew].color = sf::Color::White;
 
@@ -50,7 +50,7 @@ std::vector<HeroData> DataTable::initializeHeroData()
   data[Hero::GeezerHarry].deadAnimationID = Animations::Human_11_Dead;
   data[Hero::GeezerHarry].attackedAnimationID = Animations::Human_11_Attacked;
   data[Hero::GeezerHarry].grabAnimationID = Animations::Human_11_Grab;
-  data[Hero::GeezerHarry].punchAnimationID = Animations::Hero_Punch;
+  //data[Hero::GeezerHarry].punchAnimationID = Animations::Hero_Punch;
   data[Hero::GeezerHarry].hitboxDimensions = sf::Vector2u(35,35);
   data[Hero::GeezerHarry].color = sf::Color::White;
 
@@ -63,7 +63,7 @@ std::vector<HeroData> DataTable::initializeHeroData()
   data[Hero::DirtyPete].deadAnimationID = Animations::Human_12_Dead;
   data[Hero::DirtyPete].attackedAnimationID = Animations::Human_12_Attacked;
   data[Hero::DirtyPete].grabAnimationID = Animations::Human_12_Grab;
-  data[Hero::DirtyPete].punchAnimationID = Animations::Hero_Punch;
+  //data[Hero::DirtyPete].punchAnimationID = Animations::Hero_Punch;
   data[Hero::DirtyPete].hitboxDimensions = sf::Vector2u(35,35);
   data[Hero::DirtyPete].color = sf::Color::White;
 
@@ -87,6 +87,7 @@ std::vector<NPCData> DataTable::initializeNPCData()
   data[NPC::Sheep].thrownAnimationID = Animations::Sheep_Walk;
   data[NPC::Sheep].hitboxDimensions = sf::Vector2u(35,35);
   data[NPC::Sheep].color = sf::Color::White;
+  data[NPC::Sheep].scaleFactor = 1.0;
 
   data[NPC::McGinger].hitpoints = 10;
   data[NPC::McGinger].speed = 1;
@@ -271,6 +272,7 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Pistol].ammoType = Projectile::Bullet;
   data[Weapon::Pistol].ammoCount = 25;
   data[Weapon::Pistol].hitboxDimensions = sf::Vector2u(10,10);
+  data[Weapon::Pistol].scaleFactor = 0.8;
 
   data[Weapon::Shotgun].power = 2;
   data[Weapon::Shotgun].range = 3;

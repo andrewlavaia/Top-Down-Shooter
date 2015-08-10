@@ -72,8 +72,8 @@ protected:
     textures.load(Textures::Human_12_SpriteSheet, "textures/human12.png");
     textures.load(Textures::Human_13_SpriteSheet, "textures/human13.png");
     textures.load(Textures::Sheep_SpriteSheet, "textures/sheep.png");
-    textures.load(Textures::Hero_Punch, "hero_punch.png");
-    textures.load(Textures::Hero_Kick, "hero_kick.png");
+    //textures.load(Textures::Hero_Punch, "hero_punch.png");
+    //textures.load(Textures::Hero_Kick, "hero_kick.png");
     textures.load(Textures::Pistol, "pistol_texture2.png");
     textures.load(Textures::Rifle, "textures/rifle.png");
     textures.load(Textures::Shotgun, "textures/shotgun.png");
@@ -197,11 +197,11 @@ protected:
     animations.load( Animations::Sheep_Dead, textures.get( Textures::Sheep_SpriteSheet ), 50, 40, 4, 1, {4,3,2,1} );
 
     // Delete or replace these
-    animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
-    animations.load(Animations::Hero_Kick, textures.get(Textures::Hero_Kick), 385, 371, 6);
+    //animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
+    //animations.load(Animations::Hero_Kick, textures.get(Textures::Hero_Kick), 385, 371, 6);
 
     // Weapon animations
-    animations.load(Animations::Pistol, textures.get(Textures::Pistol), 48, 48, 1);
+    animations.load(Animations::Pistol, textures.get(Textures::Pistol), 24, 24, 1);
     animations.load(Animations::Rifle, textures.get(Textures::Rifle), 11, 31, 1);
     animations.load(Animations::Shotgun, textures.get(Textures::Shotgun), 13, 27, 1);
     animations.load(Animations::SMG, textures.get(Textures::SMG), 12, 25, 1);

@@ -60,7 +60,7 @@ private:
   const Animation&              deadAnimation;
   const Animation&              attackedAnimation;
   const Animation&              grabAnimation;
-  const Animation&              punchAnimation;
+  //const Animation&              punchAnimation;
 };
 
 #endif // HERO_H

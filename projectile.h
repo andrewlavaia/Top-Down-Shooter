@@ -4,6 +4,7 @@
 
 #include "animatedentity.h"
 
+class Weapon;
 class DataTable;
 
 class Projectile : public AnimatedEntity
@@ -19,13 +20,14 @@ public:
   };
 
   explicit Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data,
-                      double x = 0, double y = 0, double degrees = 0);
+                      const Weapon& weapon, double x = 0, double y = 0, double degrees = 0);
 
   virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
   virtual void playAnimation();
 
   Type getType() const { return type; }
   unsigned getRange() const { return range; }
+  const Weapon& getOriginatingWeapon() const { return originatingWeapon; }
 
 private:
   Type type;
@@ -33,7 +35,7 @@ private:
   const Animation& moveAnimation;
   const Animation& dieAnimation;
   unsigned range;
-  //const Weapon& firedWeapon; // weapon that projectile originated from (needed for collision detection purposes)
+  const Weapon& originatingWeapon; // weapon that projectile originated from (needed for collision detection purposes)
 };
 
 #endif

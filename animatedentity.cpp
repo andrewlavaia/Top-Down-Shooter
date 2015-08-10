@@ -287,7 +287,7 @@ void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 
 bool AnimatedEntity::checkCollision( const AnimatedEntity& a ) const
 {
-  if( this != &a && checkDistance(100, a) && isCollisionOK() && !isDead() && !a.isDead() && Collision::BoundingBoxTest( hitbox, a.hitbox ) )
+  if( this != &a && checkDistance(100, a) && isCollisionOK() && a.isCollisionOK() && Collision::BoundingBoxTest( hitbox, a.hitbox ) )
     return true;
   else
     return false;
@@ -299,6 +299,16 @@ bool AnimatedEntity::isDead() const
     return true;
   else
     return false;
+}
+
+void AnimatedEntity::ifDead()
+{
+  if( getStatus() == AnimatedEntity::Die && !animatedSprite.isPlaying() ) // if dying with no active die animation, entity should be dead
+  {
+    setStatus( AnimatedEntity::Dead );
+    playAnimation();
+    collisionOK = false;
+  }
 }
 
 Orientation AnimatedEntity::getRelativeOrientation( const AnimatedEntity& entity ) const
@@ -359,11 +369,10 @@ bool AnimatedEntity::checkDistance(double distance, const AnimatedEntity& entity
 
 void AnimatedEntity::Destroy()
 {
-  if( isDead() )
+  if( isDead() ) // is this needed???
     return;
 
-  directions.clear();
-  directions_it = directions.begin();
+  clearDirections();
 
   setStatus( AnimatedEntity::Die );
   animatedSprite.setLooped( false );
@@ -373,6 +382,9 @@ void AnimatedEntity::Destroy()
 
 void AnimatedEntity::TakeDamage( double damage )
 {
+  if( getStatus() == AnimatedEntity::Die || getStatus() == AnimatedEntity::Dead )
+    return;
+
   hitpoints = hitpoints - damage;
   if( hitpoints <= 0 )
     Destroy();
@@ -380,6 +392,9 @@ void AnimatedEntity::TakeDamage( double damage )
 
 void AnimatedEntity::TakeDamageOverTime( double damage, sf::Time dt )
 {
+  if( getStatus() == AnimatedEntity::Die || getStatus() == AnimatedEntity::Dead )
+    return;
+
   hitpoints = hitpoints - ( damage * 10 * dt.asSeconds() );
   if( hitpoints <= 0 )
     Destroy();

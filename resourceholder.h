@@ -37,8 +37,8 @@ namespace Textures {
     Human_12_SpriteSheet,
     Human_13_SpriteSheet,
     Sheep_SpriteSheet,
-    Hero_Punch,
-    Hero_Kick,
+    //Hero_Punch,
+    //Hero_Kick,
     NPC_Texture,
     Pistol,
     Rifle,
@@ -152,8 +152,8 @@ namespace Animations {
     Human_13_Attacked,
     Human_13_Die,
     Human_13_Dead,
-    Hero_Punch, // obsolete
-    Hero_Kick,  // obsolete
+    //Hero_Punch, // obsolete
+    //Hero_Kick,  // obsolete
     Sheep_Idle,
     Sheep_Walk,
     Sheep_Attacked,

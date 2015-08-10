@@ -3,13 +3,14 @@
 #include "datatables.h"
 
 Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data,
-                       double x, double y, double degrees)
+                       const Weapon& weapon, double x, double y, double degrees)
   : AnimatedEntity(AnimatedEntity::ProjectileType),
     type(t),
     rotation(degrees),
     moveAnimation(animations.get(data.ProjectileTable[t].moveAnimationID)),
     dieAnimation(animations.get(data.ProjectileTable[t].dieAnimationID)),
-    range(data.ProjectileTable[t].range)
+    range(data.ProjectileTable[t].range),
+    originatingWeapon(weapon)
 {
   setHitPoints(data.ProjectileTable[t].hitpoints);
   setMaxHitPoints(data.ProjectileTable[t].hitpoints);
@@ -32,6 +33,9 @@ Projectile::Projectile(Type t, const ResourceHolder<Animation, Animations::ID>& 
   animatedSprite.setLooped(true);
   //animatedSprite.setFrameTime(sf::seconds(0.16));
   animatedSprite.setColor(data.ProjectileTable[t].color);
+
+  setScaleFactor(data.ProjectileTable[t].scaleFactor);
+  animatedSprite.setScale( getScaleFactor(), getScaleFactor() );
 }
 
 void Projectile::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
@@ -46,7 +50,11 @@ void Projectile::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
       break;
 
     case AnimatedEntity::NPCType :
-      //Destroy(); //fix collision detection
+      // first check to see if the projectiles came from the weapon that the NPC is holding
+      if( &(getOriginatingWeapon()) != &(*dynamic_cast<const NPC&>(a).getWeapon()) )
+      {
+        Destroy();
+      }
       break;
 
     case AnimatedEntity::WeaponType :

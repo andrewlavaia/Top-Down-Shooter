@@ -47,6 +47,8 @@ class AnimatedEntity
     virtual void                            playAnimation() = 0;
 
     virtual void                            Move();
+    virtual void                            ifDead();
+
     void                                    MoveOneUnit(Orientation::Type o, double speed, bool rotation = true);
     void                                    MoveOneUnit(double rotation, double speed);
     void                                    MoveAnimatedSprite(double interpolation);
@@ -90,7 +92,8 @@ class AnimatedEntity
     void                                    setMaxHitPoints(double h) { max_hitpoints = h; }
     void                                    setSpeed(double s) { speed = s; }
     void                                    setPower(double p) { power = p; }
-    void                                    setScaleFactor(unsigned s) { scaleFactor = s; }
+    void                                    setScaleFactor(double s) { scaleFactor = s; }
+
 
   private:
     ParentType                              parentType;

@@ -24,6 +24,7 @@ struct HeroData
     Animations::ID  punchAnimationID = Animations::Empty;
     sf::Color       color = sf::Color::White; // default represents no color
     sf::Vector2u    hitboxDimensions = sf::Vector2u(20,20);
+    double          scaleFactor = 2.0;
 };
 
 struct NPCData
@@ -41,6 +42,7 @@ struct NPCData
     sf::Color       color = sf::Color::White; //default represents no color
     sf::Vector2u    hitboxDimensions = sf::Vector2u(20,20);
     Weapon::Type    weapon = Weapon::Hands;
+    double          scaleFactor = 2.0;
 };
 
 struct WeaponData
@@ -64,7 +66,8 @@ struct WeaponData
     Animations::ID  primaryAnimationID = Animations::Empty;
     Animations::ID  secondaryAnimationID = Animations::Empty;
     sf::Color       color = sf::Color::White; //default represents no color
-    sf::Vector2u    hitboxDimensions = sf::Vector2u(10,10);
+    sf::Vector2u    hitboxDimensions = sf::Vector2u(10, 10);
+    double          scaleFactor = 1.0;
 };
 
 struct CollidableData
@@ -86,6 +89,7 @@ struct ProjectileData
     Animations::ID  dieAnimationID = Animations::Empty;
     sf::Color       color = sf::Color::White; //default represents no color
     sf::Vector2u    hitboxDimensions = sf::Vector2u(5,5);
+    double          scaleFactor = 1.0;
 };
 
 class DataTable
