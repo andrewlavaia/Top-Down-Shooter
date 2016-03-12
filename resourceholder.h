@@ -46,8 +46,17 @@ namespace Textures {
     SMG,
     RocketLauncher,
     Bullet,
+    Dagger_Metallic,
+    ShortSword_Metallic,
+    Sword_Metallic,
+    LongSword_Metallic,
+    SingleAx_Metallic,
+    DoubleAx_Metallic,
+    Spear_Metallic,
     Grass,
     Dungeon,
+    Crosshair,
+
  };
 }
 
@@ -165,6 +174,13 @@ namespace Animations {
     SMG,
     RocketLauncher_Idle,
     Bullet,
+    Dagger_Metallic_Idle,
+    ShortSword_Metallic_Idle,
+    Sword_Metallic_Idle,
+    LongSword_Metallic_Idle,
+    SingleAx_Metallic_Idle,
+    DoubleAx_Metallic_Idle,
+    Spear_Metallic_Idle,
     Grass,
   };
 

@@ -23,11 +23,15 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
     case 1:
       mp.Load("map2.txt");
 
+
+      // Boundaries not really working well. Take out and keave as open map.
+
       // Need to add invisible indestructible wall surrounding level
       CreateCollidable(Collidable::Boundary, 0, 0, 5, bounds.y); // left wall
       CreateCollidable(Collidable::Boundary, bounds.x, 0, 5, bounds.y); // right wall
       CreateCollidable(Collidable::Boundary, 0, 0, bounds.x, 5); // top wall
       CreateCollidable(Collidable::Boundary, 0, bounds.y, bounds.x, 5); // bottom wall
+
 
 
 
@@ -62,8 +66,8 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
 */
       // add weapons
       CreateWeapon( Weapon::SMG, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateWeapon( Weapon::Pole, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateWeapon( Weapon::Pole, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      //CreateWeapon( Weapon::Pole, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      //CreateWeapon( Weapon::Pole, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
       CreateWeapon( Weapon::Shotgun, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
       CreateWeapon( Weapon::Rifle, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
       CreateWeapon( Weapon::Pistol, rand() % (int)getBounds().x, rand() % (int)getBounds().y );

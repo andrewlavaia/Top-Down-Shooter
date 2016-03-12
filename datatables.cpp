@@ -228,39 +228,6 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Hands].ammoType = Projectile::Empty;
   data[Weapon::Hands].ammoCount = 0;
 
-  data[Weapon::Pole].power = 3;
-  data[Weapon::Pole].range = 10;
-  data[Weapon::Pole].idleAnimationID = Animations::Empty;
-  data[Weapon::Pole].moveAnimationID = Animations::Empty;
-  data[Weapon::Pole].primaryAttackType = Attack::Standard;
-  data[Weapon::Pole].secondaryAttackType = Attack::Standard;
-  data[Weapon::Pole].primaryAttackSpeed = 0.5;
-  data[Weapon::Pole].secondaryAttackSpeed = 0.5;
-  data[Weapon::Pole].ammoType = Projectile::Empty;
-  data[Weapon::Pole].ammoCount = 0;
-
-  data[Weapon::Sword].power = 4;
-  data[Weapon::Sword].range = 4;
-  data[Weapon::Sword].idleAnimationID = Animations::Empty;
-  data[Weapon::Sword].moveAnimationID = Animations::Empty;
-  data[Weapon::Sword].primaryAttackType = Attack::Standard;
-  data[Weapon::Sword].secondaryAttackType = Attack::Standard;
-  data[Weapon::Sword].primaryAttackSpeed = 0.3;
-  data[Weapon::Sword].secondaryAttackSpeed = 0.3;
-  data[Weapon::Sword].ammoType = Projectile::Empty;
-  data[Weapon::Sword].ammoCount = 0;
-
-  data[Weapon::Axe].power = 4;
-  data[Weapon::Axe].range = 5;
-  data[Weapon::Axe].idleAnimationID = Animations::Empty;
-  data[Weapon::Axe].moveAnimationID = Animations::Empty;
-  data[Weapon::Axe].primaryAttackType = Attack::Standard;
-  data[Weapon::Axe].secondaryAttackType = Attack::Standard;
-  data[Weapon::Axe].primaryAttackSpeed = 0.4;
-  data[Weapon::Axe].secondaryAttackSpeed = 0.4;
-  data[Weapon::Axe].ammoType = Projectile::Empty;
-  data[Weapon::Axe].ammoCount = 0;
-
   data[Weapon::Pistol].power = 1;
   data[Weapon::Pistol].range = 2;
   data[Weapon::Pistol].idleAnimationID = Animations::Pistol;
@@ -321,6 +288,69 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::RocketLauncher].ammoType = Projectile::Rocket;
   data[Weapon::RocketLauncher].ammoCount = 4;
   data[Weapon::RocketLauncher].hitboxDimensions = sf::Vector2u(10,10);
+
+  data[Weapon::Dagger].power = 3;
+  data[Weapon::Dagger].range = 10;
+  data[Weapon::Dagger].idleAnimationID = Animations::Empty;
+  data[Weapon::Dagger].moveAnimationID = Animations::Empty;
+  data[Weapon::Dagger].primaryAttackType = Attack::Standard;
+  data[Weapon::Dagger].secondaryAttackType = Attack::Standard;
+  data[Weapon::Dagger].primaryAttackSpeed = 0.5;
+  data[Weapon::Dagger].secondaryAttackSpeed = 0.5;
+
+  data[Weapon::ShortSword].power = 3;
+  data[Weapon::ShortSword].range = 10;
+  data[Weapon::ShortSword].idleAnimationID = Animations::Empty;
+  data[Weapon::ShortSword].moveAnimationID = Animations::Empty;
+  data[Weapon::ShortSword].primaryAttackType = Attack::Standard;
+  data[Weapon::ShortSword].secondaryAttackType = Attack::Standard;
+  data[Weapon::ShortSword].primaryAttackSpeed = 0.5;
+  data[Weapon::ShortSword].secondaryAttackSpeed = 0.5;
+
+  data[Weapon::Sword].power = 4;
+  data[Weapon::Sword].range = 4;
+  data[Weapon::Sword].idleAnimationID = Animations::Empty;
+  data[Weapon::Sword].moveAnimationID = Animations::Empty;
+  data[Weapon::Sword].primaryAttackType = Attack::Standard;
+  data[Weapon::Sword].secondaryAttackType = Attack::Standard;
+  data[Weapon::Sword].primaryAttackSpeed = 0.3;
+  data[Weapon::Sword].secondaryAttackSpeed = 0.3;
+
+  data[Weapon::LongSword].power = 4;
+  data[Weapon::LongSword].range = 4;
+  data[Weapon::LongSword].idleAnimationID = Animations::Empty;
+  data[Weapon::LongSword].moveAnimationID = Animations::Empty;
+  data[Weapon::LongSword].primaryAttackType = Attack::Standard;
+  data[Weapon::LongSword].secondaryAttackType = Attack::Standard;
+  data[Weapon::LongSword].primaryAttackSpeed = 0.3;
+  data[Weapon::LongSword].secondaryAttackSpeed = 0.3;
+
+  data[Weapon::SingleAxe].power = 4;
+  data[Weapon::SingleAxe].range = 5;
+  data[Weapon::SingleAxe].idleAnimationID = Animations::Empty;
+  data[Weapon::SingleAxe].moveAnimationID = Animations::Empty;
+  data[Weapon::SingleAxe].primaryAttackType = Attack::Standard;
+  data[Weapon::SingleAxe].secondaryAttackType = Attack::Standard;
+  data[Weapon::SingleAxe].primaryAttackSpeed = 0.4;
+  data[Weapon::SingleAxe].secondaryAttackSpeed = 0.4;
+
+  data[Weapon::DoubleAxe].power = 4;
+  data[Weapon::DoubleAxe].range = 5;
+  data[Weapon::DoubleAxe].idleAnimationID = Animations::Empty;
+  data[Weapon::DoubleAxe].moveAnimationID = Animations::Empty;
+  data[Weapon::DoubleAxe].primaryAttackType = Attack::Standard;
+  data[Weapon::DoubleAxe].secondaryAttackType = Attack::Standard;
+  data[Weapon::DoubleAxe].primaryAttackSpeed = 0.4;
+  data[Weapon::DoubleAxe].secondaryAttackSpeed = 0.4;
+
+  data[Weapon::Spear].power = 4;
+  data[Weapon::Spear].range = 5;
+  data[Weapon::Spear].idleAnimationID = Animations::Empty;
+  data[Weapon::Spear].moveAnimationID = Animations::Empty;
+  data[Weapon::Spear].primaryAttackType = Attack::Standard;
+  data[Weapon::Spear].secondaryAttackType = Attack::Standard;
+  data[Weapon::Spear].primaryAttackSpeed = 0.4;
+  data[Weapon::Spear].secondaryAttackSpeed = 0.4;
 
   return data;
 }

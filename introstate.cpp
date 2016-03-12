@@ -8,6 +8,11 @@ CIntroState CIntroState::IntroState;
 void CIntroState::Init(CGameEngine* game)
 {
   std::cout << "Intro State started." << std::endl ;
+
+  header.setFont( fonts.get( Fonts::Calibri ) );
+  header.setColor( sf::Color::Blue );
+  header.setPosition( 50, 150 );
+  header.setString( "Congratulations young man, you have just inherited a sheep farm." );
 }
 
 void CIntroState::Cleanup()
@@ -54,7 +59,8 @@ void CIntroState::Update(CGameEngine* game)
 
 void CIntroState::Draw(CGameEngine* game, double interpolation)
 {
-  game->window.clear();
+  game->window.clear( sf::Color::White );
+  game->window.draw( header );
   game->window.display();
 
 }

@@ -22,10 +22,19 @@ public:
 	}
 
 protected:
-	CHighScoreState() { }
+	CHighScoreState()
+	{
+    fonts.load(Fonts::Calibri, "calibri.ttf");
+  }
 
 private:
 	static CHighScoreState HighScoreState;
+
+  ResourceHolder<sf::Font, Fonts::ID> fonts;
+  ResourceHolder<sf::Texture, Textures::ID> textures;
+  ResourceHolder<Animation, Animations::ID> animations;
+
+  sf::Text header;
 
 };
 

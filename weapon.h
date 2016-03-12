@@ -15,17 +15,21 @@ class Weapon : public AnimatedEntity
   public:
     enum Type {
       Hands,
-      Pole,
-      Sword,
-      Axe,
       Pistol,
       Shotgun,
       Rifle,
       SMG,
       RocketLauncher,
+      Dagger,
+      ShortSword,
+      Sword,
+      LongSword,
+      SingleAxe,
+      DoubleAxe,
+      Spear,
       TypeCount
     };
-    // weapon that immbolizes NPC for period of time (ancient rope with balls on it)
+    // weapon that immbolizes NPC for period of time (ancient rope with balls on it)?
 
     explicit Weapon(Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y);
 

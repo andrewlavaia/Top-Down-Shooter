@@ -34,6 +34,9 @@ void CPlayState::Init(CGameEngine* game)
  }
 
   HUD_background.setSize( sf::Vector2f( game->window.getSize().x, 50 ) );
+  crosshair.setPosition( game->window.mapPixelToCoords( sf::Mouse::getPosition( game->window ) ) );
+  game->window.setMouseCursorVisible(false);
+
 }
 
 void CPlayState::Cleanup()
@@ -330,7 +333,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
 {
 
   // Hero Animation Rules
-  if(this->noKeyPressed && ( hero->getStatus() == AnimatedEntity::Moving || hero->getStatus() == AnimatedEntity::Impassable ) )
+  if( this->noKeyPressed && ( hero->getStatus() == AnimatedEntity::Moving || hero->getStatus() == AnimatedEntity::Impassable ) )
   {
     hero->setStatus(AnimatedEntity::Idle);
     hero->playAnimation();
@@ -403,6 +406,10 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   window.draw( HUD_timer );
   window.draw( HUD_sheep_count );
 
+  // draw crosshair
+  crosshair.setPosition( window.mapPixelToCoords( sf::Mouse::getPosition( window ) ) );
+  window.draw( crosshair );
+
   // ---------------------
   // Draw Entities
   // ---------------------
@@ -426,16 +433,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
       {
         window.draw( dynamic_cast<NPC&>(**it).getWeapon()->animatedSprite );
       }
-/*
-      // no longer needed now that npc weapons are treated like any other entity
-      if( dynamic_cast<NPC&>(**it).getWeapon()->getType() != Weapon::Hands  )
-      {
-        NPC& npc = dynamic_cast<NPC&>(**it);
-        npc.getWeapon()->animatedSprite.update( game->frameTime );
-        npc.getWeapon()->MoveAnimatedSprite( interpolation );
-        window.draw( npc.getWeapon()->animatedSprite );
-      }
-*/
+
     }
 
   }

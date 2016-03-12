@@ -8,6 +8,11 @@ CHighScoreState CHighScoreState::HighScoreState;
 void CHighScoreState::Init(CGameEngine* game)
 {
   std::cout << "High Score State started." << std::endl;
+
+  header.setFont( fonts.get( Fonts::Calibri ) );
+  header.setColor( sf::Color::Blue );
+  header.setPosition( 50, 150 );
+  header.setString( "High Scores" );
 }
 
 void CHighScoreState::Cleanup()
@@ -54,6 +59,7 @@ void CHighScoreState::Update(CGameEngine* game)
 
 void CHighScoreState::Draw(CGameEngine* game, double interpolation)
 {
-  game->window.clear();
+  game->window.clear( sf::Color::White );
+  game->window.draw( header );
   game->window.display();
 }

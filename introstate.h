@@ -23,10 +23,19 @@ public:
 
 
 protected:
-	CIntroState() { }
+	CIntroState()
+  {
+    fonts.load(Fonts::Calibri, "calibri.ttf");
+  }
 
 private:
 	static CIntroState IntroState;
+
+  ResourceHolder<sf::Font, Fonts::ID> fonts;
+  ResourceHolder<sf::Texture, Textures::ID> textures;
+  ResourceHolder<Animation, Animations::ID> animations;
+
+  sf::Text header;
 
 };
 

@@ -82,6 +82,7 @@ protected:
     textures.load(Textures::Bullet, "bullet.png");
     textures.load(Textures::Grass, "grass.jpg");
     textures.load(Textures::Dungeon, "dungeon.png");
+    textures.load(Textures::Crosshair, "textures/crosshair.png");
 
     animations.load( Animations::Empty, textures.get( Textures::Empty ), 1, 1, 1 );
     animations.load( Animations::Hitbox, textures.get( Textures::Hitbox ), 1, 1, 1 );
@@ -231,6 +232,9 @@ protected:
     HUD_sheep_count.setCharacterSize(40);
     HUD_sheep_count.setColor(sf::Color::Black);
 
+    crosshair.setTexture( textures.get( Textures::Crosshair ) );
+    crosshair.setOrigin(25,25);
+
   }
 
 private:
@@ -250,6 +254,7 @@ private:
 	sf::Text HUD_health;
 	sf::Text HUD_timer;
 	sf::Text HUD_sheep_count;
+	sf::Sprite crosshair;
 
 };
 

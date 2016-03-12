@@ -11,30 +11,30 @@ void CCharSelectState::Init(CGameEngine* game)
   hero1.play(animations.get(Animations::Human_1_Idle));
   hero1.setLooped(true);
   hero1.setScale(2, 2);
-  hero1.setPosition(50, 50);
+  hero1.setPosition(100, 50);
 
   hero2.play(animations.get(Animations::Human_10_Idle));
   hero2.setLooped(true);
   hero2.setScale(2, 2);
-  hero2.setPosition(150, 50);
+  hero2.setPosition(200, 50);
 
   hero3.play(animations.get(Animations::Human_11_Idle));
   hero3.setLooped(true);
   hero3.setScale(2, 2);
-  hero3.setPosition(250, 50);
+  hero3.setPosition(300, 50);
 
   hero4.play(animations.get(Animations::Human_12_Idle));
   hero4.setLooped(true);
   hero4.setScale(2, 2);
-  hero4.setPosition(350, 50);
+  hero4.setPosition(400, 50);
 
   hoverBorder.setPosition( hero1.getPosition() );
   selectBorder.setPosition( hero1.getPosition() );
 
   header.setFont( fonts.get( Fonts::Calibri ) );
   header.setColor( sf::Color::Blue );
-  header.setPosition( 50, 25 );
-  header.setString( "Choose a character" );
+  header.setPosition( 50, 150 );
+  header.setString( "Select your character by clicking on him. Press SpaceBar to begin." );
 }
 
 void CCharSelectState::Cleanup()
