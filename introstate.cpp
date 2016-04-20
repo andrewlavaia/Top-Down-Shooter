@@ -9,10 +9,19 @@ void CIntroState::Init(CGameEngine* game)
 {
   std::cout << "Intro State started." << std::endl ;
 
-  header.setFont( fonts.get( Fonts::Calibri ) );
-  header.setColor( sf::Color::Blue );
-  header.setPosition( 50, 150 );
-  header.setString( "Congratulations young man, you have just inherited a sheep farm." );
+  header1.setFont( fonts.get( Fonts::Calibri ) );
+  header1.setColor( sf::Color::Blue );
+  header1.setPosition( 50, 150 );
+  header2.setFont( fonts.get( Fonts::Calibri ) );
+  header2.setColor( sf::Color::Blue );
+  header2.setPosition( 50, 200 );
+  header3.setFont( fonts.get( Fonts::Calibri ) );
+  header3.setColor( sf::Color::Blue );
+  header3.setPosition( 50, 250 );
+
+  header1.setString( "Congratulations young man, you just inherited a sheep farm.");
+  header2.setString( "Your job is to protect your sheep as long as you possibly can." );
+  header3.setString( "Good luck..." );
 }
 
 void CIntroState::Cleanup()
@@ -60,7 +69,9 @@ void CIntroState::Update(CGameEngine* game)
 void CIntroState::Draw(CGameEngine* game, double interpolation)
 {
   game->window.clear( sf::Color::White );
-  game->window.draw( header );
+  game->window.draw( header1 );
+  game->window.draw( header2 );
+  game->window.draw( header3 );
   game->window.display();
 
 }

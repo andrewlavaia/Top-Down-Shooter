@@ -80,9 +80,9 @@ protected:
     textures.load(Textures::SMG, "textures/smg.png");
     textures.load(Textures::RocketLauncher, "textures/rocketlauncher.png");
     textures.load(Textures::Bullet, "bullet.png");
-    textures.load(Textures::Grass, "grass.jpg");
     textures.load(Textures::Dungeon, "dungeon.png");
     textures.load(Textures::Crosshair, "textures/crosshair.png");
+    textures.load(Textures::Grass, "textures/grass_texture.png");
 
     animations.load( Animations::Empty, textures.get( Textures::Empty ), 1, 1, 1 );
     animations.load( Animations::Hitbox, textures.get( Textures::Hitbox ), 1, 1, 1 );

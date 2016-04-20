@@ -35,7 +35,10 @@ private:
   ResourceHolder<sf::Texture, Textures::ID> textures;
   ResourceHolder<Animation, Animations::ID> animations;
 
-  sf::Text header;
+  sf::Text header1;
+  sf::Text header2;
+  sf::Text header3;
+
 
 };
 

@@ -14,6 +14,7 @@ void MainMenu::Initialize()
   //auto button_options = sfg::Button::Create( "Options" );
 	auto button_exit = sfg::Button::Create( "Exit" );
 
+
 	button_ng->GetSignal( sfg::Widget::OnLeftClick ).Connect( std::bind( &MainMenu::OnNGButtonClick, this ) );
 	button_hs->GetSignal( sfg::Widget::OnLeftClick ).Connect( std::bind( &MainMenu::OnHSButtonClick, this ) );
 	//button_options->GetSignal( sfg::Widget::OnLeftClick ).Connect( std::bind( &MainMenu::OnOptionsButtonClick, this ) );
@@ -25,6 +26,8 @@ void MainMenu::Initialize()
 	box->Pack( button_hs, false );
 	//box->Pack( button_options, false );
 	box->Pack( button_exit, false );
+
+	box->SetPosition(sf::Vector2f(450, 250));
 
 /*
 	// Create a movable expandable window and add the box layouter to it. Also set the window's title.

@@ -7,7 +7,9 @@ void CPlayState::Init(CGameEngine* game)
 {
   std::cout << "Play State started." << std::endl;
   //this->level->Load(1);
-  level->background.setTexture( textures.get( Textures::Dungeon ) );
+  level->background.setTexture( textures.get( Textures::Grass ) );
+  //level->background.setTexture( textures.get( Textures::Dungeon ) );
+
   std::cout << "Level 1 Loaded." << std::endl;
   std::cout<< "Hero " << CCharSelectState::Instance()->getSelectedHero() << " selected" << std::endl;
 
@@ -345,6 +347,21 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   sf::RenderWindow& window = game->window;
   window.clear( sf::Color( 0, 0, 0) );
 
+  // Set Views
+  sf::View standard = window.getView(); // set current view
+
+  // initialize mini-map view
+  unsigned int size = 250; // The 'minimap' view will show a smaller picture of the map
+  sf::View minimap(sf::FloatRect(standard.getCenter().x, standard.getCenter().y, static_cast<float>(size), static_cast<float>(window.getSize().y*size/window.getSize().x)));
+  minimap.setViewport(sf::FloatRect(1.f-static_cast<float>(minimap.getSize().x)/window.getSize().x-0.02f, 1.f-static_cast<float>(minimap.getSize().y)/window.getSize().y-0.02f, static_cast<float>(minimap.getSize().x)/window.getSize().x, static_cast<float>(minimap.getSize().y)/window.getSize().y));
+  //minimap.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 0.25f));
+  minimap.zoom(6.f);
+
+  sf::RectangleShape miniback; // We want to draw a rectangle behind the minimap
+  miniback.setPosition( window.mapPixelToCoords( sf::Vector2i( -500, -500 ) ) );
+  miniback.setSize(sf::Vector2f(window.getSize().x*8, window.getSize().y*8));
+  miniback.setFillColor(sf::Color::Black);
+
   // ------------------------
   // Move Camera
   // ------------------------
@@ -354,29 +371,27 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
 
   sf::Vector2i p = window.mapCoordsToPixel(hero->position);
   const double limit = 200;
+  const double max_width = 4000;
+  const double max_height = 2658;
   if( p.x > (double)window.getSize().x - limit )
   {
-    sf::View view = window.getView();
-    view.move( hero->getSpeed() * interpolation, 0.0 );
-    window.setView( view );
+    standard.move( hero->getSpeed() * interpolation, 0.0 );
+    window.setView( standard );
   }
   else if( p.x < limit )
   {
-    sf::View view = window.getView();
-    view.move( hero->getSpeed() * interpolation * -1, 0.0 );
-    window.setView( view );
+    standard.move( hero->getSpeed() * interpolation * -1, 0.0 );
+    window.setView( standard );
   }
   if( p.y > (double)window.getSize().y - limit )
   {
-    sf::View view = window.getView();
-    view.move( 0.0, hero->getSpeed() * interpolation );
-    window.setView( view );
+    standard.move( 0.0, hero->getSpeed() * interpolation );
+    window.setView( standard );
   }
   else if( p.y < limit )
   {
-    sf::View view = window.getView();
-    view.move( 0.0, hero->getSpeed() * interpolation * -1);
-    window.setView( view );
+    standard.move( 0.0, hero->getSpeed() * interpolation * -1);
+    window.setView( standard );
   }
 
 
@@ -385,6 +400,9 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // --------------------
 
   window.draw( level->background );
+  window.setView( minimap );
+  window.draw( miniback );
+  window.setView( standard );
 
   // --------------------
   // Draw HUD
@@ -418,6 +436,9 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
+    window.setView( minimap );
+    window.draw( (*it)->animatedSprite );
+    window.setView( standard );
     //window.draw((*it)->hitbox); // DEBUG only
     if( (*it)->getParentType() == AnimatedEntity::NPCType )
     {
@@ -445,6 +466,10 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   hero->animatedSprite.update( game->frameTime );
   hero->MoveAnimatedSprite( interpolation );
   window.draw( hero->animatedSprite );
+
+  window.setView( minimap );
+  window.draw( hero->animatedSprite );
+  window.setView( standard );
   //window.draw(hero->hitbox); // DEBUG only
 
   // draw weapon in front of hero only when weapon is not pointing towards top of screen
@@ -453,7 +478,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   {
     window.draw( hero->getWeapon()->animatedSprite );
   }
-
 
 
   // ---------------
