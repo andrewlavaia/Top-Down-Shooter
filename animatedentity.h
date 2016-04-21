@@ -80,6 +80,7 @@ class AnimatedEntity
     sf::Sprite                              hitbox; // every animated entity should have an invisible sf::sprite behind it that will serve as a hitbox for collision tests
     sf::RectangleShape                      healthbar; //graphically displays current health
     sf::RectangleShape                      healthbar_damage; //graphically displays missing health
+    sf::Color                               minimap_color;
 
   protected:
     void                                    Destroy();

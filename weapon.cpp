@@ -40,6 +40,8 @@ Weapon::Weapon( Type t, const ResourceHolder<Animation, Animations::ID>& animati
 
   animatedSprite.setRotation( 90 );
   hitbox.setRotation( 90 );
+
+  minimap_color = sf::Color::Black;
 }
 
 

@@ -35,7 +35,7 @@ void CPlayState::Init(CGameEngine* game)
     break;
  }
 
-  HUD_background.setSize( sf::Vector2f( game->window.getSize().x, 50 ) );
+  HUD_background.setSize( sf::Vector2f( game->window.getSize().x, game->window.getSize().y * .10 ) );
   crosshair.setPosition( game->window.mapPixelToCoords( sf::Mouse::getPosition( game->window ) ) );
   game->window.setMouseCursorVisible(false);
 
@@ -351,16 +351,35 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   sf::View standard = window.getView(); // set current view
 
   // initialize mini-map view
-  unsigned int size = 250; // The 'minimap' view will show a smaller picture of the map
-  sf::View minimap(sf::FloatRect(standard.getCenter().x, standard.getCenter().y, static_cast<float>(size), static_cast<float>(window.getSize().y*size/window.getSize().x)));
-  minimap.setViewport(sf::FloatRect(1.f-static_cast<float>(minimap.getSize().x)/window.getSize().x-0.02f, 1.f-static_cast<float>(minimap.getSize().y)/window.getSize().y-0.02f, static_cast<float>(minimap.getSize().x)/window.getSize().x, static_cast<float>(minimap.getSize().y)/window.getSize().y));
-  //minimap.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 0.25f));
-  minimap.zoom(6.f);
+  unsigned int size = 200; // The 'minimap' view will show a smaller picture of the map
+  //sf::View minimap(sf::FloatRect(standard.getCenter().x, standard.getCenter().y, static_cast<float>(size), static_cast<float>(window.getSize().y*size/window.getSize().x)));
+  sf::View minimap(sf::FloatRect(hero->position.x, hero->position.y, static_cast<float>(size), static_cast<float>(window.getSize().y*size/window.getSize().x)));
+  //minimap.setViewport(sf::FloatRect(1.f-static_cast<float>(minimap.getSize().x)/window.getSize().x-0.02f, 1.f-static_cast<float>(minimap.getSize().y)/window.getSize().y-0.02f, static_cast<float>(minimap.getSize().x)/window.getSize().x, static_cast<float>(minimap.getSize().y)/window.getSize().y));
+  minimap.setViewport(sf::FloatRect(0.90f, 0, 0.10f, 0.10f));
+  minimap.zoom(10.f);
 
   sf::RectangleShape miniback; // We want to draw a rectangle behind the minimap
-  miniback.setPosition( window.mapPixelToCoords( sf::Vector2i( -500, -500 ) ) );
-  miniback.setSize(sf::Vector2f(window.getSize().x*8, window.getSize().y*8));
-  miniback.setFillColor(sf::Color::Black);
+  miniback.setPosition( window.mapPixelToCoords( sf::Vector2i( -1000, -1000 ) ) );
+  miniback.setSize(sf::Vector2f(window.getSize().x*10, window.getSize().y*10)); // make background larger than necessary so that it covers entire view
+  miniback.setFillColor(sf::Color::White);
+
+  sf::RectangleShape minihero;
+  minihero.setPosition(hero->position);
+  minihero.setSize(sf::Vector2f(100, 100));
+  minihero.setOrigin(50,50);
+  minihero.setFillColor(sf::Color::Blue);
+
+  sf::RectangleShape mininpc;
+  mininpc.setPosition(sf::Vector2f(-1000,-1000)); // temporary holding place
+  mininpc.setSize(sf::Vector2f(80, 80));
+  mininpc.setOrigin(40,40);
+  mininpc.setFillColor(sf::Color::Red);
+
+  sf::RectangleShape miniweapon;
+  miniweapon.setPosition(sf::Vector2f(-1000,-1000)); // temporary holding place
+  miniweapon.setSize(sf::Vector2f(40, 40));
+  miniweapon.setOrigin(20,20);
+  miniweapon.setFillColor(sf::Color::Black);
 
   // ------------------------
   // Move Camera
@@ -400,33 +419,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // --------------------
 
   window.draw( level->background );
-  window.setView( minimap );
-  window.draw( miniback );
-  window.setView( standard );
 
-  // --------------------
-  // Draw HUD
-  // --------------------
-  // move hud to top of active view
-  HUD_background.setPosition( window.mapPixelToCoords( sf::Vector2i( 0, 0 ) ) );
-  HUD_health.setPosition( window.mapPixelToCoords( sf::Vector2i( 50, 0 ) ) );
-  HUD_weapon.setPosition( window.mapPixelToCoords( sf::Vector2i( 150, 10 ) ) );
-  HUD_timer.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x/2, 0 ) ) );
-  HUD_sheep_count.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x - 50, 0 ) ) );
-
-  // update AnimatedSprites
-  HUD_weapon.update( game->frameTime );
-
-  // draw hud
-  window.draw( HUD_background );
-  window.draw( HUD_health );
-  window.draw( HUD_weapon );
-  window.draw( HUD_timer );
-  window.draw( HUD_sheep_count );
-
-  // draw crosshair
-  crosshair.setPosition( window.mapPixelToCoords( sf::Mouse::getPosition( window ) ) );
-  window.draw( crosshair );
 
   // ---------------------
   // Draw Entities
@@ -436,9 +429,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
-    window.setView( minimap );
-    window.draw( (*it)->animatedSprite );
-    window.setView( standard );
     //window.draw((*it)->hitbox); // DEBUG only
     if( (*it)->getParentType() == AnimatedEntity::NPCType )
     {
@@ -466,10 +456,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   hero->animatedSprite.update( game->frameTime );
   hero->MoveAnimatedSprite( interpolation );
   window.draw( hero->animatedSprite );
-
-  window.setView( minimap );
-  window.draw( hero->animatedSprite );
-  window.setView( standard );
   //window.draw(hero->hitbox); // DEBUG only
 
   // draw weapon in front of hero only when weapon is not pointing towards top of screen
@@ -478,6 +464,52 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   {
     window.draw( hero->getWeapon()->animatedSprite );
   }
+
+  // --------------------
+  // Draw HUD
+  // --------------------
+  // move hud to top of active view
+  // drawn last so that it is on top of everything
+  HUD_background.setPosition( window.mapPixelToCoords( sf::Vector2i( 0, 0 ) ) );
+  HUD_health.setPosition( window.mapPixelToCoords( sf::Vector2i( 50, 0 ) ) );
+  HUD_weapon.setPosition( window.mapPixelToCoords( sf::Vector2i( 150, 10 ) ) );
+  HUD_timer.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x/2, 0 ) ) );
+  HUD_sheep_count.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x - 50, 0 ) ) );
+
+  // update AnimatedSprites
+  HUD_weapon.update( game->frameTime );
+
+  // draw hud
+  window.draw( HUD_background );
+  window.draw( HUD_health );
+  window.draw( HUD_weapon );
+  window.draw( HUD_timer );
+  window.draw( HUD_sheep_count );
+
+  // draw minimap
+  window.setView( minimap );
+  window.draw( miniback );
+  for(std::vector< std::shared_ptr<AnimatedEntity> >::const_iterator it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
+  {
+    if( !(*it)->isDead() && (*it)->getParentType() == AnimatedEntity::NPCType )
+    {
+      mininpc.setPosition((*it)->position.x, (*it)->position.y);
+      mininpc.setFillColor( (*it)->minimap_color );
+      window.draw( mininpc );
+    } else if( !(*it)->isDead() && (*it)->getParentType() == AnimatedEntity::WeaponType )
+    {
+      miniweapon.setPosition((*it)->position.x, (*it)->position.y);
+      miniweapon.setFillColor( (*it)->minimap_color );
+      window.draw( miniweapon );
+    }
+  }
+
+  window.draw( minihero );
+  window.setView( standard );
+
+  // draw crosshair
+  crosshair.setPosition( window.mapPixelToCoords( sf::Mouse::getPosition( window ) ) );
+  window.draw( crosshair );
 
 
   // ---------------

@@ -44,6 +44,8 @@ Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, 
   setStatus(AnimatedEntity::Idle);
   playAnimation();
 
+  minimap_color = sf::Color::Blue;
+
 }
 
 void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)

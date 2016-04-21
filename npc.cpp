@@ -39,6 +39,7 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations,
 
   setScaleFactor( data.NPCTable[t].scaleFactor );
   animatedSprite.setScale( getScaleFactor(), getScaleFactor() );
+  minimap_color = sf::Color::Red;
 
   // set AI
   switch(type)
@@ -64,6 +65,7 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations,
       AddDirection(Orientation::E,  100, getSpeed(), true);
       AddDirection(Orientation::N,  100, getSpeed(), true);
       AddDirection(Orientation::W,  100, getSpeed(), true);
+      minimap_color = sf::Color::Green;
       break;
 
     default :

@@ -10,7 +10,8 @@ AnimatedEntity::AnimatedEntity( ParentType pType )
     status( AnimatedEntity::Idle ),
     distance_travelled( 0 ),
     scaleFactor( 1.0 ),
-    collisionOK( true )
+    collisionOK( true ),
+    minimap_color( sf::Color::Transparent )
     //collisionCooldown( sf::Time::Zero )
 {
   directions.clear();
