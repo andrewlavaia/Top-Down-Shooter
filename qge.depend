@@ -513,8 +513,9 @@
 	"level.h"
 	"charselectstate.h"
 
-1415370129 c:\c++\qge\helpers.h
+1461451208 c:\c++\qge\helpers.h
 	<sstream>
+	<iomanip>
 
 1438221112 c:\c++\qge\attack.h
 	<SFML/Graphics.hpp>
@@ -574,9 +575,10 @@
 1398053945 c:\c++\qge\tile.h
 	<SFML/Graphics.hpp>
 
-1438643793 c:\c++\qge\level.h
+1461457456 c:\c++\qge\level.h
 	<vector>
 	<memory>
+	<random>
 	"mapmanager.h"
 	"resourceholder.h"
 	"animation.h"
@@ -587,6 +589,7 @@
 	"npc.h"
 	"collidable.h"
 	"projectile.h"
+	<cassert>
 
 1438133006 source:c:\c++\qge\collidable.cpp
 	"collidable.h"
@@ -950,7 +953,7 @@
 	<list>
 	<cstdint>
 
-1457760165 source:c:\c++\qge\hero.cpp
+1461447816 source:c:\c++\qge\hero.cpp
 	"hero.h"
 	"datatables.h"
 	<cmath>
@@ -970,7 +973,7 @@
 1461127394 c:\c++\qge\introstate.h
 	"gamestate.h"
 
-1457851324 source:c:\c++\qge\level.cpp
+1461457963 source:c:\c++\qge\level.cpp
 	"level.h"
 
 1457760878 source:c:\c++\qge\main.cpp
@@ -1022,6 +1025,9 @@
 	"weapon.h"
 	"datatables.h"
 
-1461213573 source:c:\c++\qge\playstate.cpp
+1461457600 source:c:\c++\qge\playstate.cpp
 	"playstate.h"
+
+1461453984 c:\c++\qge\random.h
+	<random>
 

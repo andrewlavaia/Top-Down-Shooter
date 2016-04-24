@@ -93,6 +93,7 @@
 		<Unit filename="playstate.h" />
 		<Unit filename="projectile.cpp" />
 		<Unit filename="projectile.h" />
+		<Unit filename="random.h" />
 		<Unit filename="resourceholder.h" />
 		<Unit filename="resourceholder.inl" />
 		<Unit filename="tile.h" />

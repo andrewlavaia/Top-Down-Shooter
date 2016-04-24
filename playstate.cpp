@@ -201,19 +201,20 @@ void CPlayState::HandleEvents(CGameEngine* game)
 
 
   // Spawning Controls (administrative only), requires public member functions
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num1 ) )
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num5 ) )
   {
-    this->level->CreateNPC( NPC::BigRick, rand() % (int)level->getBounds().x, rand() % (int)level->getBounds().y );
+    this->level->CreateNPC( NPC::BigRick, level->getRandomNearbyLocation(hero->position) );
+    std::cout<< "NPC spawned"<<std::endl;
   }
 
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num2 ) )
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num6 ) )
   {
-    this->level->CreateNPC( NPC::McGinger, rand() % (int)level->getBounds().x, rand() % (int)level->getBounds().y  );
+    this->level->CreateNPC( NPC::McGinger, level->getRandomNearbyLocation(hero->position) );
   }
 
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num3 ) )
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num7 ) )
   {
-    this->level->CreateNPC( NPC::Sheep, rand() % (int)level->getBounds().x, rand() % (int)level->getBounds().y  );
+    this->level->CreateNPC( NPC::Sheep, level->getRandomNearbyLocation(hero->position) );
   }
 /*
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
@@ -325,8 +326,10 @@ void CPlayState::Update(CGameEngine* game)
   HUD_weapon.setLooped( true );
   HUD_weapon.setRotation( 90 );
   HUD_health.setString( to_string( hero->getHP() ) );
-  HUD_timer.setString( to_string( this->level->getGameOverTime() - this->level->getRunningTime() ) );
+  HUD_timer.setString( to_string( this->level->getGameOverTime() - this->level->getRunningTime(), 1 ) );
   HUD_sheep_count.setString( to_string( this->level->getEnemyDeathCount() ) );
+
+  level->getRandomNearbyLocation(hero->position);
 
 } // end CState::Update
 

@@ -17,6 +17,9 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
   // clear vectors and deallocate memory
   entities.clear();
 
+  // position background off screen
+  background.setPosition(-1000,-1000);
+
   // Load Level
   switch (level_id)
   {
@@ -75,16 +78,16 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
       CreateWeapon( Weapon::RocketLauncher, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
 
 
-      CreateNPC( NPC::Sheep,          rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateNPC( NPC::McGinger,       rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateNPC( NPC::BigRick,        rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateNPC( NPC::UglyAmy,        rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateNPC( NPC::TooCoolJack,    rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateNPC( NPC::DeNiro,         rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateNPC( NPC::Barnaby,        rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateNPC( NPC::ToughSugar,     rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateNPC( NPC::AmbiguousAlex,  rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateNPC( NPC::BaldingSam,     rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::Sheep, sf::Vector2f(100,100) );
+      CreateNPC( NPC::McGinger, sf::Vector2f(200,200) );
+      CreateNPC( NPC::BigRick, sf::Vector2f(300,300) );
+      CreateNPC( NPC::UglyAmy, sf::Vector2f(400,400) );
+      CreateNPC( NPC::TooCoolJack, sf::Vector2f(500,500) );
+      CreateNPC( NPC::DeNiro, sf::Vector2f(600,600) );
+      CreateNPC( NPC::Barnaby, sf::Vector2f(600,600) );
+      CreateNPC( NPC::ToughSugar, sf::Vector2f(700,700) );
+      CreateNPC( NPC::AmbiguousAlex, sf::Vector2f(800,800) );
+      CreateNPC( NPC::BaldingSam, sf::Vector2f(900,900) );
 
 
 
@@ -93,8 +96,8 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
     case 2:
       mp.Load("map_L2.txt");
 
-      CreateNPC( NPC::McGinger, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateNPC( NPC::BigRick, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateNPC( NPC::McGinger, sf::Vector2f(500,500) );
+      CreateNPC( NPC::BigRick, sf::Vector2f(100,100) );
 
       break;
 
@@ -103,16 +106,16 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
 }
 
 // Dynamically creates a new NPC object and returns a smart pointer to it
-void Level::CreateNPC(NPC::Type type, double x, double y)
+void Level::CreateNPC(NPC::Type type, sf::Vector2f coord)
 {
   //create weapon from NPCTable and add to entities if anything other than hand
-  auto w = std::make_shared<Weapon>( data.NPCTable[type].weapon, animations, data, x, y );
+  auto w = std::make_shared<Weapon>( data.NPCTable[type].weapon, animations, data, coord.x, coord.y );
   if( data.NPCTable[type].weapon == Weapon::Hands )
     w = nullptr;
   else
     entities.push_back(w);
 
-  auto p = std::make_shared<NPC>(type, animations, data, x, y, w);
+  auto p = std::make_shared<NPC>(type, animations, data, coord.x, coord.y, w);
   entities.push_back(p);
 
   if( type == NPC::Sheep )
@@ -196,7 +199,7 @@ bool Level::Victory()
 
 bool Level::GameOver()
 {
-  if (running_time.getElapsedTime() > gameover_time)
+  if (running_time.getElapsedTisf::Vector2f                                getRandomLocation();me() > gameover_time)
     return true;
   else
     return false;
@@ -213,4 +216,15 @@ float Level::getGameOverTime()
   return gameover_time.asSeconds();
 }
 
+sf::Vector2f Level::getRandomNearbyLocation(sf::Vector2f location)
+{
+  typedef std::mt19937                                 Engine;
+  typedef std::uniform_real_distribution<float>        Distribution;
 
+  auto r = std::bind(Distribution(-500, 500), Engine((unsigned)time(NULL)));
+
+  //std::cout << "Random Coord " << location.x + r() << "," << location.y + r() << std::endl;
+  sf::Vector2f coord = sf::Vector2f(location.x + r(), location.y + r());
+  return coord;
+
+}

@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <memory>
+#include <random>
+
 #include "mapmanager.h"
 #include "resourceholder.h"
 #include "animation.h"
@@ -14,7 +16,7 @@
 #include "npc.h"
 #include "collidable.h"
 #include "projectile.h"
-
+#include <cassert>
 
 
 class Level
@@ -32,7 +34,8 @@ public:
   float                                       getGameOverTime();
   unsigned                                    getEnemyDeathCount() const { return enemy_death_count; };
   const sf::Vector2f                          getBounds() const { return bounds; }
-  void                                        CreateNPC(NPC::Type type, double x, double y);
+  void                                        CreateNPC(NPC::Type type, sf::Vector2f coord);
+  sf::Vector2f                                getRandomNearbyLocation(sf::Vector2f location);
 
   MapManager                                   mp;
   sf::Sprite                                   background;
