@@ -6,10 +6,11 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
     animations(animations),
     data(data),
     bounds(1600.0, 1600.0),
-    gameover_time(sf::seconds(120.0f)),
+    gameover_time(sf::seconds(120.0)),
     enemy_death_count(0),
     sheep_pen_count(0),
-    sheep_total(0)
+    sheep_total(0),
+    spawn_cooldown(sf::Time::Zero)
 {
 
   running_time.restart();
@@ -227,4 +228,27 @@ sf::Vector2f Level::getRandomNearbyLocation(sf::Vector2f location)
   sf::Vector2f coord = sf::Vector2f(location.x + r(), location.y + r());
   return coord;
 
+}
+
+void Level::spawnNPCs(sf::Time dt, sf::Vector2f location)
+{
+  if( canSpawn() )
+  {
+    std::cout<<"Do something."<<std::endl;
+    CreateNPC( NPC::BigRick, getRandomNearbyLocation( location ) );
+    resetSpawnCooldown();
+  }
+  reduceSpawnCooldown(dt);
+  /*
+    const float seconds = getRunningTime();
+    if( seconds < 20)
+    {
+      spawn_trigger = false;
+      std::cout<<"Do nothing."<<std::endl;
+    } else if ( spawn_trigger == false && seconds > 20 && seconds < 40)
+    {
+      spawn_trigger = true;
+      std::cout<<"Do something."<<std::endl;
+    }
+  */
 }

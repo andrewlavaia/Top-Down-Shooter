@@ -303,6 +303,8 @@ void CPlayState::Update(CGameEngine* game)
     }
   }
 
+  // Spawn new enemies
+  level->spawnNPCs(game->logicTime, hero->position);
 
   // -------------------
   // Game Over Conditions
@@ -326,7 +328,8 @@ void CPlayState::Update(CGameEngine* game)
   HUD_weapon.setLooped( true );
   HUD_weapon.setRotation( 90 );
   HUD_health.setString( to_string( hero->getHP() ) );
-  HUD_timer.setString( to_string( this->level->getGameOverTime() - this->level->getRunningTime(), 1 ) );
+  //HUD_timer.setString( to_string( this->level->getGameOverTime() - this->level->getRunningTime(), 1 ) );
+  HUD_timer.setString( to_string( this->level->getRunningTime(), 1 ) );
   HUD_sheep_count.setString( to_string( this->level->getEnemyDeathCount() ) );
 
   level->getRandomNearbyLocation(hero->position);

@@ -37,6 +37,8 @@ public:
   void                                        CreateNPC(NPC::Type type, sf::Vector2f coord);
   sf::Vector2f                                getRandomNearbyLocation(sf::Vector2f location);
 
+  void                                        spawnNPCs(sf::Time dt, sf::Vector2f location);
+
   MapManager                                   mp;
   sf::Sprite                                   background;
   std::vector<std::shared_ptr<AnimatedEntity>> entities;
@@ -55,9 +57,11 @@ private:
   //void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
   void                                        CreateWeapon(Weapon::Type type, double x, double y);
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
+  bool                                        canSpawn() { return spawn_cooldown < sf::Time::Zero; }
+  void                                        reduceSpawnCooldown(sf::Time dt) { spawn_cooldown -= dt; }
+  void                                        resetSpawnCooldown() { spawn_cooldown = sf::seconds(20); }
 
   int                                         level_id;
-
 
   const sf::Vector2f                          bounds; // width, height of playable area in level
   sf::Clock                                   running_time;
@@ -65,6 +69,10 @@ private:
   unsigned                                    enemy_death_count;
   unsigned                                    sheep_pen_count;
   unsigned                                    sheep_total;
+
+  sf::Time                                    spawn_cooldown;
+  unsigned                                    spawn_count;
+
 
 
 };
