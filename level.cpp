@@ -80,16 +80,25 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
 
 
       CreateNPC( NPC::Sheep, sf::Vector2f(100,100) );
+      CreateRandomNPC(sf::Vector2f(100,100));
+      CreateRandomNPC(sf::Vector2f(200,200));
+      CreateRandomNPC(sf::Vector2f(300,300));
+      CreateRandomNPC(sf::Vector2f(400,400));
+      CreateRandomNPC(sf::Vector2f(500,500));
+      CreateRandomNPC(sf::Vector2f(600,600));
+      CreateRandomNPC(sf::Vector2f(700,700));
+      CreateRandomNPC(sf::Vector2f(800,800));
+      /*
       CreateNPC( NPC::McGinger, sf::Vector2f(200,200) );
       CreateNPC( NPC::BigRick, sf::Vector2f(300,300) );
       CreateNPC( NPC::UglyAmy, sf::Vector2f(400,400) );
       CreateNPC( NPC::TooCoolJack, sf::Vector2f(500,500) );
-      CreateNPC( NPC::DeNiro, sf::Vector2f(600,600) );
+      CreateNPC( NPC::DeNiro, sf::Vector2f(1000,1000) );
       CreateNPC( NPC::Barnaby, sf::Vector2f(600,600) );
       CreateNPC( NPC::ToughSugar, sf::Vector2f(700,700) );
       CreateNPC( NPC::AmbiguousAlex, sf::Vector2f(800,800) );
       CreateNPC( NPC::BaldingSam, sf::Vector2f(900,900) );
-
+      */
 
 
       break;
@@ -110,7 +119,7 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
 void Level::CreateNPC(NPC::Type type, sf::Vector2f coord)
 {
   //create weapon from NPCTable and add to entities if anything other than hand
-  auto w = std::make_shared<Weapon>( data.NPCTable[type].weapon, animations, data, coord.x, coord.y );
+  auto w = std::make_shared<Weapon>( getRandomWeaponType(), animations, data, coord.x, coord.y );
   if( data.NPCTable[type].weapon == Weapon::Hands )
     w = nullptr;
   else
@@ -121,6 +130,12 @@ void Level::CreateNPC(NPC::Type type, sf::Vector2f coord)
 
   if( type == NPC::Sheep )
     sheep_total++;
+}
+
+// Dynamically creates a new NPC object and returns a smart pointer to it
+void Level::CreateRandomNPC(sf::Vector2f location)
+{
+  CreateNPC(getRandomNPCType(), getRandomNearbyLocation(location));
 }
 
 // Dynamically creates a new Weapon object and returns a smart pointer to it
@@ -222,7 +237,11 @@ sf::Vector2f Level::getRandomNearbyLocation(sf::Vector2f location)
   typedef std::mt19937                                 Engine;
   typedef std::uniform_real_distribution<float>        Distribution;
 
-  auto r = std::bind(Distribution(-500, 500), Engine((unsigned)time(NULL)));
+unsigned long seed =
+    std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::system_clock::now().time_since_epoch()).count();
+
+  auto r = std::bind(Distribution(-500, 500), Engine(seed));
 
   //std::cout << "Random Coord " << location.x + r() << "," << location.y + r() << std::endl;
   sf::Vector2f coord = sf::Vector2f(location.x + r(), location.y + r());
@@ -235,20 +254,39 @@ void Level::spawnNPCs(sf::Time dt, sf::Vector2f location)
   if( canSpawn() )
   {
     std::cout<<"Do something."<<std::endl;
-    CreateNPC( NPC::BigRick, getRandomNearbyLocation( location ) );
+    CreateRandomNPC( getRandomNearbyLocation( location ) );
     resetSpawnCooldown();
+    getRandomWeaponType();
   }
   reduceSpawnCooldown(dt);
-  /*
-    const float seconds = getRunningTime();
-    if( seconds < 20)
-    {
-      spawn_trigger = false;
-      std::cout<<"Do nothing."<<std::endl;
-    } else if ( spawn_trigger == false && seconds > 20 && seconds < 40)
-    {
-      spawn_trigger = true;
-      std::cout<<"Do something."<<std::endl;
-    }
-  */
 }
+
+void Level::reduceSpawnCooldown(sf::Time dt)
+{
+  spawn_cooldown -= dt;
+}
+
+void Level::resetSpawnCooldown()
+{
+  spawn_cooldown = sf::seconds(20);
+}
+
+bool Level::canSpawn()
+{
+  return spawn_cooldown < sf::Time::Zero;
+}
+
+Weapon::Type Level::getRandomWeaponType()
+{
+  Weapon::Type w = static_cast<Weapon::Type>(rand() % Weapon::TypeCount);
+  return w;
+}
+
+NPC::Type Level::getRandomNPCType()
+{
+  NPC::Type n = static_cast<NPC::Type>(rand() % NPC::TypeCount);
+  return n;
+}
+
+
+

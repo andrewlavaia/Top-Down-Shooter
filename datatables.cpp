@@ -103,7 +103,6 @@ std::vector<NPCData> DataTable::initializeNPCData()
   data[NPC::McGinger].color = sf::Color::White;
   data[NPC::McGinger].weapon = Weapon::Rifle;
 
-
   data[NPC::BigRick].hitpoints = 10;
   data[NPC::BigRick].speed = 2;
   data[NPC::BigRick].power = 1;

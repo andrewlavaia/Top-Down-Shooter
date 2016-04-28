@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <random>
+#include <chrono>
 
 #include "mapmanager.h"
 #include "resourceholder.h"
@@ -35,6 +36,7 @@ public:
   unsigned                                    getEnemyDeathCount() const { return enemy_death_count; };
   const sf::Vector2f                          getBounds() const { return bounds; }
   void                                        CreateNPC(NPC::Type type, sf::Vector2f coord);
+  void                                        CreateRandomNPC(sf::Vector2f location);
   sf::Vector2f                                getRandomNearbyLocation(sf::Vector2f location);
 
   void                                        spawnNPCs(sf::Time dt, sf::Vector2f location);
@@ -57,9 +59,12 @@ private:
   //void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
   void                                        CreateWeapon(Weapon::Type type, double x, double y);
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
-  bool                                        canSpawn() { return spawn_cooldown < sf::Time::Zero; }
-  void                                        reduceSpawnCooldown(sf::Time dt) { spawn_cooldown -= dt; }
-  void                                        resetSpawnCooldown() { spawn_cooldown = sf::seconds(20); }
+  bool                                        canSpawn();
+  void                                        reduceSpawnCooldown(sf::Time dt);
+  void                                        resetSpawnCooldown();
+
+  NPC::Type                                   getRandomNPCType();
+  Weapon::Type                                getRandomWeaponType();
 
   int                                         level_id;
 

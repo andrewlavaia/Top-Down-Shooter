@@ -539,7 +539,7 @@
 1438264276 c:\c++\qge\projectile.h
 	"animatedentity.h"
 
-1439473221 c:\c++\qge\weapon.h
+1461818380 c:\c++\qge\weapon.h
 	<SFML/Graphics.hpp>
 	"animatedentity.h"
 	"direction.h"
@@ -575,10 +575,11 @@
 1398053945 c:\c++\qge\tile.h
 	<SFML/Graphics.hpp>
 
-1461552910 c:\c++\qge\level.h
+1461819741 c:\c++\qge\level.h
 	<vector>
 	<memory>
 	<random>
+	<chrono>
 	"mapmanager.h"
 	"resourceholder.h"
 	"animation.h"
@@ -600,7 +601,7 @@
 	<map>
 	"collision.h"
 
-1439473141 source:c:\c++\qge\datatables.cpp
+1461816653 source:c:\c++\qge\datatables.cpp
 	"datatables.h"
 
 1436395955 source:c:\c++\qge\gameengine.cpp
@@ -973,7 +974,7 @@
 1461127394 c:\c++\qge\introstate.h
 	"gamestate.h"
 
-1461552442 source:c:\c++\qge\level.cpp
+1461820248 source:c:\c++\qge\level.cpp
 	"level.h"
 
 1457760878 source:c:\c++\qge\main.cpp
