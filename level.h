@@ -30,16 +30,13 @@ public:
   void                                        MoveEntities();
   void                                        DeleteEntities();
 
-
-  float                                       getRunningTime();
-  float                                       getGameOverTime();
   unsigned                                    getEnemyDeathCount() const { return enemy_death_count; };
   const sf::Vector2f                          getBounds() const { return bounds; }
   void                                        CreateNPC(NPC::Type type, sf::Vector2f coord);
   void                                        CreateRandomNPC(sf::Vector2f location);
   sf::Vector2f                                getRandomNearbyLocation(sf::Vector2f location);
 
-  void                                        spawnNPCs(sf::Time dt, sf::Vector2f location);
+  void                                        spawnNPCs(unsigned n, sf::Time dt, sf::Vector2f location);
 
   MapManager                                   mp;
   sf::Sprite                                   background;
@@ -57,7 +54,7 @@ private:
 
   // createProjectile should be reworked so that it can be used for npc and hero weapons and so animations and data can go back to being private
   //void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
-  void                                        CreateWeapon(Weapon::Type type, double x, double y);
+  void                                        CreateWeapon(Weapon::Type type, sf::Vector2f location);
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
   bool                                        canSpawn();
   void                                        reduceSpawnCooldown(sf::Time dt);
@@ -69,8 +66,6 @@ private:
   int                                         level_id;
 
   const sf::Vector2f                          bounds; // width, height of playable area in level
-  sf::Clock                                   running_time;
-  sf::Time                                    gameover_time;
   unsigned                                    enemy_death_count;
   unsigned                                    sheep_pen_count;
   unsigned                                    sheep_total;

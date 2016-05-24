@@ -20,12 +20,12 @@ void CHighScoreState::Cleanup()
   std::cout << "High Score State ended." << std::endl;
 }
 
-void CHighScoreState::Pause()
+void CHighScoreState::Pause(CGameEngine* game)
 {
 
 }
 
-void CHighScoreState::Resume()
+void CHighScoreState::Resume(CGameEngine* game)
 {
 
 }

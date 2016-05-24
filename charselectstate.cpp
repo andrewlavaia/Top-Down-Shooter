@@ -42,12 +42,12 @@ void CCharSelectState::Cleanup()
   std::cout << "CharSelect State ended." << std::endl ;
 }
 
-void CCharSelectState::Pause()
+void CCharSelectState::Pause(CGameEngine* game)
 {
 
 }
 
-void CCharSelectState::Resume()
+void CCharSelectState::Resume(CGameEngine* game)
 {
 
 }

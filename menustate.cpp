@@ -19,12 +19,12 @@ void CMenuState::Cleanup()
   std::cout << "Menu State ended." << std::endl ;
 }
 
-void CMenuState::Pause()
+void CMenuState::Pause(CGameEngine* game)
 {
 
 }
 
-void CMenuState::Resume()
+void CMenuState::Resume(CGameEngine* game)
 {
 
 }

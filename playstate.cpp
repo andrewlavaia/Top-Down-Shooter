@@ -46,14 +46,16 @@ void CPlayState::Cleanup()
   std::cout << "Play State ended." << std::endl;
 }
 
-void CPlayState::Pause()
+void CPlayState::Pause(CGameEngine* game)
 {
-
+    std::cout << "Paused" << std::endl;
+    game->isPaused = true;
 }
 
-void CPlayState::Resume()
+void CPlayState::Resume(CGameEngine* game)
 {
-
+    std::cout << "Unpaused" << std::endl;
+    game->isPaused = false;
 }
 
 void CPlayState::HandleEvents(CGameEngine* game)
@@ -82,161 +84,178 @@ void CPlayState::HandleEvents(CGameEngine* game)
   // Keyboard Events
   // -----------------
 
-  // Hero Movement
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A) && hero->getStatus() != AnimatedEntity::Impassable )
+  // PAUSE
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Escape ) && game->isPaused == false )
   {
-    hero->setStatus(AnimatedEntity::Moving);
-    hero->setOrientation(Orientation::NW);
-    hero->MoveOneUnit(Orientation::NW, hero->getSpeed());
-    noKeyPressed = false;
+    Pause(game);
   }
-  else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::D) && hero->getStatus() != AnimatedEntity::Impassable )
+  else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Escape ) && game->isPaused == true )
   {
-    hero->setStatus(AnimatedEntity::Moving);
-    hero->setOrientation(Orientation::NE);
-    hero->MoveOneUnit(Orientation::NE, hero->getSpeed());
-    noKeyPressed = false;
-  }
-  else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::A) && hero->getStatus() != AnimatedEntity::Impassable )
-  {
-    hero->setStatus(AnimatedEntity::Moving);
-    hero->setOrientation(Orientation::SW);
-    hero->MoveOneUnit(Orientation::SW, hero->getSpeed());
-    noKeyPressed = false;
-  }
-  else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::D) && hero->getStatus() != AnimatedEntity::Impassable )
-  {
-    hero->setStatus(AnimatedEntity::Moving);
-    hero->setOrientation(Orientation::SE);
-    hero->MoveOneUnit(Orientation::SE, hero->getSpeed());
-    noKeyPressed = false;
-  }
-  else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && hero->getStatus() != AnimatedEntity::Impassable )
-  {
-    hero->setStatus(AnimatedEntity::Moving);
-    hero->setOrientation(Orientation::W);
-    hero->MoveOneUnit(Orientation::W, hero->getSpeed());
-    noKeyPressed = false;
-  }
-  else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && hero->getStatus() != AnimatedEntity::Impassable )
-  {
-    hero->setStatus(AnimatedEntity::Moving);
-    hero->setOrientation(Orientation::E);
-    hero->MoveOneUnit(Orientation::E, hero->getSpeed());
-    noKeyPressed = false;
-  }
-  else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && hero->getStatus() != AnimatedEntity::Impassable )
-  {
-    hero->setStatus(AnimatedEntity::Moving);
-    hero->setOrientation(Orientation::N);
-    hero->MoveOneUnit(Orientation::N, hero->getSpeed());
-    noKeyPressed = false;
-  }
-  else
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && hero->getStatus() != AnimatedEntity::Impassable )
-  {
-    hero->setStatus(AnimatedEntity::Moving);
-    hero->setOrientation(Orientation::S);
-    hero->MoveOneUnit(Orientation::S, hero->getSpeed());
-    noKeyPressed = false;
+    Resume(game);
   }
 
-  // Weapon Rotation
-      // Mouse Controls
-  sf::Vector2i heroPos = game->window.mapCoordsToPixel(hero->position);
-  float dx = sf::Mouse::getPosition( game->window ).x - heroPos.x; // needs to be negative for cos in tangent function (?)
-  float dy = heroPos.y - sf::Mouse::getPosition( game->window ).y;
-  const double PI = 3.14159265;
-  float rotation = ( atan2( dx, dy ) * 180 )/PI; // take arctangent and convert from radians to degrees
-  hero->getWeapon()->animatedSprite.setRotation( rotation );
-
-      // Keyboard Controls
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
+  if(!game->isPaused)
   {
-    hero->getWeapon()->animatedSprite.rotate( 3 );
-    hero->getWeapon()->hitbox.rotate( 3 );
-  }
-  else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) )
-  {
-    hero->getWeapon()->animatedSprite.rotate( -3 );
-    hero->getWeapon()->hitbox.rotate( -3 );
-  }
+
+    // Hero Movement
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::A) && hero->getStatus() != AnimatedEntity::Impassable )
+    {
+      hero->setStatus(AnimatedEntity::Moving);
+      hero->setOrientation(Orientation::NW);
+      hero->MoveOneUnit(Orientation::NW, hero->getSpeed());
+      noKeyPressed = false;
+    }
+    else
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && sf::Keyboard::isKeyPressed(sf::Keyboard::D) && hero->getStatus() != AnimatedEntity::Impassable )
+    {
+      hero->setStatus(AnimatedEntity::Moving);
+      hero->setOrientation(Orientation::NE);
+      hero->MoveOneUnit(Orientation::NE, hero->getSpeed());
+      noKeyPressed = false;
+    }
+    else
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::A) && hero->getStatus() != AnimatedEntity::Impassable )
+    {
+      hero->setStatus(AnimatedEntity::Moving);
+      hero->setOrientation(Orientation::SW);
+      hero->MoveOneUnit(Orientation::SW, hero->getSpeed());
+      noKeyPressed = false;
+    }
+    else
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && sf::Keyboard::isKeyPressed(sf::Keyboard::D) && hero->getStatus() != AnimatedEntity::Impassable )
+    {
+      hero->setStatus(AnimatedEntity::Moving);
+      hero->setOrientation(Orientation::SE);
+      hero->MoveOneUnit(Orientation::SE, hero->getSpeed());
+      noKeyPressed = false;
+    }
+    else
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) && hero->getStatus() != AnimatedEntity::Impassable )
+    {
+      hero->setStatus(AnimatedEntity::Moving);
+      hero->setOrientation(Orientation::W);
+      hero->MoveOneUnit(Orientation::W, hero->getSpeed());
+      noKeyPressed = false;
+    }
+    else
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::D) && hero->getStatus() != AnimatedEntity::Impassable )
+    {
+      hero->setStatus(AnimatedEntity::Moving);
+      hero->setOrientation(Orientation::E);
+      hero->MoveOneUnit(Orientation::E, hero->getSpeed());
+      noKeyPressed = false;
+    }
+    else
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W) && hero->getStatus() != AnimatedEntity::Impassable )
+    {
+      hero->setStatus(AnimatedEntity::Moving);
+      hero->setOrientation(Orientation::N);
+      hero->MoveOneUnit(Orientation::N, hero->getSpeed());
+      noKeyPressed = false;
+    }
+    else
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) && hero->getStatus() != AnimatedEntity::Impassable )
+    {
+      hero->setStatus(AnimatedEntity::Moving);
+      hero->setOrientation(Orientation::S);
+      hero->MoveOneUnit(Orientation::S, hero->getSpeed());
+      noKeyPressed = false;
+    }
+
+    // Weapon Rotation
+        // Mouse Controls
+    sf::Vector2i heroPos = game->window.mapCoordsToPixel(hero->position);
+    float dx = sf::Mouse::getPosition( game->window ).x - heroPos.x; // needs to be negative for cos in tangent function (?)
+    float dy = heroPos.y - sf::Mouse::getPosition( game->window ).y;
+    const double PI = 3.14159265;
+    float rotation = ( atan2( dx, dy ) * 180 )/PI; // take arctangent and convert from radians to degrees
+    hero->getWeapon()->animatedSprite.setRotation( rotation );
+
+        // Keyboard Controls
+    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
+    {
+      hero->getWeapon()->animatedSprite.rotate( 3 );
+      hero->getWeapon()->hitbox.rotate( 3 );
+    }
+    else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) )
+    {
+      hero->getWeapon()->animatedSprite.rotate( -3 );
+      hero->getWeapon()->hitbox.rotate( -3 );
+    }
 
 
-  // Pickup NPC or Weapon
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::O))
-  {
-    hero->Pickup(this->level->entities);
-  }
+    // Pickup NPC or Weapon
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+    {
+      hero->Pickup(this->level->entities);
+    }
 
-  // Drop NPC or Weapon
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::SemiColon))
-  {
-    hero->Drop();
-  }
+    // Drop NPC or Weapon
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::SemiColon))
+    {
+      hero->Drop();
+    }
 
-  // Primary Attack
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::K ) || sf::Mouse::isButtonPressed( sf::Mouse::Left ) )
-  {
-    hero->PrimaryAttack( this->level->entities );
-  }
+    // Primary Attack
+    if( sf::Keyboard::isKeyPressed( sf::Keyboard::K ) || sf::Mouse::isButtonPressed( sf::Mouse::Left ) )
+    {
+      hero->PrimaryAttack( this->level->entities );
+    }
 
-  // Secondary Attack
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::L ) || sf::Mouse::isButtonPressed( sf::Mouse::Right ) )
-  {
-    hero->SecondaryAttack( this->level->entities );
-  }
+    // Secondary Attack
+    if( sf::Keyboard::isKeyPressed( sf::Keyboard::L ) || sf::Mouse::isButtonPressed( sf::Mouse::Right ) )
+    {
+      hero->SecondaryAttack( this->level->entities );
+    }
 
-  // Throw
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) )
-  {
-    hero->Throw();
-  }
-
-
-  // Spawning Controls (administrative only), requires public member functions
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num5 ) )
-  {
-    this->level->CreateNPC( NPC::BigRick, level->getRandomNearbyLocation(hero->position) );
-    std::cout<< "NPC spawned"<<std::endl;
-  }
-
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num6 ) )
-  {
-    this->level->CreateNPC( NPC::McGinger, level->getRandomNearbyLocation(hero->position) );
-  }
-
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num7 ) )
-  {
-    this->level->CreateNPC( NPC::Sheep, level->getRandomNearbyLocation(hero->position) );
-  }
-/*
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
-  {
-    this->level->CreateProjectile( Projectile::Bullet,
-                                  hero->position.x,
-                                  hero->position.y,
-                                  hero->getOrientation().getType());
-  }
-*/
+    // Throw
+    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) )
+    {
+      hero->Throw();
+    }
 
 
-  // Load next level
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
-    //this->level->Load(2);
-  }
+  /*
+    // Spawning Controls (administrative only), requires public member functions
+    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num5 ) )
+    {
+      this->level->CreateNPC( NPC::BigRick, level->getRandomNearbyLocation(hero->position) );
+      std::cout<< "NPC spawned"<<std::endl;
+    }
 
+    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num6 ) )
+    {
+      this->level->CreateNPC( NPC::McGinger, level->getRandomNearbyLocation(hero->position) );
+    }
+
+    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num7 ) )
+    {
+      this->level->CreateNPC( NPC::Sheep, level->getRandomNearbyLocation(hero->position) );
+    }
+  */
+  /*
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
+    {
+      this->level->CreateProjectile( Projectile::Bullet,
+                                    hero->position.x,
+                                    hero->position.y,
+                                    hero->getOrientation().getType());
+    }
+  */
+
+
+    // Load next level
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
+      //this->level->Load(2);
+    }
+  } // end if(!isPaused)
 }
 
 
 void CPlayState::Update(CGameEngine* game)
 {
+
+  game_time += game->logicTime;
 
   // ---------------
   // Collision Tests
@@ -304,7 +323,8 @@ void CPlayState::Update(CGameEngine* game)
   }
 
   // Spawn new enemies
-  level->spawnNPCs(game->logicTime, hero->position);
+  level->spawnNPCs(3, game->logicTime, hero->position);
+  //!!! update number so that it is random and increases as time goes on.
 
   // -------------------
   // Game Over Conditions
@@ -329,7 +349,7 @@ void CPlayState::Update(CGameEngine* game)
   HUD_weapon.setRotation( 90 );
   HUD_health.setString( to_string( hero->getHP() ) );
   //HUD_timer.setString( to_string( this->level->getGameOverTime() - this->level->getRunningTime(), 1 ) );
-  HUD_timer.setString( to_string( this->level->getRunningTime(), 1 ) );
+  HUD_timer.setString( to_string( game_time.asSeconds(), 1 ) );
   HUD_sheep_count.setString( to_string( this->level->getEnemyDeathCount() ) );
 
   level->getRandomNearbyLocation(hero->position);
@@ -478,7 +498,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // drawn last so that it is on top of everything
   HUD_background.setPosition( window.mapPixelToCoords( sf::Vector2i( 0, 0 ) ) );
   HUD_health.setPosition( window.mapPixelToCoords( sf::Vector2i( 50, 0 ) ) );
-  HUD_weapon.setPosition( window.mapPixelToCoords( sf::Vector2i( 150, 10 ) ) );
+  HUD_weapon.setPosition( window.mapPixelToCoords( sf::Vector2i( 250, 25 ) ) );
   HUD_timer.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x/2, 0 ) ) );
   HUD_sheep_count.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x - 50, 0 ) ) );
 

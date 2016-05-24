@@ -6,20 +6,18 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
     animations(animations),
     data(data),
     bounds(1600.0, 1600.0),
-    gameover_time(sf::seconds(120.0)),
     enemy_death_count(0),
     sheep_pen_count(0),
     sheep_total(0),
-    spawn_cooldown(sf::Time::Zero)
+    spawn_cooldown(sf::milliseconds(-1)),
+    spawn_count(0)
 {
-
-  running_time.restart();
 
   // clear vectors and deallocate memory
   entities.clear();
 
   // position background off screen
-  background.setPosition(-1000,-1000);
+  background.setPosition(-1000, -1000);
 
   // Load Level
   switch (level_id)
@@ -70,16 +68,17 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
       CreateCollidable(Collidable::Exit,             700,   400,  100,   100);
 */
       // add weapons
-      CreateWeapon( Weapon::SMG, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      //CreateWeapon( Weapon::Pole, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      //CreateWeapon( Weapon::Pole, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateWeapon( Weapon::Shotgun, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateWeapon( Weapon::Rifle, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateWeapon( Weapon::Pistol, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
-      CreateWeapon( Weapon::RocketLauncher, rand() % (int)getBounds().x, rand() % (int)getBounds().y );
+      CreateWeapon(Weapon::SMG, getRandomNearbyLocation(sf::Vector2f(100,100)));
+      CreateWeapon(Weapon::Shotgun, getRandomNearbyLocation(sf::Vector2f(100,100)));
+      CreateWeapon(Weapon::Rifle, getRandomNearbyLocation(sf::Vector2f(100,100)));
+      CreateWeapon(Weapon::Pistol, getRandomNearbyLocation(sf::Vector2f(100,100)));
+      CreateWeapon(Weapon::RocketLauncher, getRandomNearbyLocation(sf::Vector2f(100,100)));
 
 
       CreateNPC( NPC::Sheep, sf::Vector2f(100,100) );
+      //set spawncooldown to -5
+      spawnNPCs(10, sf::Time::Zero, sf::Vector2f(100,100));
+      /*
       CreateRandomNPC(sf::Vector2f(100,100));
       CreateRandomNPC(sf::Vector2f(200,200));
       CreateRandomNPC(sf::Vector2f(300,300));
@@ -88,6 +87,7 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
       CreateRandomNPC(sf::Vector2f(600,600));
       CreateRandomNPC(sf::Vector2f(700,700));
       CreateRandomNPC(sf::Vector2f(800,800));
+      */
       /*
       CreateNPC( NPC::McGinger, sf::Vector2f(200,200) );
       CreateNPC( NPC::BigRick, sf::Vector2f(300,300) );
@@ -130,6 +130,8 @@ void Level::CreateNPC(NPC::Type type, sf::Vector2f coord)
 
   if( type == NPC::Sheep )
     sheep_total++;
+
+  spawn_count++;
 }
 
 // Dynamically creates a new NPC object and returns a smart pointer to it
@@ -139,9 +141,9 @@ void Level::CreateRandomNPC(sf::Vector2f location)
 }
 
 // Dynamically creates a new Weapon object and returns a smart pointer to it
-void Level::CreateWeapon(Weapon::Type type, double x, double y)
+void Level::CreateWeapon(Weapon::Type type, sf::Vector2f location)
 {
-  auto p = std::make_shared<Weapon>(type, animations, data, x, y);
+  auto p = std::make_shared<Weapon>(type, animations, data, location.x, location.y);
   entities.push_back(p);
 }
 /*
@@ -204,40 +206,16 @@ void Level::DestroyObject(T1& vec, T2& it)
   vec.erase( std::remove( vec.begin(), vec.end(), *it ), vec.end() );
 }
 
-/*
-bool Level::Victory()
-{
-  if(npc_success_count >= victory_requirement && running_time.getElapsedTime() < gameover_time)
-    return true;
-  else
-    return false;
-}
-
-bool Level::GameOver()
-{
-  if (running_time.getElapsedTisf::Vector2f                                getRandomLocation();me() > gameover_time)
-    return true;
-  else
-    return false;
-}
-*/
-
-float Level::getRunningTime()
-{
-  return running_time.getElapsedTime().asSeconds();
-}
-
-float Level::getGameOverTime()
-{
-  return gameover_time.asSeconds();
-}
-
 sf::Vector2f Level::getRandomNearbyLocation(sf::Vector2f location)
 {
   typedef std::mt19937                                 Engine;
   typedef std::uniform_real_distribution<float>        Distribution;
 
-unsigned long seed =
+  //!!! Need a better random seed
+  // needs to update faster than milliseconds so that I can spawn multiple random items at once
+  // OR add a 1 millisec delay to spawn function?
+
+  unsigned long seed =
     std::chrono::duration_cast<std::chrono::milliseconds>
         (std::chrono::system_clock::now().time_since_epoch()).count();
 
@@ -245,18 +223,25 @@ unsigned long seed =
 
   //std::cout << "Random Coord " << location.x + r() << "," << location.y + r() << std::endl;
   sf::Vector2f coord = sf::Vector2f(location.x + r(), location.y + r());
+  //std::cout<<"coord1 " <<coord.x<<","<<coord.y<<std::endl;
+  //std::cout<<"coord2 " <<location.x + r()<<","<<location.y+r()<<std::endl;
+
+  sf::sleep(sf::milliseconds(1)); //need to wait 1 millisecond because random seed is based on milliseconds
   return coord;
 
 }
 
-void Level::spawnNPCs(sf::Time dt, sf::Vector2f location)
+void Level::spawnNPCs(unsigned n, sf::Time dt, sf::Vector2f location)
 {
   if( canSpawn() )
   {
-    std::cout<<"Do something."<<std::endl;
-    CreateRandomNPC( getRandomNearbyLocation( location ) );
+    for(auto i = 0; i < n; i++)
+    {
+      CreateRandomNPC( getRandomNearbyLocation( location ) );
+      //std::cout<<"NPC spawned"<<std::endl;
+    }
     resetSpawnCooldown();
-    getRandomWeaponType();
+    //getRandomWeaponType();
   }
   reduceSpawnCooldown(dt);
 }
@@ -268,7 +253,7 @@ void Level::reduceSpawnCooldown(sf::Time dt)
 
 void Level::resetSpawnCooldown()
 {
-  spawn_cooldown = sf::seconds(20);
+  spawn_cooldown = sf::seconds(10);
 }
 
 bool Level::canSpawn()
@@ -287,6 +272,4 @@ NPC::Type Level::getRandomNPCType()
   NPC::Type n = static_cast<NPC::Type>(rand() % NPC::TypeCount);
   return n;
 }
-
-
 

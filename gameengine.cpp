@@ -2,7 +2,9 @@
 #include "gameengine.h"
 #include "gamestate.h"
 
-CGameEngine::CGameEngine(sf::RenderWindow &sfmlwindow) : window(sfmlwindow)
+CGameEngine::CGameEngine(sf::RenderWindow &sfmlwindow)
+: window(sfmlwindow),
+  isPaused(false)
 {
 
 }
@@ -53,7 +55,7 @@ void CGameEngine::PushState(CGameState* state)
 {
 	// pause current state
 	if ( !states.empty() ) {
-		states.back()->Pause();
+		states.back()->Pause(this);
 	}
 
 	// store and init the new state
@@ -71,7 +73,7 @@ void CGameEngine::PopState()
 
 	// resume previous state
 	if ( !states.empty() ) {
-		states.back()->Resume();
+		states.back()->Resume(this);
 	}
 }
 

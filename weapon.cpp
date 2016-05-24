@@ -13,8 +13,8 @@ Weapon::Weapon( Type t, const ResourceHolder<Animation, Animations::ID>& animati
     idleAnimation( animations.get( data.WeaponTable[t].idleAnimationID ) ),
     moveAnimation( animations.get( data.WeaponTable[t].moveAnimationID ) ),
     dieAnimation( animations.get( data.WeaponTable[t].dieAnimationID ) ),
-    primaryAttackAnimation( animations.get( data.WeaponTable[t].primaryAnimationID ) ),
-    secondaryAttackAnimation( animations.get( data.WeaponTable[t].secondaryAnimationID ) )
+    primaryAttackAnimation( animations.get( data.WeaponTable[t].primaryAttackAnimationID ) ),
+    secondaryAttackAnimation( animations.get( data.WeaponTable[t].secondaryAttackAnimationID ) )
 {
   setHitPoints( data.WeaponTable[t].hitpoints );
   setMaxHitPoints( data.WeaponTable[t].hitpoints );
@@ -84,6 +84,14 @@ void Weapon::playAnimation()
 
     case AnimatedEntity::Thrown :
       animatedSprite.play( moveAnimation );
+      break;
+
+    case AnimatedEntity::AttackingPrimary :
+      animatedSprite.play( primaryAttackAnimation );
+      break;
+
+    case AnimatedEntity::AttackingSecondary :
+      animatedSprite.play( secondaryAttackAnimation );
       break;
 
     default :

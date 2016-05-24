@@ -10,8 +10,8 @@ public:
 	void Init(CGameEngine* game);
 	void Cleanup();
 
-	void Pause();
-	void Resume();
+	void Pause(CGameEngine* game);
+	void Resume(CGameEngine* game);
 
 	void HandleEvents(CGameEngine* game);
 	void Update(CGameEngine* game);

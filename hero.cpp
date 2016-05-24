@@ -159,6 +159,8 @@ void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>&
   {
     case Attack::Standard :
       getWeapon()->hitbox.setScale( getWeapon()->getScaleFactor(), getWeapon()->getRange() );
+      //!!! add new types of attacks (slash, pierce, etc)
+
       break;
 
     case Attack::Shoot :

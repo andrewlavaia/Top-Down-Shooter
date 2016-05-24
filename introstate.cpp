@@ -29,12 +29,12 @@ void CIntroState::Cleanup()
   std::cout << "Intro State ended." << std::endl ;
 }
 
-void CIntroState::Pause()
+void CIntroState::Pause(CGameEngine* game)
 {
 
 }
 
-void CIntroState::Resume()
+void CIntroState::Resume(CGameEngine* game)
 {
 
 }

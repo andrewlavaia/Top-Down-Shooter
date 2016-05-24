@@ -38,8 +38,8 @@ public:
 	void Init(CGameEngine* game);
 	void Cleanup();
 
-	void Pause();
-	void Resume();
+	void Pause(CGameEngine* game);
+	void Resume(CGameEngine* game);
 
 	void HandleEvents(CGameEngine* game);
 	void Update(CGameEngine* game);
@@ -52,7 +52,8 @@ public:
   bool noKeyPressed;
 
 protected:
-	CPlayState()
+	CPlayState() :
+    game_time(sf::Time::Zero)
 	{
     fonts.load(Fonts::Calibri, "calibri.ttf");
 
@@ -197,10 +198,6 @@ protected:
     animations.load( Animations::Sheep_Die, textures.get( Textures::Sheep_SpriteSheet ), 50, 40, 4, 1, {4,3,2,1} );
     animations.load( Animations::Sheep_Dead, textures.get( Textures::Sheep_SpriteSheet ), 50, 40, 4, 1, {4,3,2,1} );
 
-    // Delete or replace these
-    //animations.load(Animations::Hero_Punch, textures.get(Textures::Hero_Punch), 398, 279, 6);
-    //animations.load(Animations::Hero_Kick, textures.get(Textures::Hero_Kick), 385, 371, 6);
-
     // Weapon animations
     animations.load(Animations::Pistol, textures.get(Textures::Pistol), 24, 24, 1);
     animations.load(Animations::Rifle, textures.get(Textures::Rifle), 11, 31, 1);
@@ -208,7 +205,11 @@ protected:
     animations.load(Animations::SMG, textures.get(Textures::SMG), 12, 25, 1);
     animations.load(Animations::RocketLauncher_Idle, textures.get(Textures::RocketLauncher), 11, 31, 1);
     animations.load(Animations::Bullet, textures.get(Textures::Bullet), 10, 10, 1);
-    animations.load(Animations::Grass, textures.get(Textures::Grass), 1024, 1024, 1);
+
+    //!!! add animations for weapon melee attacks (pistol whip, sword slash, etc)
+
+
+    animations.load(Animations::Grass, textures.get(Textures::Grass), 1024, 1024, 1); // easier to set up as animation with single sprite
 
     hero = std::make_shared<Hero>(Hero::Bob, animations, data); // constructor is called upon program startup so cannot use
                                                                 // CCharState::Instance()->getSelectedHero() here as it will return 0
@@ -218,7 +219,7 @@ protected:
     //HUD_background.setTexture( );
     HUD_background.setFillColor( sf::Color( 255, 255, 255, 255 ) );
 
-    HUD_weapon.setScale(1, 1);
+    HUD_weapon.setScale(2, 2);
 
     HUD_health.setFont(fonts.get(Fonts::Calibri));
     HUD_health.setCharacterSize(40);
@@ -255,6 +256,8 @@ private:
 	sf::Text HUD_timer;
 	sf::Text HUD_sheep_count;
 	sf::Sprite crosshair;
+
+	sf::Time game_time;
 
 };
 

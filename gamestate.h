@@ -10,8 +10,8 @@ public:
 	virtual void Init(CGameEngine* game) = 0;
 	virtual void Cleanup() = 0;
 
-	virtual void Pause() = 0;
-	virtual void Resume() = 0;
+	virtual void Pause(CGameEngine* game) = 0;
+	virtual void Resume(CGameEngine* game) = 0;
 
 	virtual void HandleEvents(CGameEngine* game) = 0;
 	virtual void Update(CGameEngine* game) = 0;

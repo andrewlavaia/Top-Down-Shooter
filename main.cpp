@@ -40,12 +40,14 @@ int main()
     while(game.tick_timer.GetCounter() > next_game_tick)
     {
       game.HandleEvents();
-      game.Update();
+
+      if(!game.isPaused)
+        game.Update();
+
       //std::cout << "Game Logic Updated in: " << game.tick_timer.GetCounter() - next_game_tick << std::endl;
       next_game_tick += TIME_PER_TICK;
       game.logicTime = game.logicClock.restart();
     }
-
     interpolation = (game.tick_timer.GetCounter() - next_game_tick + TIME_PER_TICK ) / TIME_PER_TICK;
     game.Draw(interpolation);
     //std::cout << interpolation <<std::endl;

@@ -220,6 +220,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Hands].range = 2;
   data[Weapon::Hands].idleAnimationID = Animations::Empty;
   data[Weapon::Hands].moveAnimationID = Animations::Empty;
+  data[Weapon::Hands].primaryAttackAnimationID = Animations::Empty;
+  data[Weapon::Hands].secondaryAttackAnimationID = Animations::Empty;
   data[Weapon::Hands].primaryAttackType = Attack::Standard;
   data[Weapon::Hands].secondaryAttackType = Attack::Standard;
   data[Weapon::Hands].primaryAttackSpeed = 0.5;
@@ -231,6 +233,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Pistol].range = 2;
   data[Weapon::Pistol].idleAnimationID = Animations::Pistol;
   data[Weapon::Pistol].moveAnimationID = Animations::Pistol;
+  data[Weapon::Pistol].primaryAttackAnimationID = Animations::Pistol;
+  data[Weapon::Pistol].secondaryAttackAnimationID = Animations::Pistol;
   data[Weapon::Pistol].primaryAttackType = Attack::Shoot;
   data[Weapon::Pistol].secondaryAttackType = Attack::Standard;
   data[Weapon::Pistol].primaryAttackSpeed = 0.25;
@@ -244,6 +248,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Shotgun].range = 3;
   data[Weapon::Shotgun].idleAnimationID = Animations::Shotgun;
   data[Weapon::Shotgun].moveAnimationID = Animations::Shotgun;
+  data[Weapon::Shotgun].primaryAttackAnimationID = Animations::Shotgun;
+  data[Weapon::Shotgun].secondaryAttackAnimationID = Animations::Shotgun;
   data[Weapon::Shotgun].primaryAttackType = Attack::Shoot;
   data[Weapon::Shotgun].secondaryAttackType = Attack::Standard;
   data[Weapon::Shotgun].primaryAttackSpeed = 0.5;
@@ -256,6 +262,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Rifle].range = 3;
   data[Weapon::Rifle].idleAnimationID = Animations::Rifle;
   data[Weapon::Rifle].moveAnimationID = Animations::Rifle;
+  data[Weapon::Rifle].primaryAttackAnimationID = Animations::Rifle;
+  data[Weapon::Rifle].secondaryAttackAnimationID = Animations::Rifle;
   data[Weapon::Rifle].primaryAttackType = Attack::Shoot;
   data[Weapon::Rifle].secondaryAttackType = Attack::Standard;
   data[Weapon::Rifle].primaryAttackSpeed = 0.5;
@@ -268,6 +276,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::SMG].range = 2;
   data[Weapon::SMG].idleAnimationID = Animations::SMG;
   data[Weapon::SMG].moveAnimationID = Animations::SMG;
+  data[Weapon::SMG].primaryAttackAnimationID = Animations::SMG;
+  data[Weapon::SMG].secondaryAttackAnimationID = Animations::SMG;
   data[Weapon::SMG].primaryAttackType = Attack::Shoot;
   data[Weapon::SMG].secondaryAttackType = Attack::Standard;
   data[Weapon::SMG].primaryAttackSpeed = 0.10;
@@ -280,6 +290,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::RocketLauncher].range = 3;
   data[Weapon::RocketLauncher].idleAnimationID = Animations::RocketLauncher_Idle;
   data[Weapon::RocketLauncher].moveAnimationID = Animations::RocketLauncher_Idle;
+  data[Weapon::RocketLauncher].primaryAttackAnimationID = Animations::RocketLauncher_Idle;
+  data[Weapon::RocketLauncher].secondaryAttackAnimationID = Animations::RocketLauncher_Idle;
   data[Weapon::RocketLauncher].primaryAttackType = Attack::Shoot;
   data[Weapon::RocketLauncher].secondaryAttackType = Attack::Standard;
   data[Weapon::RocketLauncher].primaryAttackSpeed = 1.0;
@@ -292,6 +304,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Dagger].range = 10;
   data[Weapon::Dagger].idleAnimationID = Animations::Empty;
   data[Weapon::Dagger].moveAnimationID = Animations::Empty;
+  data[Weapon::Dagger].primaryAttackAnimationID = Animations::Empty;
+  data[Weapon::Dagger].secondaryAttackAnimationID = Animations::Empty;
   data[Weapon::Dagger].primaryAttackType = Attack::Standard;
   data[Weapon::Dagger].secondaryAttackType = Attack::Standard;
   data[Weapon::Dagger].primaryAttackSpeed = 0.5;
@@ -301,6 +315,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::ShortSword].range = 10;
   data[Weapon::ShortSword].idleAnimationID = Animations::Empty;
   data[Weapon::ShortSword].moveAnimationID = Animations::Empty;
+  data[Weapon::ShortSword].primaryAttackAnimationID = Animations::Empty;
+  data[Weapon::ShortSword].secondaryAttackAnimationID = Animations::Empty;
   data[Weapon::ShortSword].primaryAttackType = Attack::Standard;
   data[Weapon::ShortSword].secondaryAttackType = Attack::Standard;
   data[Weapon::ShortSword].primaryAttackSpeed = 0.5;
@@ -310,6 +326,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Sword].range = 4;
   data[Weapon::Sword].idleAnimationID = Animations::Empty;
   data[Weapon::Sword].moveAnimationID = Animations::Empty;
+  data[Weapon::Sword].primaryAttackAnimationID = Animations::Empty;
+  data[Weapon::Sword].secondaryAttackAnimationID = Animations::Empty;
   data[Weapon::Sword].primaryAttackType = Attack::Standard;
   data[Weapon::Sword].secondaryAttackType = Attack::Standard;
   data[Weapon::Sword].primaryAttackSpeed = 0.3;
@@ -319,6 +337,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::LongSword].range = 4;
   data[Weapon::LongSword].idleAnimationID = Animations::Empty;
   data[Weapon::LongSword].moveAnimationID = Animations::Empty;
+  data[Weapon::LongSword].primaryAttackAnimationID = Animations::Empty;
+  data[Weapon::LongSword].secondaryAttackAnimationID = Animations::Empty;
   data[Weapon::LongSword].primaryAttackType = Attack::Standard;
   data[Weapon::LongSword].secondaryAttackType = Attack::Standard;
   data[Weapon::LongSword].primaryAttackSpeed = 0.3;
@@ -328,6 +348,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::SingleAxe].range = 5;
   data[Weapon::SingleAxe].idleAnimationID = Animations::Empty;
   data[Weapon::SingleAxe].moveAnimationID = Animations::Empty;
+  data[Weapon::SingleAxe].primaryAttackAnimationID = Animations::Empty;
+  data[Weapon::SingleAxe].secondaryAttackAnimationID = Animations::Empty;
   data[Weapon::SingleAxe].primaryAttackType = Attack::Standard;
   data[Weapon::SingleAxe].secondaryAttackType = Attack::Standard;
   data[Weapon::SingleAxe].primaryAttackSpeed = 0.4;
@@ -337,6 +359,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::DoubleAxe].range = 5;
   data[Weapon::DoubleAxe].idleAnimationID = Animations::Empty;
   data[Weapon::DoubleAxe].moveAnimationID = Animations::Empty;
+  data[Weapon::DoubleAxe].primaryAttackAnimationID = Animations::Empty;
+  data[Weapon::DoubleAxe].secondaryAttackAnimationID = Animations::Empty;
   data[Weapon::DoubleAxe].primaryAttackType = Attack::Standard;
   data[Weapon::DoubleAxe].secondaryAttackType = Attack::Standard;
   data[Weapon::DoubleAxe].primaryAttackSpeed = 0.4;
@@ -346,6 +370,8 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::Spear].range = 5;
   data[Weapon::Spear].idleAnimationID = Animations::Empty;
   data[Weapon::Spear].moveAnimationID = Animations::Empty;
+  data[Weapon::Spear].primaryAttackAnimationID = Animations::Empty;
+  data[Weapon::Spear].secondaryAttackAnimationID = Animations::Empty;
   data[Weapon::Spear].primaryAttackType = Attack::Standard;
   data[Weapon::Spear].secondaryAttackType = Attack::Standard;
   data[Weapon::Spear].primaryAttackSpeed = 0.4;

@@ -15,12 +15,12 @@ void COptionState::Cleanup()
   std::cout << "Option State ended." << std::endl;
 }
 
-void COptionState::Pause()
+void COptionState::Pause(CGameEngine* game)
 {
 
 }
 
-void COptionState::Resume()
+void COptionState::Resume(CGameEngine* game)
 {
 
 }

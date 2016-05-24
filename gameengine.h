@@ -41,6 +41,7 @@ public:
   sf::Clock logicClock;
   sf::Time logicTime;
   sf::Font font;
+  bool isPaused;
 
   // Window as a reference because it may have a longer lifetime than game engine for crash reporting
 	sf::RenderWindow& window;
