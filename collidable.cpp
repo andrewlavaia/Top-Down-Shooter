@@ -28,6 +28,8 @@ Collidable::Collidable(Type t, const ResourceHolder<Animation, Animations::ID>& 
   animatedSprite.setScale(width/idleAnimation.getSpriteSheet()->getSize().x,
                           height/idleAnimation.getSpriteSheet()->getSize().y);
 
+  animatedSprite.setOrigin(animatedSprite.getLocalBounds().width/2, animatedSprite.getLocalBounds().height/2);
+
 }
 
 void Collidable::collideWithEntity(const AnimatedEntity& a, sf::Time dt)

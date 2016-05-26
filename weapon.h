@@ -43,6 +43,8 @@ class Weapon : public AnimatedEntity
     std::unique_ptr<Attack> secondaryAttack;
     std::unique_ptr<Projectile> ammoType;
 
+    const Animation* getIdleAnimation() const { return &idleAnimation; };
+
   private:
     Type              type;
     unsigned          range;

@@ -46,6 +46,8 @@ Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, 
 
   minimap_color = sf::Color::Blue;
 
+  animatedSprite.setOrigin(animatedSprite.getLocalBounds().width/2, animatedSprite.getLocalBounds().height/2);
+
 }
 
 void Hero::collideWithEntity(const AnimatedEntity& a, sf::Time dt)

@@ -42,6 +42,16 @@ Weapon::Weapon( Type t, const ResourceHolder<Animation, Animations::ID>& animati
   hitbox.setRotation( 90 );
 
   minimap_color = sf::Color::Black;
+
+  // if no specific origin dimensions are set, use center of sprite, otherwise use specific dimensions
+  if( data.WeaponTable[t].originDimensions.x == 0 && data.WeaponTable[t].originDimensions.y == 0)
+  {
+    animatedSprite.setOrigin(animatedSprite.getLocalBounds().width/2, animatedSprite.getLocalBounds().height/2);
+  }
+  else
+  {
+    animatedSprite.setOrigin(data.WeaponTable[t].originDimensions.x, data.WeaponTable[t].originDimensions.y);
+  }
 }
 
 
@@ -72,6 +82,8 @@ void Weapon::collideWithEntity( const AnimatedEntity& a, sf::Time dt )
 
 void Weapon::playAnimation()
 {
+  animatedSprite.setLooped( false );
+
   switch( getStatus() )
   {
     case AnimatedEntity::Idle :
@@ -88,6 +100,7 @@ void Weapon::playAnimation()
 
     case AnimatedEntity::AttackingPrimary :
       animatedSprite.play( primaryAttackAnimation );
+      //std::cout << "play animation - " << primaryAttackAnimation.getSize() << std::endl;
       break;
 
     case AnimatedEntity::AttackingSecondary :

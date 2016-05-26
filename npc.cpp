@@ -41,6 +41,8 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations,
   animatedSprite.setScale( getScaleFactor(), getScaleFactor() );
   minimap_color = sf::Color::Red;
 
+  animatedSprite.setOrigin(animatedSprite.getLocalBounds().width/2, animatedSprite.getLocalBounds().height/2);
+
   // set AI
   switch(type)
   {

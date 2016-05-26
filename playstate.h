@@ -53,7 +53,8 @@ public:
 
 protected:
 	CPlayState() :
-    game_time(sf::Time::Zero)
+    game_time(sf::Time::Zero),
+    keyboard_delay(sf::Time::Zero)
 	{
     fonts.load(Fonts::Calibri, "calibri.ttf");
 
@@ -73,14 +74,16 @@ protected:
     textures.load(Textures::Human_12_SpriteSheet, "textures/human12.png");
     textures.load(Textures::Human_13_SpriteSheet, "textures/human13.png");
     textures.load(Textures::Sheep_SpriteSheet, "textures/sheep.png");
-    //textures.load(Textures::Hero_Punch, "hero_punch.png");
-    //textures.load(Textures::Hero_Kick, "hero_kick.png");
+
     textures.load(Textures::Pistol, "pistol_texture2.png");
     textures.load(Textures::Rifle, "textures/rifle.png");
     textures.load(Textures::Shotgun, "textures/shotgun.png");
     textures.load(Textures::SMG, "textures/smg.png");
     textures.load(Textures::RocketLauncher, "textures/rocketlauncher.png");
     textures.load(Textures::Bullet, "bullet.png");
+    textures.load(Textures::Spear, "textures/spear.png");
+    textures.load(Textures::Spear_Thrust, "textures/spear_thrust.png");
+
     textures.load(Textures::Dungeon, "dungeon.png");
     textures.load(Textures::Crosshair, "textures/crosshair.png");
     textures.load(Textures::Grass, "textures/grass_texture.png");
@@ -206,6 +209,9 @@ protected:
     animations.load(Animations::RocketLauncher_Idle, textures.get(Textures::RocketLauncher), 11, 31, 1);
     animations.load(Animations::Bullet, textures.get(Textures::Bullet), 10, 10, 1);
 
+    animations.load(Animations::Spear_Idle, textures.get(Textures::Spear_Thrust), 6, 84, 1);
+    animations.load(Animations::Spear_Thrust, textures.get(Textures::Spear_Thrust), 6, 84, 8, 1);
+
     //!!! add animations for weapon melee attacks (pistol whip, sword slash, etc)
 
 
@@ -229,9 +235,17 @@ protected:
     HUD_timer.setCharacterSize(40);
     HUD_timer.setColor(sf::Color::Black);
 
+    HUD_ammo_count.setFont(fonts.get(Fonts::Calibri));
+    HUD_ammo_count.setCharacterSize(40);
+    HUD_ammo_count.setColor(sf::Color::Black);
+
     HUD_sheep_count.setFont(fonts.get(Fonts::Calibri));
     HUD_sheep_count.setCharacterSize(40);
     HUD_sheep_count.setColor(sf::Color::Black);
+
+    pause_text.setFont(fonts.get(Fonts::Calibri));
+    pause_text.setCharacterSize(100);
+    pause_text.setColor(sf::Color::Black); //!!! find a better color
 
     crosshair.setTexture( textures.get( Textures::Crosshair ) );
     crosshair.setOrigin(25,25);
@@ -254,10 +268,17 @@ private:
 	AnimatedSprite HUD_weapon;
 	sf::Text HUD_health;
 	sf::Text HUD_timer;
+  sf::Text HUD_ammo_count;
 	sf::Text HUD_sheep_count;
+	sf::Text pause_text;
 	sf::Sprite crosshair;
 
 	sf::Time game_time;
+
+	sf::Time keyboard_delay;
+  bool keyboardReady() { return keyboard_delay < sf::Time::Zero; }
+  void reduceKeyboardCooldown(sf::Time dt) { keyboard_delay -= dt; }
+  void resetKeyboardCooldown() { keyboard_delay = sf::milliseconds(250); }
 
 };
 

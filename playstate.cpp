@@ -37,6 +37,7 @@ void CPlayState::Init(CGameEngine* game)
 
   HUD_background.setSize( sf::Vector2f( game->window.getSize().x, game->window.getSize().y * .10 ) );
   crosshair.setPosition( game->window.mapPixelToCoords( sf::Mouse::getPosition( game->window ) ) );
+  pause_text.setString("GAME PAUSED");
   game->window.setMouseCursorVisible(false);
 
 }
@@ -85,13 +86,15 @@ void CPlayState::HandleEvents(CGameEngine* game)
   // -----------------
 
   // PAUSE
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Escape ) && game->isPaused == false )
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Escape ) && game->isPaused == false && keyboardReady() )
   {
     Pause(game);
+    resetKeyboardCooldown();
   }
-  else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Escape ) && game->isPaused == true )
+  else if( sf::Keyboard::isKeyPressed( sf::Keyboard::Escape ) && game->isPaused == true && keyboardReady() )
   {
     Resume(game);
+    resetKeyboardCooldown();
   }
 
   if(!game->isPaused)
@@ -241,14 +244,16 @@ void CPlayState::HandleEvents(CGameEngine* game)
                                     hero->position.y,
                                     hero->getOrientation().getType());
     }
-  */
-
 
     // Load next level
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
       //this->level->Load(2);
     }
+    */
   } // end if(!isPaused)
+
+  // Reduce Keyboard Input Cooldown
+  reduceKeyboardCooldown(game->logicTime);
 }
 
 
@@ -332,27 +337,20 @@ void CPlayState::Update(CGameEngine* game)
 
   if( hero->getHP() <= 0 )
   {
-    //push state to victory state
+    //push state to game over state
   }
-/*
-  if( )
-  {
-    // push state to game over state
-  }
-*/
+
 
   // -------------------
   // Update HUD
   // -------------------
-  HUD_weapon.play( *hero->getWeapon()->animatedSprite.getAnimation() );
-  HUD_weapon.setLooped( true );
+  HUD_weapon.play( *hero->getWeapon()->getIdleAnimation() );
   HUD_weapon.setRotation( 90 );
+  HUD_weapon.pause();
   HUD_health.setString( to_string( hero->getHP() ) );
-  //HUD_timer.setString( to_string( this->level->getGameOverTime() - this->level->getRunningTime(), 1 ) );
   HUD_timer.setString( to_string( game_time.asSeconds(), 1 ) );
+  HUD_ammo_count.setString( to_string( 0 ) ); //!!! update ammo count
   HUD_sheep_count.setString( to_string( this->level->getEnemyDeathCount() ) );
-
-  level->getRandomNearbyLocation(hero->position);
 
 } // end CState::Update
 
@@ -498,17 +496,26 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // drawn last so that it is on top of everything
   HUD_background.setPosition( window.mapPixelToCoords( sf::Vector2i( 0, 0 ) ) );
   HUD_health.setPosition( window.mapPixelToCoords( sf::Vector2i( 50, 0 ) ) );
-  HUD_weapon.setPosition( window.mapPixelToCoords( sf::Vector2i( 250, 25 ) ) );
+  HUD_weapon.setPosition( window.mapPixelToCoords( sf::Vector2i( 275, 25 ) ) );
+  HUD_ammo_count.setPosition (window.mapPixelToCoords( sf::Vector2i( 325, 10 ) ) );
   HUD_timer.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x/2, 0 ) ) );
   HUD_sheep_count.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x - 50, 0 ) ) );
 
   // update AnimatedSprites
   HUD_weapon.update( game->frameTime );
 
+  if( game->isPaused )
+  {
+    pause_text.setPosition( window.mapPixelToCoords( sf::Vector2i( 250, window.getSize().y/2 - 100 ) ) );
+    window.draw( pause_text );
+  }
+
+
   // draw hud
   window.draw( HUD_background );
   window.draw( HUD_health );
   window.draw( HUD_weapon );
+  window.draw( HUD_ammo_count );
   window.draw( HUD_timer );
   window.draw( HUD_sheep_count );
 

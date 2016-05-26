@@ -29,7 +29,7 @@ AnimatedEntity::AnimatedEntity( ParentType pType )
 
 void AnimatedEntity::MoveAnimatedSprite(double interpolation)
 {
-  animatedSprite.setOrigin(animatedSprite.getLocalBounds().width/2, animatedSprite.getLocalBounds().height/2);
+
   sf::Vector2f distance = position - animatedSprite.getPosition();
   animatedSprite.move(distance.x * interpolation, distance.y * interpolation);
   hitbox.setPosition(animatedSprite.getPosition().x, animatedSprite.getPosition().y);
@@ -68,13 +68,17 @@ void AnimatedEntity::AddDirectionOppo(double d)
 
 void AnimatedEntity::Move()
 {
-  //random number generator : rand()%(max-min+1) + min
-  //std::cout<<obj.position.x << std::endl;
+  // Attacking Weapons need to be excluded from the rest of this code
+  if( getStatus() == AnimatedEntity::AttackingPrimary || getStatus() == AnimatedEntity::AttackingSecondary )
+  {
+    return;
+  }
+
   if( directions.empty() )
   {
     if( !isDead() )
     {
-      setStatus( AnimatedEntity::Idle );
+      setStatus( AnimatedEntity::Idle ); //!!! causing issues with animations not playing for weapons
       playAnimation();
     }
     return;

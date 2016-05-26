@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1461213686 source:c:\c++\qge\animatedentity.cpp
+1464237490 source:c:\c++\qge\animatedentity.cpp
 	"animatedentity.h"
 
 1461213629 c:\c++\qge\animatedentity.h
@@ -368,7 +368,7 @@
 
 1437604487 c:\c++\qge\orientation.h
 
-1439472665 c:\c++\qge\resourceholder.h
+1464183609 c:\c++\qge\resourceholder.h
 	<map>
 	<string>
 	<memory>
@@ -487,7 +487,7 @@
 	<Windows.h>
 	<iostream>
 
-1464057175 c:\c++\qge\playstate.h
+1464238523 c:\c++\qge\playstate.h
 	"gamestate.h"
 	<vector>
 	<memory>
@@ -539,7 +539,7 @@
 1438264276 c:\c++\qge\projectile.h
 	"animatedentity.h"
 
-1461818380 c:\c++\qge\weapon.h
+1464231584 c:\c++\qge\weapon.h
 	<SFML/Graphics.hpp>
 	"animatedentity.h"
 	"direction.h"
@@ -553,7 +553,7 @@
 	"animatedsprite.h"
 	"direction.h"
 
-1463439681 c:\c++\qge\datatables.h
+1464237739 c:\c++\qge\datatables.h
 	"resourceholder.h"
 	"direction.h"
 	"hero.h"
@@ -592,7 +592,7 @@
 	"projectile.h"
 	<cassert>
 
-1438133006 source:c:\c++\qge\collidable.cpp
+1464237490 source:c:\c++\qge\collidable.cpp
 	"collidable.h"
 	"datatables.h"
 
@@ -601,7 +601,7 @@
 	<map>
 	"collision.h"
 
-1463439985 source:c:\c++\qge\datatables.cpp
+1464238476 source:c:\c++\qge\datatables.cpp
 	"datatables.h"
 
 1464044543 source:c:\c++\qge\gameengine.cpp
@@ -954,7 +954,7 @@
 	<list>
 	<cstdint>
 
-1463782898 source:c:\c++\qge\hero.cpp
+1464237482 source:c:\c++\qge\hero.cpp
 	"hero.h"
 	"datatables.h"
 	<cmath>
@@ -974,7 +974,7 @@
 1464044354 c:\c++\qge\introstate.h
 	"gamestate.h"
 
-1464057598 source:c:\c++\qge\level.cpp
+1464183793 source:c:\c++\qge\level.cpp
 	"level.h"
 
 1464044947 source:c:\c++\qge\main.cpp
@@ -1006,7 +1006,7 @@
 1464044474 c:\c++\qge\optionstate.h
 	"gamestate.h"
 
-1461213819 source:c:\c++\qge\npc.cpp
+1464237490 source:c:\c++\qge\npc.cpp
 	"npc.h"
 	"level.h"
 	"datatables.h"
@@ -1022,11 +1022,11 @@
 	"projectile.h"
 	"datatables.h"
 
-1463440037 source:c:\c++\qge\weapon.cpp
+1464238169 source:c:\c++\qge\weapon.cpp
 	"weapon.h"
 	"datatables.h"
 
-1464057630 source:c:\c++\qge\playstate.cpp
+1464218992 source:c:\c++\qge\playstate.cpp
 	"playstate.h"
 
 1461453984 c:\c++\qge\random.h

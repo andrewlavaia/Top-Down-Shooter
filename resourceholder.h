@@ -37,8 +37,6 @@ namespace Textures {
     Human_12_SpriteSheet,
     Human_13_SpriteSheet,
     Sheep_SpriteSheet,
-    //Hero_Punch,
-    //Hero_Kick,
     NPC_Texture,
     Pistol,
     Rifle,
@@ -52,7 +50,8 @@ namespace Textures {
     LongSword_Metallic,
     SingleAx_Metallic,
     DoubleAx_Metallic,
-    Spear_Metallic,
+    Spear,
+    Spear_Thrust,
     Grass,
     Dungeon,
     Crosshair,
@@ -161,8 +160,6 @@ namespace Animations {
     Human_13_Attacked,
     Human_13_Die,
     Human_13_Dead,
-    //Hero_Punch, // obsolete
-    //Hero_Kick,  // obsolete
     Sheep_Idle,
     Sheep_Walk,
     Sheep_Attacked,
@@ -180,7 +177,8 @@ namespace Animations {
     LongSword_Metallic_Idle,
     SingleAx_Metallic_Idle,
     DoubleAx_Metallic_Idle,
-    Spear_Metallic_Idle,
+    Spear_Idle,
+    Spear_Thrust,
     Grass,
   };
 

@@ -67,6 +67,7 @@ struct WeaponData
     Animations::ID  secondaryAttackAnimationID = Animations::Empty;
     sf::Color       color = sf::Color::White; //default represents no color
     sf::Vector2u    hitboxDimensions = sf::Vector2u(10, 10);
+    sf::Vector2u    originDimensions = sf::Vector2u(0, 0);
     double          scaleFactor = 1.0;
 };
 

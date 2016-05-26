@@ -74,6 +74,8 @@ Level::Level(int id, const ResourceHolder<Animation, Animations::ID>& animations
       CreateWeapon(Weapon::Pistol, getRandomNearbyLocation(sf::Vector2f(100,100)));
       CreateWeapon(Weapon::RocketLauncher, getRandomNearbyLocation(sf::Vector2f(100,100)));
 
+      CreateWeapon(Weapon::Spear, sf::Vector2f(100,100));
+
 
       CreateNPC( NPC::Sheep, sf::Vector2f(100,100) );
       //set spawncooldown to -5
