@@ -1,7 +1,6 @@
 
 #include "charselectstate.h"
 #include "playstate.h"
-#include <iostream>
 
 CCharSelectState CCharSelectState::CharSelectState;
 

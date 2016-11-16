@@ -1,6 +1,7 @@
 
 #include "weapon.h"
 #include "datatables.h"
+#include "helpers.h"
 
 Weapon::Weapon( Type t, const ResourceHolder<Animation, Animations::ID>& animations, const DataTable& data, double x, double y )
   : AnimatedEntity( AnimatedEntity::WeaponType ),
@@ -9,7 +10,7 @@ Weapon::Weapon( Type t, const ResourceHolder<Animation, Animations::ID>& animati
     ammoType( std::unique_ptr<Projectile>( new Projectile( data.WeaponTable[t].ammoType, animations, data, *this ) ) ),
     type( t ),
     range( data.WeaponTable[t].range ),
-    ammoCount( data.WeaponTable[t].ammoCount ),
+    ammoCount( abs( rand_normal(data.WeaponTable[t].ammoCount, data.WeaponTable[t].ammoCount/4) ) ), //abs used to insure no negatives are produced
     idleAnimation( animations.get( data.WeaponTable[t].idleAnimationID ) ),
     moveAnimation( animations.get( data.WeaponTable[t].moveAnimationID ) ),
     dieAnimation( animations.get( data.WeaponTable[t].dieAnimationID ) ),
@@ -32,7 +33,6 @@ Weapon::Weapon( Type t, const ResourceHolder<Animation, Animations::ID>& animati
   setStatus( AnimatedEntity::Idle );
   animatedSprite.play( idleAnimation );
   animatedSprite.setLooped( false );
-  //animatedSprite.setFrameTime( sf::seconds(0.16) );
   animatedSprite.setColor( data.WeaponTable[t].color );
 
   setScaleFactor( data.WeaponTable[t].scaleFactor );
@@ -52,6 +52,7 @@ Weapon::Weapon( Type t, const ResourceHolder<Animation, Animations::ID>& animati
   {
     animatedSprite.setOrigin(data.WeaponTable[t].originDimensions.x, data.WeaponTable[t].originDimensions.y);
   }
+
 }
 
 
@@ -100,7 +101,6 @@ void Weapon::playAnimation()
 
     case AnimatedEntity::AttackingPrimary :
       animatedSprite.play( primaryAttackAnimation );
-      //std::cout << "play animation - " << primaryAttackAnimation.getSize() << std::endl;
       break;
 
     case AnimatedEntity::AttackingSecondary :

@@ -46,7 +46,7 @@ void Projectile::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
   switch(a.getParentType())
   {
     case AnimatedEntity::HeroType :
-      Destroy();
+      Destroy(); //!!! not working?
       break;
 
     case AnimatedEntity::NPCType :

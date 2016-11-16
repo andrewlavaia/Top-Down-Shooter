@@ -18,7 +18,6 @@ Hero::Hero(Type t, const ResourceHolder<Animation, Animations::ID>& animations, 
     deadAnimation(animations.get(data.HeroTable[t].deadAnimationID)),
     attackedAnimation(animations.get(data.HeroTable[t].attackedAnimationID)),
     grabAnimation(animations.get(data.HeroTable[t].grabAnimationID))
-    //punchAnimation(animations.get(data.HeroTable[t].punchAnimationID))
 {
   setHitPoints(data.HeroTable[t].hitpoints);
   setMaxHitPoints(data.HeroTable[t].hitpoints);
@@ -161,32 +160,39 @@ void Hero::pAttack(Attack& attack, std::vector<std::shared_ptr<AnimatedEntity>>&
   {
     case Attack::Standard :
       getWeapon()->hitbox.setScale( getWeapon()->getScaleFactor(), getWeapon()->getRange() );
-      //!!! add new types of attacks (slash, pierce, etc)
-
       break;
 
     case Attack::Shoot :
-        // Should this be optimized? 5 projectiles constructed every shot. 4 are then immediately destructed if not buckshot.
-        auto p1 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation());
-        auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()-5);
-        auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()-3);
-        auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()+3);
-        auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()+5);
-
-      switch( getWeapon()->ammoType->getType() )
+      if(getWeapon()->getAmmo() > 0 )
       {
-        case Projectile::BuckShot :
-          entities.push_back(p1);
-          entities.push_back(p2);
-          entities.push_back(p3);
-          entities.push_back(p4);
-          entities.push_back(p5);
-          break;
+          // Should this be optimized? 5 projectiles constructed every shot. 4 are then immediately destructed if not buckshot.
+          auto p1 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation());
+          auto p2 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()-5);
+          auto p3 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()-3);
+          auto p4 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()+3);
+          auto p5 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), animations, data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation()+5);
 
-        default:
-          entities.push_back(p1);
-          break;
-      }
+        switch( getWeapon()->ammoType->getType() )
+        {
+          case Projectile::BuckShot :
+            entities.push_back(p1);
+            entities.push_back(p2);
+            entities.push_back(p3);
+            entities.push_back(p4);
+            entities.push_back(p5);
+            break;
+
+          default:
+            entities.push_back(p1);
+            break;
+        }
+        getWeapon()->reduceAmmo();
+      } // end if(ammoCount > 0 )
+      break;
+
+    case Attack::Thrust :
+
+
       break;
   }
 
@@ -224,7 +230,6 @@ void Hero::Drop()
   else if( weapon != nullptr )
   {
     weapon->hitbox.setScale( getWeapon()->getScaleFactor(), getWeapon()->getScaleFactor() );
-    //weapon->hitbox.setRotation( getWeapon()->animatedSprite.getRotation() );
     weapon = nullptr;
   }
 }
@@ -246,7 +251,6 @@ void Hero::Throw()
   if( weapon != nullptr )
   {
     weapon->hitbox.setScale( getWeapon()->getScaleFactor(), getWeapon()->getScaleFactor() );
-    //weapon->hitbox.setRotation( getOrientation().getRotation() );
     weapon->AddDirection( getOrientation().getType(), throw_distance, throw_speed );
     weapon->setStatus( AnimatedEntity::Thrown );
     weapon->playAnimation();

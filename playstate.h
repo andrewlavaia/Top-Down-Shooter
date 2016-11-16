@@ -82,7 +82,8 @@ protected:
     textures.load(Textures::RocketLauncher, "textures/rocketlauncher.png");
     textures.load(Textures::Bullet, "bullet.png");
     textures.load(Textures::Spear, "textures/spear.png");
-    textures.load(Textures::Spear_Thrust, "textures/spear_thrust.png");
+    textures.load(Textures::Spear_Thrust, "textures/spear_thrust_v2.png");
+    textures.load(Textures::Spear_Slash, "textures/spear_whirlwind_v2.png");
 
     textures.load(Textures::Dungeon, "dungeon.png");
     textures.load(Textures::Crosshair, "textures/crosshair.png");
@@ -209,8 +210,9 @@ protected:
     animations.load(Animations::RocketLauncher_Idle, textures.get(Textures::RocketLauncher), 11, 31, 1);
     animations.load(Animations::Bullet, textures.get(Textures::Bullet), 10, 10, 1);
 
-    animations.load(Animations::Spear_Idle, textures.get(Textures::Spear_Thrust), 6, 84, 1);
-    animations.load(Animations::Spear_Thrust, textures.get(Textures::Spear_Thrust), 6, 84, 8, 1);
+    animations.load(Animations::Spear_Idle, textures.get(Textures::Spear_Thrust), 101, 101, 1);
+    animations.load(Animations::Spear_Thrust, textures.get(Textures::Spear_Thrust), 101, 101, 10, 1);
+    animations.load(Animations::Spear_Slash, textures.get(Textures::Spear_Slash), 101, 101, 10, 1);
 
     //!!! add animations for weapon melee attacks (pistol whip, sword slash, etc)
 
@@ -222,7 +224,6 @@ protected:
 	  level = std::make_shared<Level>(1, animations, data);
 
     HUD_background.setSize( sf::Vector2f( 0, 0 ) ); // empty initialization. Set to window size in Playstate::Init()
-    //HUD_background.setTexture( );
     HUD_background.setFillColor( sf::Color( 255, 255, 255, 255 ) );
 
     HUD_weapon.setScale(2, 2);

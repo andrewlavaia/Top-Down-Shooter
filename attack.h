@@ -12,9 +12,8 @@ public:
   enum Type {
     Standard,
     Shoot,
+    Thrust,
   };
-
-  // Are more attack types really needed or just new animations?
 
   Attack(Type t, double attack_speed = 0.5)
   {

@@ -36,14 +36,16 @@ class Weapon : public AnimatedEntity
     virtual void collideWithEntity(const AnimatedEntity& a, sf::Time dt);
     virtual void playAnimation();
 
+    void reduceAmmo() { ammoCount-- ;}
+
     Type getType() const { return type; }
     unsigned getRange() const { return range; }
+    unsigned getAmmo() const { return ammoCount; }
+    const Animation* getIdleAnimation() const { return &idleAnimation; };
 
     std::unique_ptr<Attack> primaryAttack;
     std::unique_ptr<Attack> secondaryAttack;
     std::unique_ptr<Projectile> ammoType;
-
-    const Animation* getIdleAnimation() const { return &idleAnimation; };
 
   private:
     Type              type;

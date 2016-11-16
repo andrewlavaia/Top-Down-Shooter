@@ -4,6 +4,10 @@
 
 #include "animatedsprite.h"
 
+
+#include <SFML/Graphics.hpp>
+#include <map>
+
 namespace Collision {
     //////
     /// Test for a collision between two sprites by comparing the alpha values of overlapping pixels
@@ -16,6 +20,7 @@ namespace Collision {
     /// You can avoid this by using the "CreateTextureAndBitmask" function
     //////
     bool PixelPerfectTest(const sf::Sprite& Object1 ,const sf::Sprite& Object2, sf::Uint8 AlphaLimit = 0);
+    bool PixelPerfectTest(const AnimatedSprite& Object1 ,const AnimatedSprite& Object2, sf::Uint8 AlphaLimit = 0);
 
     //////
     /// Replaces Texture::loadFromFile
@@ -38,6 +43,7 @@ namespace Collision {
     /// Supports scaling and rotation
     //////
     bool BoundingBoxTest(const sf::Sprite& Object1, const sf::Sprite& Object2);
+    bool BoundingBoxTest(const AnimatedSprite& Object1, const AnimatedSprite& Object2);
 }
 
 #endif  /* COLLISION_H */

@@ -6,9 +6,7 @@ CPlayState CPlayState::PlayState;
 void CPlayState::Init(CGameEngine* game)
 {
   std::cout << "Play State started." << std::endl;
-  //this->level->Load(1);
   level->background.setTexture( textures.get( Textures::Grass ) );
-  //level->background.setTexture( textures.get( Textures::Dungeon ) );
 
   std::cout << "Level 1 Loaded." << std::endl;
   std::cout<< "Hero " << CCharSelectState::Instance()->getSelectedHero() << " selected" << std::endl;
@@ -45,6 +43,7 @@ void CPlayState::Init(CGameEngine* game)
 void CPlayState::Cleanup()
 {
   std::cout << "Play State ended." << std::endl;
+
 }
 
 void CPlayState::Pause(CGameEngine* game)
@@ -173,6 +172,7 @@ void CPlayState::HandleEvents(CGameEngine* game)
     const double PI = 3.14159265;
     float rotation = ( atan2( dx, dy ) * 180 )/PI; // take arctangent and convert from radians to degrees
     hero->getWeapon()->animatedSprite.setRotation( rotation );
+    hero->getWeapon()->hitbox.setRotation( rotation );
 
         // Keyboard Controls
     if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
@@ -217,39 +217,6 @@ void CPlayState::HandleEvents(CGameEngine* game)
       hero->Throw();
     }
 
-
-  /*
-    // Spawning Controls (administrative only), requires public member functions
-    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num5 ) )
-    {
-      this->level->CreateNPC( NPC::BigRick, level->getRandomNearbyLocation(hero->position) );
-      std::cout<< "NPC spawned"<<std::endl;
-    }
-
-    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num6 ) )
-    {
-      this->level->CreateNPC( NPC::McGinger, level->getRandomNearbyLocation(hero->position) );
-    }
-
-    if( sf::Keyboard::isKeyPressed( sf::Keyboard::Num7 ) )
-    {
-      this->level->CreateNPC( NPC::Sheep, level->getRandomNearbyLocation(hero->position) );
-    }
-  */
-  /*
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
-    {
-      this->level->CreateProjectile( Projectile::Bullet,
-                                    hero->position.x,
-                                    hero->position.y,
-                                    hero->getOrientation().getType());
-    }
-
-    // Load next level
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
-      //this->level->Load(2);
-    }
-    */
   } // end if(!isPaused)
 
   // Reduce Keyboard Input Cooldown
@@ -269,16 +236,14 @@ void CPlayState::Update(CGameEngine* game)
   // Test all collisions
   for(std::vector< std::shared_ptr<AnimatedEntity> >::iterator it = this->level->entities.begin(); it != this->level->entities.end(); ++it)
   {
-
-    // Test collision with hero
-    hero->collideWithEntity(**it, game->logicTime);
-
     // Test collision with all other entities
     for(std::vector< std::shared_ptr<AnimatedEntity> >::iterator jt = this->level->entities.begin(); jt != this->level->entities.end(); ++jt)
     {
       (*it)->collideWithEntity(**jt, game->logicTime);
     }
 
+    // Test collision with hero
+    hero->collideWithEntity(**it, game->logicTime);
   }
 
   // Trigger NPC aggro
@@ -329,7 +294,6 @@ void CPlayState::Update(CGameEngine* game)
 
   // Spawn new enemies
   level->spawnNPCs(3, game->logicTime, hero->position);
-  //!!! update number so that it is random and increases as time goes on.
 
   // -------------------
   // Game Over Conditions
@@ -337,7 +301,18 @@ void CPlayState::Update(CGameEngine* game)
 
   if( hero->getHP() <= 0 )
   {
-    //push state to game over state
+
+    game->window.setMouseCursorVisible(true);
+    game->window.setView(game->window.getDefaultView());
+
+    level->entities.clear();
+
+    //push state to main menu state
+    game->PopState();
+    game->PopState();
+    game->PopState();
+
+
   }
 
 
@@ -349,7 +324,7 @@ void CPlayState::Update(CGameEngine* game)
   HUD_weapon.pause();
   HUD_health.setString( to_string( hero->getHP() ) );
   HUD_timer.setString( to_string( game_time.asSeconds(), 1 ) );
-  HUD_ammo_count.setString( to_string( 0 ) ); //!!! update ammo count
+  HUD_ammo_count.setString( to_string( hero->getWeapon()->getAmmo() ) );
   HUD_sheep_count.setString( to_string( this->level->getEnemyDeathCount() ) );
 
 } // end CState::Update
@@ -376,9 +351,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
 
   // initialize mini-map view
   unsigned int size = 200; // The 'minimap' view will show a smaller picture of the map
-  //sf::View minimap(sf::FloatRect(standard.getCenter().x, standard.getCenter().y, static_cast<float>(size), static_cast<float>(window.getSize().y*size/window.getSize().x)));
   sf::View minimap(sf::FloatRect(hero->position.x, hero->position.y, static_cast<float>(size), static_cast<float>(window.getSize().y*size/window.getSize().x)));
-  //minimap.setViewport(sf::FloatRect(1.f-static_cast<float>(minimap.getSize().x)/window.getSize().x-0.02f, 1.f-static_cast<float>(minimap.getSize().y)/window.getSize().y-0.02f, static_cast<float>(minimap.getSize().x)/window.getSize().x, static_cast<float>(minimap.getSize().y)/window.getSize().y));
   minimap.setViewport(sf::FloatRect(0.90f, 0, 0.10f, 0.10f));
   minimap.zoom(10.f);
 
@@ -410,30 +383,28 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   // ------------------------
   // Move view when hero is within 'limit' of  window edge
 
-  //std::cout << hero->position.x << ", " <<hero->position.y << std::endl;
-
   sf::Vector2i p = window.mapCoordsToPixel(hero->position);
   const double limit = 200;
   const double max_width = 4000;
   const double max_height = 2658;
   if( p.x > (double)window.getSize().x - limit )
   {
-    standard.move( hero->getSpeed() * interpolation, 0.0 );
+    standard.move( hero->getSpeed()/1.5 * interpolation, 0.0 );
     window.setView( standard );
   }
   else if( p.x < limit )
   {
-    standard.move( hero->getSpeed() * interpolation * -1, 0.0 );
+    standard.move( hero->getSpeed()/1.5 * interpolation * -1, 0.0 );
     window.setView( standard );
   }
   if( p.y > (double)window.getSize().y - limit )
   {
-    standard.move( 0.0, hero->getSpeed() * interpolation );
+    standard.move( 0.0, hero->getSpeed()/1.5 * interpolation );
     window.setView( standard );
   }
   else if( p.y < limit )
   {
-    standard.move( 0.0, hero->getSpeed() * interpolation * -1);
+    standard.move( 0.0, hero->getSpeed()/1.5  * interpolation * -1);
     window.setView( standard );
   }
 
@@ -453,7 +424,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
     (*it)->animatedSprite.update(game->frameTime);
     (*it)->MoveAnimatedSprite(interpolation);
     window.draw((*it)->animatedSprite);
-    //window.draw((*it)->hitbox); // DEBUG only
+
     if( (*it)->getParentType() == AnimatedEntity::NPCType )
     {
       if( !(*it)->isDead() )
@@ -480,7 +451,6 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   hero->animatedSprite.update( game->frameTime );
   hero->MoveAnimatedSprite( interpolation );
   window.draw( hero->animatedSprite );
-  //window.draw(hero->hitbox); // DEBUG only
 
   // draw weapon in front of hero only when weapon is not pointing towards top of screen
   if( hero->getWeapon()->animatedSprite.getRotation() >= 90
@@ -497,7 +467,7 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   HUD_background.setPosition( window.mapPixelToCoords( sf::Vector2i( 0, 0 ) ) );
   HUD_health.setPosition( window.mapPixelToCoords( sf::Vector2i( 50, 0 ) ) );
   HUD_weapon.setPosition( window.mapPixelToCoords( sf::Vector2i( 275, 25 ) ) );
-  HUD_ammo_count.setPosition (window.mapPixelToCoords( sf::Vector2i( 325, 10 ) ) );
+  HUD_ammo_count.setPosition (window.mapPixelToCoords( sf::Vector2i( 325, 0 ) ) );
   HUD_timer.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x/2, 0 ) ) );
   HUD_sheep_count.setPosition( window.mapPixelToCoords( sf::Vector2i( window.getSize().x - 50, 0 ) ) );
 
@@ -515,7 +485,8 @@ void CPlayState::Draw(CGameEngine* game, double interpolation)
   window.draw( HUD_background );
   window.draw( HUD_health );
   window.draw( HUD_weapon );
-  window.draw( HUD_ammo_count );
+  if( hero->getWeapon()->getAmmo() > 0 )
+    window.draw( HUD_ammo_count );
   window.draw( HUD_timer );
   window.draw( HUD_sheep_count );
 

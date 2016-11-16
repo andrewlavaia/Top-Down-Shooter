@@ -52,8 +52,6 @@ private:
   template <typename T1, typename T2>
     void DestroyObject(T1& vec, T2& it);
 
-  // createProjectile should be reworked so that it can be used for npc and hero weapons and so animations and data can go back to being private
-  //void                                        CreateProjectile(Projectile::Type type, double x, double y, Orientation::Type o);
   void                                        CreateWeapon(Weapon::Type type, sf::Vector2f location);
   void                                        CreateCollidable(Collidable::Type type, int x, int y, int width, int height);
   bool                                        canSpawn();

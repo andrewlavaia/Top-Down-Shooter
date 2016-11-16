@@ -3,9 +3,11 @@
     <folder id="0">
         <file id="0" name="sword_metallic.png" width="16" height="32" pivot_x="0" pivot_y="1"/>
         <file id="1" name="spear_metallic.png" width="16" height="64" pivot_x="0" pivot_y="1"/>
+        <file id="2" name="shortsword_metallic.png" width="16" height="32" pivot_x="0" pivot_y="1"/>
+        <file id="3" name="longsword_metallic.png" width="16" height="64" pivot_x="0" pivot_y="1"/>
     </folder>
     <entity id="0" name="entity_000">
-        <animation id="0" name="thrustAnimation" length="400">
+        <animation id="0" name="thrustAnimation_spear" length="400">
             <mainline>
                 <key id="0">
                     <object_ref id="0" timeline="0" key="0" z_index="0"/>
@@ -35,51 +37,81 @@
                 </key>
             </timeline>
         </animation>
-        <animation id="1" name="slashAnimation" length="500">
+        <animation id="1" name="thrustAnimation_longsword" length="400">
             <mainline>
                 <key id="0">
+                    <object_ref id="0" timeline="0" key="0" z_index="0"/>
+                </key>
+                <key id="1" time="32">
                     <object_ref id="0" timeline="0" key="1" z_index="0"/>
                 </key>
-                <key id="1" time="101">
+                <key id="2" time="75">
                     <object_ref id="0" timeline="0" key="2" z_index="0"/>
                 </key>
-                <key id="2" time="195">
-                    <object_ref id="0" timeline="0" key="4" z_index="0"/>
-                </key>
-                <key id="3" time="278">
-                    <object_ref id="0" timeline="0" key="5" z_index="0"/>
-                </key>
-                <key id="4" time="330">
-                    <object_ref id="0" timeline="0" key="6" z_index="0"/>
-                </key>
-                <key id="5" time="368">
-                    <object_ref id="0" timeline="0" key="7" z_index="0"/>
+                <key id="3" time="160">
+                    <object_ref id="0" timeline="0" key="3" z_index="0"/>
                 </key>
             </mainline>
             <timeline id="0" name="sword_metallic">
-                <key id="0" spin="-1">
-                    <object folder="0" file="1" x="0.478054" y="-44.105109" pivot_x="0.522632" pivot_y="0.066066" angle="0"/>
+                <key id="0" spin="0">
+                    <object folder="0" file="3" pivot_x="0.48977" pivot_y="0.492865" angle="0"/>
                 </key>
-                <key id="1" spin="-1">
-                    <object folder="0" file="1" x="-7.884058" y="15.666667" pivot_x="0" pivot_y="1" angle="0"/>
+                <key id="1" time="32" spin="0">
+                    <object folder="0" file="3" y="-10" pivot_x="0.48977" pivot_y="0.492865" angle="0"/>
                 </key>
-                <key id="2" time="101">
-                    <object folder="0" file="1" x="25.304348" y="13.057971" pivot_x="0" pivot_y="1" angle="291.977259"/>
+                <key id="2" time="75" spin="0">
+                    <object folder="0" file="3" y="20" pivot_x="0.48977" pivot_y="0.492865" angle="0"/>
                 </key>
-                <key id="3" time="195">
-                    <object folder="0" file="1" x="-7.895584" y="56.895212" pivot_x="0" pivot_y="1" angle="0.450617"/>
+                <key id="3" time="160" spin="0">
+                    <object folder="0" file="3" y="20" pivot_x="0.48977" pivot_y="0.492865" angle="0"/>
                 </key>
-                <key id="4" time="195">
-                    <object folder="0" file="1" x="0.936355" y="-2.80895" pivot_x="0.522632" pivot_y="0.066066" angle="0.450617"/>
+            </timeline>
+        </animation>
+        <animation id="2" name="slashAnimation_whirlwind" length="400">
+            <mainline>
+                <key id="0">
+                    <object_ref id="0" timeline="0" key="0" z_index="0"/>
                 </key>
-                <key id="5" time="278">
-                    <object folder="0" file="1" x="-0.808224" y="-5.768215" pivot_x="0.522632" pivot_y="0.066066" angle="24.82688"/>
+                <key id="1" time="50">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
                 </key>
-                <key id="6" time="330">
-                    <object folder="0" file="1" x="-0.808301" y="-8.16531" pivot_x="0.522632" pivot_y="0.066066" angle="54.180987"/>
+                <key id="2" time="100">
+                    <object_ref id="0" timeline="0" key="2" z_index="0"/>
                 </key>
-                <key id="7" time="368" spin="-1">
-                    <object folder="0" file="1" x="-0.808358" y="-9.917033" pivot_x="0.522632" pivot_y="0.066066" angle="75.632065"/>
+                <key id="3" time="149">
+                    <object_ref id="0" timeline="0" key="3" z_index="0"/>
+                </key>
+                <key id="4" time="200">
+                    <object_ref id="0" timeline="0" key="4" z_index="0"/>
+                </key>
+                <key id="5" time="270">
+                    <object_ref id="0" timeline="0" key="5" z_index="0"/>
+                </key>
+                <key id="6" time="319">
+                    <object_ref id="0" timeline="0" key="6" z_index="0"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="sword_metallic">
+                <key id="0">
+                    <object folder="0" file="1" x="0.231082" y="-20.148631" pivot_x="0.504213" pivot_y="0.178043" angle="0"/>
+                </key>
+                <key id="1" time="50">
+                    <object folder="0" file="1" x="1.231082" y="5.351369" pivot_x="0.504213" pivot_y="0.178043" angle="24.959608"/>
+                </key>
+                <key id="2" time="100">
+                    <object folder="0" file="1" x="-2.768918" y="-5.148631" pivot_x="0.504213" pivot_y="0.178043" angle="64.49" scale_x="1"/>
+                </key>
+                <key id="3" time="149">
+                    <object folder="0" file="1" x="-6.768918" y="-20.148631" pivot_x="0.504213" pivot_y="0.178043" angle="145.499736"/>
+                </key>
+                <key id="4" time="200">
+                    <object folder="0" file="1" x="11.231082" y="-20.148631" pivot_x="0.504213" pivot_y="0.178043" angle="226.416631" scale_x="1" scale_y="1"/>
+                </key>
+                <key id="5" time="270">
+                    <object folder="0" file="1" x="16.231082" y="4.101369" pivot_x="0.504213" pivot_y="0.178043" angle="297.914666" scale_x="1" scale_y="1"/>
+                </key>
+                <key id="6" time="319" spin="-1">
+                    <object folder="0" file="1" x="2.200313" y="3.960984" pivot_x="0.504213" pivot_y="0.178043" angle="30.899581" scale_x="1" scale_y="1"/>
                 </key>
             </timeline>
         </animation>

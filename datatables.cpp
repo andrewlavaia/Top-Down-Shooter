@@ -366,17 +366,17 @@ std::vector<WeaponData> DataTable::initializeWeaponData()
   data[Weapon::DoubleAxe].primaryAttackSpeed = 0.4;
   data[Weapon::DoubleAxe].secondaryAttackSpeed = 0.4;
 
-  data[Weapon::Spear].power = 4;
-  data[Weapon::Spear].range = 5;
+  data[Weapon::Spear].power = 5;
+  data[Weapon::Spear].range = 15;
   data[Weapon::Spear].idleAnimationID = Animations::Spear_Idle;
   data[Weapon::Spear].moveAnimationID = Animations::Spear_Idle;
   data[Weapon::Spear].primaryAttackAnimationID = Animations::Spear_Thrust;
-  data[Weapon::Spear].secondaryAttackAnimationID = Animations::Spear_Idle;
+  data[Weapon::Spear].secondaryAttackAnimationID = Animations::Spear_Slash;
   data[Weapon::Spear].primaryAttackType = Attack::Standard;
   data[Weapon::Spear].secondaryAttackType = Attack::Standard;
   data[Weapon::Spear].primaryAttackSpeed = 0.4;
-  data[Weapon::Spear].secondaryAttackSpeed = 0.4;
-  data[Weapon::Spear].originDimensions = sf::Vector2u(4, 64);
+  data[Weapon::Spear].secondaryAttackSpeed = 0.5;
+  //data[Weapon::Spear].originDimensions = sf::Vector2u(3, 64);
 
 
   return data;

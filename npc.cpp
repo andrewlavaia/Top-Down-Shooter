@@ -48,17 +48,12 @@ NPC::NPC(Type t, const ResourceHolder<Animation, Animations::ID>& animations,
   {
     case NPC::McGinger :
       AddDirection(Orientation::S, 100, getSpeed(), false);
-      //AddDirection(Orientation::NW, 100, getSpeed(), true);
-      //AddDirection(Orientation::NE, 50, getSpeed(), true);
-      //AddDirection(Orientation::SW, 50, getSpeed(), true);
-
       break;
 
     case NPC::BigRick :
       AddDirection(Orientation::S,  100, getSpeed(), true);
       AddDirection(Orientation::E,  100, getSpeed(), true);
       AddDirection(Orientation::NW, 100, getSpeed(), true);
-      //AddDirection(Orientation::SW, 50, getSpeed(), true);
       break;
 
     case NPC::Sheep :
@@ -120,7 +115,6 @@ void NPC::pAttack(Attack& attack, Level& level)
     case Attack::Shoot :
       auto p1 = std::make_shared<Projectile>(getWeapon()->ammoType->getType(), level.animations, level.data, *getWeapon(), position.x, position.y, getWeapon()->animatedSprite.getRotation());
       level.entities.push_back(p1);
-      //CreateProjectile(getWeapon()->ammoType->getType(), getWeapon()->position.x, getWeapon()->position.y, getOrientation().getType() );
       break;
   }
 
@@ -135,7 +129,7 @@ void NPC::engageHero(const AnimatedEntity& hero, Level& level)
         && (  getStatus() == AnimatedEntity::Moving
            || getStatus() == AnimatedEntity::Idle )
         && isCollisionOK()
-        && !Collision::BoundingBoxTest( hitbox, hero.hitbox )
+        && !Collision::BoundingBoxTest( animatedSprite, hero.animatedSprite )
       )
     {
       setStatus( AnimatedEntity::Moving );
@@ -220,9 +214,6 @@ void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
 
         case Collidable::Boundary :
           AddDirectionOppo( 20 );
-          //setOrientation( getOrientation().getOppo() );
-          //setStatus( AnimatedEntity::Moving );
-          //MoveOneUnit( getOrientation().getOppo(), getSpeed() );
           break;
 
         case Collidable::SheepPen :
@@ -237,7 +228,6 @@ void NPC::collideWithEntity(const AnimatedEntity& a, sf::Time dt)
             AddDirection( getOrientation().getType(), 15, getSpeed(), false ); // moves last direction added gets looked at first
           }
 
-          //std::cout<<"NPC captured in pen."<<std::endl;
           break;
 
         default :

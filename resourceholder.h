@@ -52,6 +52,7 @@ namespace Textures {
     DoubleAx_Metallic,
     Spear,
     Spear_Thrust,
+    Spear_Slash,
     Grass,
     Dungeon,
     Crosshair,
@@ -179,6 +180,7 @@ namespace Animations {
     DoubleAx_Metallic_Idle,
     Spear_Idle,
     Spear_Thrust,
+    Spear_Slash,
     Grass,
   };
 

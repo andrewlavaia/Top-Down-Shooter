@@ -68,8 +68,8 @@ void AnimatedEntity::AddDirectionOppo(double d)
 
 void AnimatedEntity::Move()
 {
-  // Attacking Weapons need to be excluded from the rest of this code
-  if( getStatus() == AnimatedEntity::AttackingPrimary || getStatus() == AnimatedEntity::AttackingSecondary )
+  // Attack animations need to be excluded from the rest of this code so that they aren't overwritten to Idle
+  if( (getStatus() == AnimatedEntity::AttackingPrimary || getStatus() == AnimatedEntity::AttackingSecondary) && animatedSprite.isPlaying() )
   {
     return;
   }
@@ -78,7 +78,7 @@ void AnimatedEntity::Move()
   {
     if( !isDead() )
     {
-      setStatus( AnimatedEntity::Idle ); //!!! causing issues with animations not playing for weapons
+      setStatus( AnimatedEntity::Idle );
       playAnimation();
     }
     return;
@@ -292,7 +292,7 @@ void AnimatedEntity::MoveOneUnit(Orientation::Type o, double spd, bool rotation)
 
 bool AnimatedEntity::checkCollision( const AnimatedEntity& a ) const
 {
-  if( this != &a && checkDistance(100, a) && isCollisionOK() && a.isCollisionOK() && Collision::BoundingBoxTest( hitbox, a.hitbox ) )
+  if( this != &a && checkDistance(100, a) && isCollisionOK() && a.isCollisionOK() && Collision::PixelPerfectTest( animatedSprite, a.animatedSprite ) )
     return true;
   else
     return false;
@@ -374,7 +374,7 @@ bool AnimatedEntity::checkDistance(double distance, const AnimatedEntity& entity
 
 void AnimatedEntity::Destroy()
 {
-  if( isDead() ) // is this needed???
+  if( isDead() )
     return;
 
   clearDirections();

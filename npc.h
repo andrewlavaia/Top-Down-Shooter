@@ -20,9 +20,6 @@ class NPC : public AnimatedEntity
 public:
   enum Type {
     Sheep,
-    //BlackSheep,
-    //RebelSheep,
-    //PrizeSheep,
     McGinger,
     BigRick,
     UglyAmy,

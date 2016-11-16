@@ -3,20 +3,11 @@
 #include "menustate.h"
 #include "timer.h"
 
-
-
 int main()
 {
   // Create main window
   sf::RenderWindow window;
   window.create(sf::VideoMode(1024, 768), "Sheep Herder", sf::Style::Default);
-
-  //sf::View view(sf::FloatRect(50, 50, 512, 384)); // view is half the size centered at 300,300
-  //view.setViewport(sf::FloatRect(0.25f,0.25f,0.5f,0.5f)); //view port is also half the size and centered on window
-  //window.setView(view);
-
-  // Set window settings
-  //window.setFramerateLimit(200); // inaccurate, avoid if possible
 
   // Create the game engine with window (stores a reference)
   CGameEngine game(window);
@@ -44,16 +35,12 @@ int main()
       if(!game.isPaused)
         game.Update();
 
-      //std::cout << "Game Logic Updated in: " << game.tick_timer.GetCounter() - next_game_tick << std::endl;
       next_game_tick += TIME_PER_TICK;
       game.logicTime = game.logicClock.restart();
     }
     interpolation = (game.tick_timer.GetCounter() - next_game_tick + TIME_PER_TICK ) / TIME_PER_TICK;
     game.Draw(interpolation);
-    //std::cout << interpolation <<std::endl;
-
-    //std::cout << "Frame Rendered in: " << game.timer.GetCounter()<<std::endl;
-	}
+}
 
   // cleanup the engine
 	game.Cleanup();
